@@ -1,0 +1,82 @@
+{
+  "layout": {
+    "Navbar": {
+      "home": "ホーム",
+      "about": "自己紹介",
+      "projects": "プロジェクト",
+      "articles": "記事",
+      "feeds": "フィード",
+      "contact": "お問い合わせ",
+      "selectLanguage": "言語を選択",
+      "share": "共有",
+      "sharePage": "このページを共有",
+      "toggleMenu": "メニューを切り替え",
+      "copied": "URLがクリップボードにコピーされました！"
+    },
+    "Footer": {
+      "nav": "ナビゲーション",
+      "connect": "接続",
+      "specs": "スペック",
+      "builtWith": "開発ツール",
+      "tagline": "ソフトウェア開発者＆AI愛好家。クリーンなエンジニアリングとAIの交差点でソフトウェアを構築。"
+    }
+  },
+  "pages": {
+    "Home": {
+      "hero": {
+        "greeting": "こんにちは、<nameTag>{name}</nameTag>です",
+        "viewProjects": "プロジェクトを見る",
+        "getInTouch": "お問い合わせ"
+      },
+      "about": {
+        "title": "自己紹介",
+        "cta": "全ストーリーを読む"
+      },
+      "cta": {
+        "eyebrow": "// お問い合わせ",
+        "title": "一緒に何かを作りましょう",
+        "description": "アイデアやプロジェクトがありますか？それともソフトウェアエンジニアリング、AI、システム設計について話したいですか？コラボレーションしましょう。",
+        "button": "お問い合わせ"
+      }
+    },
+    "Projects": {
+      "title": "プロジェクト",
+      "subtitle": "これまでに構築したソフトウェアの記録。様々な技術レイヤーを探求しています。",
+      "allProjects": "すべて",
+      "noProjects": "選択したフィルターに一致するプロジェクトが見つかりません。"
+    },
+    "Contact": {
+      "title": "お問い合わせ",
+      "subtitle": "プロジェクトのご相談、ご質問、または単にあいさつをしたいですか？すべてのメッセージに目を通します。",
+      "emailLabel": "メールアドレス",
+      "socialsLabel": "ソーシャル",
+      "nameLabel": "名前",
+      "emailInputLabel": "メールアドレス",
+      "subjectLabel": "件名",
+      "subjectPlaceholder": "一緒に仕事をしましょう",
+      "messageLabel": "メッセージ",
+      "messagePlaceholder": "プロジェクト、アイデア、または質問について教えてください...",
+      "send": "メッセージを送信",
+      "sending": "送信中...",
+      "successTitle": "送信完了",
+      "successSubtitle": "ご連絡ありがとうございます。近いうちにご返信いたします。",
+      "sendAnother": "別のメッセージを送信",
+      "errorSubmitFailed": "メッセージの送信に失敗しました。もう一度お試しください。"
+    },
+    "Feeds": {
+      "title": "フィード",
+      "subtitle": "短い考察、クイックリンク、そして小さなアップデート。",
+      "noFeeds": "フィードが見つかりません。"
+    },
+    "NotFound": {
+      "title": "404 // ページが見つかりません",
+      "subtitle": "指定されたディレクトリまたはファイルはデータベースに存在しません。",
+      "cta": "ホームに戻る"
+    },
+    "Error": {
+      "title": "500 // システムエラー",
+      "subtitle": "アプリケーションの実行中に予期しないエラーが発生しました。",
+      "cta": "システムを再読み込み"
+    }
+  }
+}

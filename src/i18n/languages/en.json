@@ -1,0 +1,82 @@
+{
+  "layout": {
+    "Navbar": {
+      "home": "Home",
+      "about": "About",
+      "projects": "Projects",
+      "articles": "Articles",
+      "feeds": "Feeds",
+      "contact": "Contact",
+      "selectLanguage": "Select language",
+      "share": "Share",
+      "sharePage": "Share this page",
+      "toggleMenu": "Toggle menu",
+      "copied": "URL copied to clipboard!"
+    },
+    "Footer": {
+      "nav": "Navigation",
+      "connect": "Connect",
+      "specs": "Specs",
+      "builtWith": "Built with",
+      "tagline": "Software Developer & AI Enthusiast. Building software at the intersection of clean engineering and AI."
+    }
+  },
+  "pages": {
+    "Home": {
+      "hero": {
+        "greeting": "Hi, I'm <nameTag>{name}</nameTag>",
+        "viewProjects": "View Projects",
+        "getInTouch": "Get in touch"
+      },
+      "about": {
+        "title": "Behind the Screen",
+        "cta": "Read the full story"
+      },
+      "cta": {
+        "eyebrow": "// GET IN TOUCH",
+        "title": "Let's build something together",
+        "description": "Have an idea, a project, or just want to chat about software engineering, AI, or system design? Drop me a line and let's collaborate.",
+        "button": "Get in touch"
+      }
+    },
+    "Projects": {
+      "title": "Projects",
+      "subtitle": "A log of software I've built, exploring different layers of the stack.",
+      "allProjects": "All",
+      "noProjects": "No projects found for the selected filter."
+    },
+    "Contact": {
+      "title": "Get in touch",
+      "subtitle": "Have a project in mind, a question, or just want to say hello? I read every message.",
+      "emailLabel": "Email",
+      "socialsLabel": "Socials",
+      "nameLabel": "Name",
+      "emailInputLabel": "Email",
+      "subjectLabel": "Subject",
+      "subjectPlaceholder": "Let's work together",
+      "messageLabel": "Message",
+      "messagePlaceholder": "Tell me about your project, idea, or question...",
+      "send": "Send message",
+      "sending": "Sending...",
+      "successTitle": "Message sent",
+      "successSubtitle": "Thanks for reaching out. I'll get back to you soon.",
+      "sendAnother": "Send another",
+      "errorSubmitFailed": "Failed to send message. Please try again."
+    },
+    "Feeds": {
+      "title": "Feeds",
+      "subtitle": "Short-form thoughts, quick links, and small updates.",
+      "noFeeds": "No feeds found."
+    },
+    "NotFound": {
+      "title": "404 // ROUTE_NOT_FOUND",
+      "subtitle": "The requested directory or file does not exist in this database.",
+      "cta": "Return to home"
+    },
+    "Error": {
+      "title": "500 // SYSTEM_ERROR",
+      "subtitle": "An unhandled exception occurred in the application runtime.",
+      "cta": "Reload runtime"
+    }
+  }
+}

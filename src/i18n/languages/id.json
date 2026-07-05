@@ -1,0 +1,82 @@
+{
+  "layout": {
+    "Navbar": {
+      "home": "Beranda",
+      "about": "Tentang",
+      "projects": "Proyek",
+      "articles": "Artikel",
+      "feeds": "Kabar",
+      "contact": "Kontak",
+      "selectLanguage": "Pilih bahasa",
+      "share": "Bagikan",
+      "sharePage": "Bagikan halaman ini",
+      "toggleMenu": "Alihkan menu",
+      "copied": "URL disalin ke papan klip!"
+    },
+    "Footer": {
+      "nav": "Navigasi",
+      "connect": "Hubungi",
+      "specs": "Spesifikasi",
+      "builtWith": "Dibuat dengan",
+      "tagline": "Software Developer & AI Enthusiast. Membangun perangkat lunak pada titik temu rekayasa bersih dan AI."
+    }
+  },
+  "pages": {
+    "Home": {
+      "hero": {
+        "greeting": "Hai, saya <nameTag>{name}</nameTag>",
+        "viewProjects": "Lihat Proyek",
+        "getInTouch": "Hubungi saya"
+      },
+      "about": {
+        "title": "Di Balik Layar",
+        "cta": "Baca kisah selengkapnya"
+      },
+      "cta": {
+        "eyebrow": "// HUBUNGI SAYA",
+        "title": "Mari bangun sesuatu bersama",
+        "description": "Punya ide, proyek, atau sekadar ingin mengobrol tentang rekayasa perangkat lunak, AI, atau desain sistem? Mari berkolaborasi.",
+        "button": "Hubungi saya"
+      }
+    },
+    "Projects": {
+      "title": "Proyek",
+      "subtitle": "Catatan perangkat lunak yang telah saya bangun, mengeksplorasi berbagai lapisan teknologi.",
+      "allProjects": "Semua",
+      "noProjects": "Tidak ada proyek yang sesuai dengan filter."
+    },
+    "Contact": {
+      "title": "Hubungi saya",
+      "subtitle": "Ada proyek yang ingin digarap, pertanyaan, atau sekadar ingin menyapa? Saya membaca setiap pesan.",
+      "emailLabel": "Email",
+      "socialsLabel": "Media Sosial",
+      "nameLabel": "Nama",
+      "emailInputLabel": "Email",
+      "subjectLabel": "Subjek",
+      "subjectPlaceholder": "Mari bekerja sama",
+      "messageLabel": "Pesan",
+      "messagePlaceholder": "Ceritakan tentang proyek, ide, atau pertanyaan Anda...",
+      "send": "Kirim pesan",
+      "sending": "Mengirim...",
+      "successTitle": "Pesan terkirim",
+      "successSubtitle": "Terima kasih telah menghubungi saya. Saya akan segera membalasnya.",
+      "sendAnother": "Kirim lagi",
+      "errorSubmitFailed": "Gagal mengirim pesan. Silakan coba lagi."
+    },
+    "Feeds": {
+      "title": "Kabar",
+      "subtitle": "Opini singkat, tautan menarik, dan pembaruan kecil.",
+      "noFeeds": "Tidak ada kabar yang ditemukan."
+    },
+    "NotFound": {
+      "title": "404 // ALAMAT_TIDAK_DITEMUKAN",
+      "subtitle": "Direktori atau berkas yang Anda cari tidak tersedia di dalam basis data.",
+      "cta": "Kembali ke beranda"
+    },
+    "Error": {
+      "title": "500 // KESALAHAN_SISTEM",
+      "subtitle": "Terjadi galat yang tidak terduga pada runtime aplikasi.",
+      "cta": "Muat ulang sistem"
+    }
+  }
+}

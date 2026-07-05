@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(frontend-design)",
+      "Bash(pnpm add *)",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Skill(brainstorming)",
+      "Bash(node *)",
+      "Bash(cat *)",
+      "Bash(grep *)"
+    ]
+  },
+  "$version": 4
+}
