@@ -853,11 +853,12 @@ export interface Profile {
       }[]
     | null;
   timelines: {
-    year: string;
+    yearStart: number;
+    yearEnd?: number | null;
+    present?: boolean | null;
     title: string;
     institution: string;
     description: string;
-    type: 'education' | 'career';
     id?: string | null;
   }[];
   hobbies: {
@@ -903,11 +904,12 @@ export interface ProfileSelect<T extends boolean = true> {
   timelines?:
     | T
     | {
-        year?: T;
+        yearStart?: T;
+        yearEnd?: T;
+        present?: T;
         title?: T;
         institution?: T;
         description?: T;
-        type?: T;
         id?: T;
       };
   hobbies?:

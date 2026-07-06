@@ -116,9 +116,27 @@ export const Profile: GlobalConfig = {
       localized: true,
       fields: [
         {
-          name: 'year',
-          type: 'text',
+          name: 'yearStart',
+          type: 'number',
           required: true,
+        },
+        {
+          name: 'yearEnd',
+          type: 'number',
+          admin: {
+            condition: (data, siblingData) => !siblingData?.present,
+          },
+          validate: (val: unknown, { siblingData }: any) => {
+            if (!siblingData?.present && !val) {
+              return 'Year end is required if this is not your current / present journey.'
+            }
+            return true
+          },
+        },
+        {
+          name: 'present',
+          type: 'checkbox',
+          defaultValue: false,
         },
         {
           name: 'title',
@@ -135,15 +153,7 @@ export const Profile: GlobalConfig = {
           type: 'textarea',
           required: true,
         },
-        {
-          name: 'type',
-          type: 'select',
-          required: true,
-          options: [
-            { label: 'Education', value: 'education' },
-            { label: 'Career', value: 'career' },
-          ],
-        },
+
       ],
     },
     {

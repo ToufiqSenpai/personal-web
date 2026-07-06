@@ -6,10 +6,12 @@ export function Reveal({
   children,
   delay = 0,
   className = '',
+  ...props
 }: {
   children: ReactNode
   delay?: number
   className?: string
+  [key: string]: any
 }) {
   const ref = useRef<HTMLDivElement>(null)
   const [isVisible, setIsVisible] = useState(false)
@@ -39,6 +41,7 @@ export function Reveal({
       ref={ref}
       className={`reveal ${isVisible ? 'is-visible' : ''} ${className}`}
       style={{ transitionDelay: `${delay}ms` }}
+      {...props}
     >
       {children}
     </div>

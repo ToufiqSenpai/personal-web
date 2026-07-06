@@ -56,7 +56,7 @@ export function FeedList({ initialFeeds, initialHasNextPage, initialNextPage }: 
   }, [loadMore])
 
   return (
-    <div className="relative border-l border-border pl-6 ml-3 space-y-8 py-4">
+    <div className="relative border-l-0 sm:border-l border-border pl-0 sm:pl-6 ml-0 sm:ml-3 space-y-8 py-4">
       {feeds.map((feed) => (
         <FeedCard key={feed.id} feed={feed} />
       ))}

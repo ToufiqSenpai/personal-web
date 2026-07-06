@@ -5,6 +5,9 @@ import { revalidateFeedsCache } from '@/hooks/revalidateCache'
 
 export const FeedsMedia: CollectionConfig = {
   slug: 'feeds-media',
+  admin: {
+    group: 'Feeds',
+  },
   access: {
     read: () => true,
   },
@@ -62,6 +65,7 @@ export const Feeds: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'createdAt'],
+    group: 'Feeds',
   },
   access: {
     read: () => true,

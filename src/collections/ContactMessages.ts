@@ -9,6 +9,7 @@ export const ContactMessages: CollectionConfig = {
   admin: {
     useAsTitle: 'subject',
     defaultColumns: ['name', 'email', 'subject', 'createdAt'],
+    group: 'Contact',
   },
   access: {
     create: () => true, // Allow anyone to submit via contact form

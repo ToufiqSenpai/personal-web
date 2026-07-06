@@ -16,9 +16,7 @@
     "Footer": {
       "nav": "ナビゲーション",
       "connect": "接続",
-      "specs": "スペック",
-      "builtWith": "開発ツール",
-      "tagline": "ソフトウェア開発者＆AI愛好家。クリーンなエンジニアリングとAIの交差点でソフトウェアを構築。"
+      "builtWith": "開発ツール"
     }
   },
   "pages": {
@@ -32,11 +30,32 @@
         "title": "自己紹介",
         "cta": "全ストーリーを読む"
       },
+      "featuredProjects": {
+        "eyebrow": "// 注目の作品",
+        "title": "最近構築した制作物",
+        "noProjects": "プロジェクトが見つかりません。また後ほどご確認ください！"
+      },
+      "featuredArticles": {
+        "eyebrow": "// 最新の執筆",
+        "title": "考察、アイデア、そして学び",
+        "readMore": "記事を読む"
+      },
       "cta": {
         "eyebrow": "// お問い合わせ",
         "title": "一緒に何かを作りましょう",
         "description": "アイデアやプロジェクトがありますか？それともソフトウェアエンジニアリング、AI、システム設計について話したいですか？コラボレーションしましょう。",
         "button": "お問い合わせ"
+      }
+    },
+    "About": {
+      "present": "現在",
+      "timeline": {
+        "eyebrow": "私の歩み",
+        "title": "経歴と学歴"
+      },
+      "hobbies": {
+        "eyebrow": "オフスクリーンの生活",
+        "title": "趣味と関心"
       }
     },
     "Projects": {

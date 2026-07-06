@@ -4,6 +4,9 @@ import { COMMON_IMAGE_MIMETYPES } from '@/constants/mimetype'
 
 export const ProjectsMedia: CollectionConfig = {
   slug: 'projects-media',
+  admin: {
+    group: 'Projects',
+  },
   access: {
     read: () => true,
   },
@@ -47,6 +50,7 @@ export const Projects: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'projectType'],
+    group: 'Projects',
   },
   access: {
     read: () => true,

@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-07-07
+
+### Added
+
+- **i18n Translation Support**:
+  - Added localized strings for the `"present"` status tag under a new `About` namespace in all translation files.
+  - Localized all section headers and empty-state placeholders in `FeaturedProjects` and `FeaturedArticles`.
+  - Added translation support to `Timeline` and `BentoHobbies` section headers.
+- **Accessibility & Touch / Focus States**:
+  - Added explicit focus-within styles (`tabIndex={0}` and outline/ring borders) to `ProjectCard` overlay, `BentoHobbies` grid items, and the `HomeAbout` avatar component to support mobile touch screens and keyboard focus.
+
+### Changed
+
+- **Timeline Schema Refactor**:
+  - Replaced the generic `year` text field in the `Profile.timelines` collection with `yearStart` (number, required), `yearEnd` (number, optional), and `present` (checkbox).
+  - Added a conditional validation function to the schema ensuring that `yearEnd` is required unless `present` is checked.
+  - Removed the unused `type` select field from the `timelines` collection.
+- **Collection Grouping in Admin Panel**:
+  - Grouped all Payload collections under semantic administrative tabs in the sidebar panel (`Profile`, `Admin`, `Contact`, `Feeds`, `Projects`) to improve CMS navigation.
+- **UI Optimizations**:
+  - Removed the developer telemetry terminal screen mockup from the homepage CTA section and centered the main text box.
+  - Replaced the static footer tagline with the dynamic `profile.intro` field loaded from the CMS database.
+  - Responsive feeds timeline: Hid the vertical timeline boundary border and floating nodes on mobile screen widths inside `FeedList` and `FeedCard` to maximize usable screen real estate.
+- **Mock Data Cleanup**:
+  - Removed unused timeline schemas, types, and mock arrays from `mock.ts`.
+
 ## [0.1.0] - 2026-07-06
 
 This is the initial release of the personal portfolio website, bridging Payload CMS 3.85 with Next.js 16 (App Router).

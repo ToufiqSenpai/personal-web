@@ -1,18 +1,21 @@
 import { Reveal } from '@/components/ui/Reveal'
 import { ProjectCard } from '@/components/projects/ProjectCard'
 import type { Project } from '@/payload-types'
+import { useTranslations } from 'next-intl'
 
 export interface FeaturedProjectsProps {
   projects: Project[]
 }
 
 export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
+  const t = useTranslations('pages.Home.featuredProjects')
+
   return (
     <section className="px-6 py-20 border-b border-border/50 bg-canvas/20">
       <div className="mx-auto max-w-6xl">
         <Reveal>
-          <p className="mb-2 font-mono text-xs uppercase tracking-wider text-accent">// Featured Work</p>
-          <h2 className="mb-12 text-2xl font-bold text-ink sm:text-3xl">Things I&apos;ve built recently</h2>
+          <p className="mb-2 font-mono text-xs uppercase tracking-wider text-accent">{t('eyebrow')}</p>
+          <h2 className="mb-12 text-2xl font-bold text-ink sm:text-3xl">{t('title')}</h2>
         </Reveal>
 
         {projects && projects.length > 0 ? (
@@ -26,7 +29,7 @@ export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
         ) : (
           <Reveal>
             <div className="py-12 text-center border border-dashed border-border rounded-xl bg-surface/50">
-              <p className="text-muted font-mono text-sm">No projects found. Check back soon!</p>
+              <p className="text-muted font-mono text-sm">{t('noProjects')}</p>
             </div>
           </Reveal>
         )}

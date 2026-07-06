@@ -15,7 +15,7 @@ export function FeedCard({ feed }: { feed: any }) {
   return (
     <div className="group relative">
       {/* Timeline Node */}
-      <div className="absolute -left-[31px] mt-1.5 h-3 w-3 rounded-full border-2 border-canvas bg-muted transition-colors group-hover:bg-accent" />
+      <div className="hidden sm:block absolute -left-[31px] mt-1.5 h-3 w-3 rounded-full border-2 border-canvas bg-muted transition-colors group-hover:bg-accent" />
       
       <article className="rounded-xl border border-border bg-surface p-6 transition-colors hover:border-accent/50">
         <header className="mb-3 flex flex-wrap items-center justify-between gap-4">

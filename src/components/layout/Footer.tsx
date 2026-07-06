@@ -17,7 +17,7 @@ export function Footer({ profile }: FooterProps) {
   return (
     <footer className="border-t border-border bg-canvas/30">
       <div className="mx-auto max-w-6xl px-6 py-12 md:py-16">
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-4">
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-3">
           
           {/* Col 1: Bio & System Status Monitor */}
           <div className="flex flex-col gap-4">
@@ -29,7 +29,7 @@ export function Footer({ profile }: FooterProps) {
               <span className="text-accent animate-pulse">_</span>
             </Link>
             <p className="text-xs text-muted leading-relaxed max-w-[240px]">
-              {tFooter('tagline')}
+              {profile.intro}
             </p>
 
           </div>
@@ -91,7 +91,7 @@ export function Footer({ profile }: FooterProps) {
             </ul>
           </div>
 
-          {/* Col 3: Connect */}
+          {/* Col 3: Connect (Socials) */}
           <div>
             <span className="block font-mono text-xs font-semibold tracking-wider text-accent uppercase mb-4">
               // {tFooter('connect')}
@@ -126,27 +126,6 @@ export function Footer({ profile }: FooterProps) {
                 <p className="text-xs text-muted font-mono">No links configured</p>
               )}
             </ul>
-          </div>
-
-          {/* Col 4: System Specs */}
-          <div>
-            <span className="block font-mono text-xs font-semibold tracking-wider text-accent uppercase mb-4">
-              // {tFooter('specs')}
-            </span>
-            <div className="space-y-3 font-mono text-xs text-muted">
-              <div className="flex flex-col gap-0.5">
-                <span className="text-[10px] text-muted/65 uppercase tracking-wide">Environment</span>
-                <span className="text-ink">production</span>
-              </div>
-              <div className="flex flex-col gap-0.5">
-                <span className="text-[10px] text-muted/65 uppercase tracking-wide">Stack</span>
-                <span className="text-ink">Next.js 16 + Payload CMS 3</span>
-              </div>
-              <div className="flex flex-col gap-0.5">
-                <span className="text-[10px] text-muted/65 uppercase tracking-wide">Database</span>
-                <span className="text-ink">MongoDB Atlas</span>
-              </div>
-            </div>
           </div>
 
         </div>

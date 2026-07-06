@@ -1,19 +1,21 @@
 import Link from 'next/link'
 import { Reveal } from '@/components/ui/Reveal'
 import { mockFeaturedArticles } from '@/data/mock'
+import { useTranslations } from 'next-intl'
 
 export function FeaturedArticles() {
   const articles = mockFeaturedArticles
+  const t = useTranslations('pages.Home.featuredArticles')
 
   return (
     <section className="px-6 py-20 bg-canvas">
       <div className="mx-auto max-w-6xl">
         <Reveal>
           <p className="mb-2 font-mono text-xs uppercase tracking-wider text-accent">
-            Latest Writing
+            {t('eyebrow')}
           </p>
           <h2 className="mb-12 text-2xl font-bold text-ink sm:text-3xl">
-            Thoughts, ideas, and lessons
+            {t('title')}
           </h2>
         </Reveal>
 
@@ -79,7 +81,7 @@ export function FeaturedArticles() {
                   
                   {/* Read indicator */}
                   <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-accent group-hover:text-accent/80 transition-colors mt-4">
-                    <span>Read article</span>
+                    <span>{t('readMore')}</span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="14"
@@ -162,7 +164,7 @@ export function FeaturedArticles() {
                   
                   {/* Read indicator */}
                   <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-accent group-hover:text-accent/80 transition-colors mt-4">
-                    <span>Read article</span>
+                    <span>{t('readMore')}</span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="14"

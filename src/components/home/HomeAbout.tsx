@@ -25,14 +25,17 @@ export function HomeAbout({ profile }: HomeAboutProps) {
           {/* Left Column: Avatar image */}
           <div className="md:col-span-5 flex justify-center">
             <Reveal>
-              <div className="relative h-72 w-72 sm:h-80 sm:w-80 md:h-96 md:w-96 overflow-hidden rounded-2xl border border-border shadow-lg bg-surface/50">
+              <div 
+                tabIndex={0}
+                className="group relative h-72 w-72 sm:h-80 sm:w-80 md:h-96 md:w-96 overflow-hidden rounded-2xl border border-border shadow-lg bg-surface/50 focus:outline-none focus:ring-2 focus:ring-accent/25"
+              >
                 {avatarUrl ? (
                   <Image
                     src={avatarUrl}
                     alt={avatarAlt}
                     fill
                     sizes="(max-w-768px) 288px, 384px"
-                    className="object-cover grayscale hover:grayscale-0 transition-all duration-700 ease-out"
+                    className="object-cover grayscale group-hover:grayscale-0 group-focus:grayscale-0 transition-all duration-700 ease-out"
                     priority
                   />
                 ) : (

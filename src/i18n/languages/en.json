@@ -16,9 +16,7 @@
     "Footer": {
       "nav": "Navigation",
       "connect": "Connect",
-      "specs": "Specs",
-      "builtWith": "Built with",
-      "tagline": "Software Developer & AI Enthusiast. Building software at the intersection of clean engineering and AI."
+      "builtWith": "Built with"
     }
   },
   "pages": {
@@ -32,11 +30,32 @@
         "title": "Behind the Screen",
         "cta": "Read the full story"
       },
+      "featuredProjects": {
+        "eyebrow": "// Featured Work",
+        "title": "Things I've built recently",
+        "noProjects": "No projects found. Check back soon!"
+      },
+      "featuredArticles": {
+        "eyebrow": "// Latest Writing",
+        "title": "Thoughts, ideas, and lessons",
+        "readMore": "Read article"
+      },
       "cta": {
         "eyebrow": "// GET IN TOUCH",
         "title": "Let's build something together",
         "description": "Have an idea, a project, or just want to chat about software engineering, AI, or system design? Drop me a line and let's collaborate.",
         "button": "Get in touch"
+      }
+    },
+    "About": {
+      "present": "Present",
+      "timeline": {
+        "eyebrow": "My Journey",
+        "title": "Career & Education"
+      },
+      "hobbies": {
+        "eyebrow": "Life Off-Screen",
+        "title": "Hobbies & Interests"
       }
     },
     "Projects": {

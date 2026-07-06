@@ -1,10 +1,4 @@
-export type TimelineItem = {
-  year: string
-  title: string
-  institution: string
-  description: string
-  type: 'education' | 'career'
-}
+
 
 export type HobbyItem = {
   title: string
@@ -107,29 +101,7 @@ export const mockAbout = {
         "Documenting what I learn so others can benefit from the mistakes I've already made.",
     },
   ],
-  timeline: [
-    {
-      year: '2024 - Present',
-      title: 'Senior Software Engineer',
-      institution: 'Tech Innovations Inc.',
-      description: 'Leading frontend development and exploring AI integration within enterprise applications.',
-      type: 'career',
-    },
-    {
-      year: '2021 - 2024',
-      title: 'Software Engineer',
-      institution: 'Creative Solutions',
-      description: 'Built scalable web applications and modernized legacy codebases using React and Node.js.',
-      type: 'career',
-    },
-    {
-      year: '2017 - 2021',
-      title: 'Bachelor of Computer Science',
-      institution: 'University of Technology',
-      description: 'Graduated with honors. Active member of the competitive programming club.',
-      type: 'education',
-    },
-  ] as TimelineItem[],
+
   hobbies: [
     {
       title: 'Photography',

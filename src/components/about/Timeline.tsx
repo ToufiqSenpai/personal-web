@@ -1,11 +1,13 @@
 import { Reveal } from '@/components/ui/Reveal'
 import type { Profile } from '@/payload-types'
+import { useTranslations } from 'next-intl'
 
 export interface TimelineProps {
   profile: Profile
 }
 
 export function Timeline({ profile }: TimelineProps) {
+  const t = useTranslations('pages.About')
   const timelineItems = profile.timelines || []
 
   return (
@@ -13,9 +15,9 @@ export function Timeline({ profile }: TimelineProps) {
       <div className="mx-auto max-w-4xl">
         <Reveal>
           <p className="mb-2 font-mono text-xs uppercase tracking-wider text-accent">
-            My Journey
+            {t('timeline.eyebrow')}
           </p>
-          <h2 className="mb-12 text-2xl font-bold text-ink">Career & Education</h2>
+          <h2 className="mb-12 text-2xl font-bold text-ink">{t('timeline.title')}</h2>
         </Reveal>
 
         <div className="relative">
@@ -40,7 +42,7 @@ export function Timeline({ profile }: TimelineProps) {
                   >
                     <div className={`rounded-xl border border-border bg-surface p-6 shadow-sm transition-colors hover:border-accent/50 ${isEven ? 'md:text-right' : 'md:text-left'}`}>
                       <span className="mb-2 block font-mono text-xs text-accent">
-                        {item.year}
+                        {item.yearStart} — {item.present ? t('present') : item.yearEnd}
                       </span>
                       <h3 className="text-lg font-bold text-ink">{item.title}</h3>
                       <p className="mb-3 text-sm font-medium text-muted">{item.institution}</p>

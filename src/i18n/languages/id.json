@@ -16,9 +16,7 @@
     "Footer": {
       "nav": "Navigasi",
       "connect": "Hubungi",
-      "specs": "Spesifikasi",
-      "builtWith": "Dibuat dengan",
-      "tagline": "Software Developer & AI Enthusiast. Membangun perangkat lunak pada titik temu rekayasa bersih dan AI."
+      "builtWith": "Dibuat dengan"
     }
   },
   "pages": {
@@ -32,11 +30,32 @@
         "title": "Di Balik Layar",
         "cta": "Baca kisah selengkapnya"
       },
+      "featuredProjects": {
+        "eyebrow": "// Karya Unggulan",
+        "title": "Hal-hal yang saya bangun baru-baru ini",
+        "noProjects": "Tidak ada proyek ditemukan. Silakan kembali lagi nanti!"
+      },
+      "featuredArticles": {
+        "eyebrow": "// Tulisan Terbaru",
+        "title": "Pemikiran, ide, dan pembelajaran",
+        "readMore": "Baca artikel"
+      },
       "cta": {
         "eyebrow": "// HUBUNGI SAYA",
         "title": "Mari bangun sesuatu bersama",
         "description": "Punya ide, proyek, atau sekadar ingin mengobrol tentang rekayasa perangkat lunak, AI, atau desain sistem? Mari berkolaborasi.",
         "button": "Hubungi saya"
+      }
+    },
+    "About": {
+      "present": "Sekarang",
+      "timeline": {
+        "eyebrow": "Perjalanan Saya",
+        "title": "Karier & Pendidikan"
+      },
+      "hobbies": {
+        "eyebrow": "Kehidupan Luar Layar",
+        "title": "Hobi & Minat"
       }
     },
     "Projects": {

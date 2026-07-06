@@ -29,7 +29,7 @@ export default async function RootLayout(props: { children: React.ReactNode, par
     <html lang={locale} className={`${GeistSans.variable} ${GeistMono.variable}`} suppressHydrationWarning>
       <body>
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem={true}>
             <Navbar name={profile.name} />
             <main>{children}</main>
             <Suspense>
