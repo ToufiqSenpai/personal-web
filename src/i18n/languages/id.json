@@ -95,7 +95,8 @@
     "Error": {
       "title": "500 // KESALAHAN_SISTEM",
       "subtitle": "Terjadi galat yang tidak terduga pada runtime aplikasi.",
-      "cta": "Muat ulang sistem"
+      "cta": "Muat ulang sistem",
+      "genericError": "Terjadi kesalahan yang tidak terduga. Silakan coba lagi."
     }
   }
 }

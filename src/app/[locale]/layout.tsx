@@ -1,7 +1,8 @@
 import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
 import { NextIntlClientProvider } from 'next-intl'
-import { getLocale, getMessages } from 'next-intl/server'
+import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server'
+import type { Metadata } from 'next'
 import React, { Suspense } from 'react'
 
 import './styles.css'
@@ -15,10 +16,36 @@ export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }))
 }
 
-import { setRequestLocale } from 'next-intl/server'
+interface RootLayoutProps {
+  children: React.ReactNode
+  params: Promise<{ locale: string }>
+}
 
-export default async function RootLayout(props: { children: React.ReactNode, params: Promise<{ locale: string }> }) {
-  const { children, params } = props
+export async function generateMetadata({ params }: Pick<RootLayoutProps, 'params'>): Promise<Metadata> {
+  const { locale } = await params
+  const typedLocale = locale as 'en' | 'id' | 'ja'
+  const profile = await getProfile(typedLocale)
+  const t = await getTranslations({ locale, namespace: 'pages.Home' })
+  const siteName = profile.name || 'My Name'
+
+  return {
+    metadataBase: new URL('https://mhmtaufiq.foo'),
+    title: {
+      default: siteName,
+      template: `%s | ${siteName}`,
+    },
+    description: profile.intro || t('cta.description'),
+    openGraph: {
+      type: 'website',
+      siteName,
+      title: siteName,
+      description: profile.intro || t('cta.description'),
+      url: 'https://mhmtaufiq.foo',
+    },
+  }
+}
+
+export default async function RootLayout({ children, params }: RootLayoutProps) {
   const { locale } = await params
   setRequestLocale(locale)
   const messages = await getMessages()

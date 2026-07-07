@@ -1,7 +1,9 @@
+import DOMPurify from 'isomorphic-dompurify'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import { useLocale } from 'next-intl'
+import type { Feed } from '@/payload-types'
 
-export function FeedCard({ feed }: { feed: any }) {
+export function FeedCard({ feed }: { feed: Feed }) {
   const locale = useLocale()
   const date = new Date(feed.createdAt)
   const formattedDate = new Intl.DateTimeFormat(locale, {
@@ -9,19 +11,17 @@ export function FeedCard({ feed }: { feed: any }) {
     day: 'numeric',
     year: 'numeric',
     hour: 'numeric',
-    minute: 'numeric'
+    minute: 'numeric',
   }).format(date)
 
   return (
     <div className="group relative">
       {/* Timeline Node */}
-      <div className="hidden sm:block absolute -left-[31px] mt-1.5 h-3 w-3 rounded-full border-2 border-canvas bg-muted transition-colors group-hover:bg-accent" />
-      
+      <div className="hidden sm:block absolute -left-7.75 mt-1.5 h-3 w-3 rounded-full border-2 border-canvas bg-muted transition-colors group-hover:bg-accent" />
+
       <article className="rounded-xl border border-border bg-surface p-6 transition-colors hover:border-accent/50">
         <header className="mb-3 flex flex-wrap items-center justify-between gap-4">
-          {feed.title && (
-            <h2 className="text-lg font-semibold text-ink w-full sm:w-auto">{feed.title}</h2>
-          )}
+          {feed.title && <h2 className="text-lg font-semibold text-ink w-full sm:w-auto">{feed.title}</h2>}
           <time className="font-mono text-xs text-muted ml-auto" dateTime={feed.createdAt}>
             {formattedDate}
           </time>
@@ -30,35 +30,30 @@ export function FeedCard({ feed }: { feed: any }) {
         {feed.media && typeof feed.media === 'object' && feed.media.url && (
           <div className="mb-4 overflow-hidden rounded-xl border border-border">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img 
-              src={feed.media.url} 
-              alt={feed.media.alt || ''} 
-              className="w-full object-cover"
-              loading="lazy"
-            />
+            <img src={feed.media.url} alt={feed.media.alt || ''} className="w-full object-cover" loading="lazy" />
           </div>
         )}
-        
         <div className="prose prose-sm dark:prose-invert max-w-none text-muted">
-          {feed.body && typeof feed.body === 'object' ? (
-             <RichText 
-               data={feed.body} 
-               converters={({ defaultConverters }: any) => ({
-                 ...defaultConverters,
-                 blocks: {
-                   ...defaultConverters?.blocks,
-                   embed: ({ node }: any) => (
-                     <div 
-                       className="my-4 overflow-hidden rounded-xl"
-                       dangerouslySetInnerHTML={{ __html: node?.fields?.html }} 
-                     />
-                   )
-                 }
-               })}
-             />
-          ) : (
-             <div dangerouslySetInnerHTML={{ __html: feed.body }} />
-          )}
+          <RichText
+            data={feed.body}
+            converters={({ defaultConverters }: any) => ({
+              ...defaultConverters,
+              blocks: {
+                ...defaultConverters?.blocks,
+                embed: ({ node }: any) => (
+                  <div
+                    className="my-4 overflow-hidden rounded-xl"
+                    dangerouslySetInnerHTML={{
+                      __html: DOMPurify.sanitize(node?.fields?.html || '', {
+                        ADD_TAGS: ['iframe'],
+                        ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling'],
+                      }),
+                    }}
+                  />
+                ),
+              },
+            })}
+          />
         </div>
       </article>
     </div>

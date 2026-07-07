@@ -10,7 +10,7 @@ export default function GithubRepoSelect({ path }: { path: string }) {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    fetch('/api/projects/github-repos')
+    fetch('/api/projects/repositories')
       .then((res) => res.json())
       .then((data) => {
         if (data.repos) {

@@ -13,8 +13,9 @@ export default function Error({ error, reset }: ErrorProps) {
   const t = useTranslations('pages.Error')
 
   useEffect(() => {
-    // Proactively log error details in sandbox logs
-    console.error('Unhandled dynamic exception:', error)
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Unhandled dynamic exception:', error)
+    }
   }, [error])
 
   return (
@@ -45,8 +46,14 @@ export default function Error({ error, reset }: ErrorProps) {
         {/* Diagnostic console */}
         <Reveal delay={250}>
           <div className="mb-8 w-full rounded-xl border border-border/60 bg-canvas/60 p-4 font-mono text-[10px] text-left text-muted/80 overflow-auto max-h-[140px] shadow-inner select-all">
-            <div className="text-red-500 font-semibold mb-1">{"FATAL EXCEPTION [SYSTEM_FAULT]:"}</div>
-            <div>{error.message || 'Unknown runtime error occurred.'}</div>
+            <div className="text-red-500 font-semibold mb-1">
+              {process.env.NODE_ENV === 'development' ? "FATAL EXCEPTION [SYSTEM_FAULT]:" : "ERROR_LOG:"}
+            </div>
+            <div>
+              {process.env.NODE_ENV === 'development'
+                ? (error.message || 'Unknown runtime error occurred.')
+                : t('genericError')}
+            </div>
             {error.digest && <div className="mt-1 text-[8px] text-muted/50">digest: {error.digest}</div>}
           </div>
         </Reveal>

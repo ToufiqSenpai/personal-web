@@ -95,7 +95,8 @@
     "Error": {
       "title": "500 // SYSTEM_ERROR",
       "subtitle": "An unhandled exception occurred in the application runtime.",
-      "cta": "Reload runtime"
+      "cta": "Reload runtime",
+      "genericError": "An unexpected error occurred. Please try again."
     }
   }
 }

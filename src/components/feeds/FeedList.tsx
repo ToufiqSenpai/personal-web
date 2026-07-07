@@ -16,11 +16,13 @@ export function FeedList({ initialFeeds, initialHasNextPage, initialNextPage }: 
   const [hasNextPage, setHasNextPage] = useState(initialHasNextPage)
   const [nextPage, setNextPage] = useState(initialNextPage)
   const [isLoading, setIsLoading] = useState(false)
+  const isLoadingRef = useRef(false)
   
   const observerTarget = useRef<HTMLDivElement>(null)
 
   const loadMore = useCallback(async () => {
-    if (!hasNextPage || isLoading || !nextPage) return
+    if (!hasNextPage || isLoadingRef.current || !nextPage) return
+    isLoadingRef.current = true
     setIsLoading(true)
     try {
       const res = await fetch(`/api/feeds?limit=5&sort=-createdAt&page=${nextPage}`)
@@ -34,11 +36,14 @@ export function FeedList({ initialFeeds, initialHasNextPage, initialNextPage }: 
     } catch (error) {
       console.error('Failed to load more feeds', error)
     } finally {
+      isLoadingRef.current = false
       setIsLoading(false)
     }
-  }, [hasNextPage, isLoading, nextPage])
+  }, [hasNextPage, nextPage])
 
   useEffect(() => {
+    if (isLoading) return
+
     const observer = new IntersectionObserver(
       entries => {
         if (entries[0]?.isIntersecting) {
@@ -53,7 +58,7 @@ export function FeedList({ initialFeeds, initialHasNextPage, initialNextPage }: 
     }
 
     return () => observer.disconnect()
-  }, [loadMore])
+  }, [loadMore, isLoading])
 
   return (
     <div className="relative border-l-0 sm:border-l border-border pl-0 sm:pl-6 ml-0 sm:ml-3 space-y-8 py-4">

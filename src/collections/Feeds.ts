@@ -1,7 +1,7 @@
 import { CollectionConfig, Block } from 'payload'
 import { lexicalEditor, BlocksFeature, UploadFeature } from '@payloadcms/richtext-lexical'
 import { COMMON_IMAGE_MIMETYPES } from '@/constants/mimetype'
-import { revalidateFeedsCache } from '@/hooks/revalidateCache'
+import { revalidateFeedsCache, revalidateFeedsDeleteCache } from '@/hooks/revalidateCache'
 
 export const FeedsMedia: CollectionConfig = {
   slug: 'feeds-media',
@@ -72,6 +72,7 @@ export const Feeds: CollectionConfig = {
   },
   hooks: {
     afterChange: [revalidateFeedsCache],
+    afterDelete: [revalidateFeedsDeleteCache],
   },
   fields: [
     {

@@ -1,5 +1,5 @@
 import { CollectionConfig } from 'payload'
-import { revalidateProjectsCache } from '@/hooks/revalidateCache'
+import { revalidateProjectsCache, revalidateProjectsDeleteCache } from '@/hooks/revalidateCache'
 import { COMMON_IMAGE_MIMETYPES } from '@/constants/mimetype'
 
 export const ProjectsMedia: CollectionConfig = {
@@ -57,12 +57,17 @@ export const Projects: CollectionConfig = {
   },
   hooks: {
     afterChange: [revalidateProjectsCache],
+    afterDelete: [revalidateProjectsDeleteCache],
   },
   endpoints: [
     {
-      path: '/github-repos',
+      path: '/repositories',
       method: 'get',
       handler: async (req) => {
+        if (!req.user) {
+          return Response.json({ error: 'Unauthorized' }, { status: 401 })
+        }
+
         const pat = process.env.GITHUB_PAT
         if (!pat) {
           return Response.json({ error: 'GITHUB_PAT not configured' }, { status: 500 })

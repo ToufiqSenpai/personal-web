@@ -424,8 +424,9 @@ The `Dockerfile` uses a multi-stage build:
 
 ### SEO Strategy
 
-- **Main site** (`example.com`): `noindex, nofollow` — not indexed by search engines
-- **Articles zone** (`articles.example.com`): SEO-optimized with proper meta tags, OG images, and auto-generated sitemap
+- Public-facing pages should expose clean, accurate metadata and Open Graph tags for search snippets and link sharing.
+- Apply indexation rules intentionally in app configuration rather than assuming the main site is always `noindex, nofollow`.
+- Articles or other editorial surfaces can adopt deeper SEO features such as richer meta tags, OG images, and sitemaps when needed.
 
 ## Non-Functional Requirements
 

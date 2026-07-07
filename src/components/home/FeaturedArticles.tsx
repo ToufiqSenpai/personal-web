@@ -1,11 +1,23 @@
 import Link from 'next/link'
 import { Reveal } from '@/components/ui/Reveal'
-import { mockFeaturedArticles } from '@/data/mock'
 import { useTranslations } from 'next-intl'
 
-export function FeaturedArticles() {
-  const articles = mockFeaturedArticles
+export interface Article {
+  slug: string
+  category: string
+  publishedAt: string
+  title: string
+  excerpt: string
+}
+
+export interface FeaturedArticlesProps {
+  articles?: Article[]
+}
+
+export function FeaturedArticles({ articles = [] }: FeaturedArticlesProps) {
   const t = useTranslations('pages.Home.featuredArticles')
+
+  if (!articles || articles.length === 0) return null
 
   return (
     <section className="px-6 py-20 bg-canvas">

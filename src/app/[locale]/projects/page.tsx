@@ -1,9 +1,42 @@
-import { getAllProjects } from '@/data/queries'
+import type { Metadata } from 'next'
+import { getAllProjects, getProfile } from '@/data/queries'
 import { ProjectCard } from '@/components/projects/ProjectCard'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 
 interface ProjectsPageProps {
   params: Promise<{ locale: string }>
+}
+
+export async function generateMetadata({ params }: ProjectsPageProps): Promise<Metadata> {
+  const resolvedParams = await params
+  const locale = resolvedParams.locale as 'en' | 'id' | 'ja'
+  const [t, profile] = await Promise.all([
+    getTranslations({ locale, namespace: 'pages.Projects' }),
+    getProfile(locale),
+  ])
+
+  const title = t('title', { defaultMessage: 'Projects' })
+  const description = t('subtitle')
+  const url = 'https://mhmtaufiq.foo/projects'
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title: `${title} | ${profile.name}`,
+      description,
+      url,
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary',
+      title: `${title} | ${profile.name}`,
+      description,
+    },
+  }
 }
 
 export default async function ProjectsPage({ params }: ProjectsPageProps) {

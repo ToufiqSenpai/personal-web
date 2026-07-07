@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1] - 2026-07-07
+
+### Added
+- **HTML Sanitization to Feeds**: Integrated `isomorphic-dompurify` to prevent Stored XSS injection vectors while preserving legitimate `iframe` embedding layout properties.
+- **Dynamic Browser Language Detection**: Leveraged `headers()` in `src/i18n/request.ts` to parse `Accept-Language` headers and dynamically set the default locale on the first visit.
+
+### Changed
+- **Secure GitHub Repositories Endpoint**: Enforced user authentication checks (`if (!req.user)`) inside `/api/projects/repositories` and changed the path from `/github-repos` to `/repositories`.
+- **Sanitized UI Error Boundary**: Configured `src/app/[locale]/error.tsx` to conditionally display detailed stack traces only in development, showing a generic error code and safe message in production.
+- **Standardized Package Manager**: Cleaned up `package.json` pnpm engine properties and refactored dev, testing, and compose build pipelines to use `npm`.
+- **Feed Infinite Scroll Guard**: Implemented synchronous ref locks and IntersectionObserver disconnect flags in `FeedList.tsx` to eliminate race conditions and overfetching.
+- **Smooth Language Switching**: Swapped full page reloads (`window.location.reload()`) with Next.js router refresh and React's `useTransition` for a seamless language switching experience.
+- **Increased Language Cookie Expiration**: Updated language persistence cookie `max-age` to 10 years (`315360000` seconds) to make it effectively permanent.
+
 ## [0.2.0] - 2026-07-07
 
 ### Added

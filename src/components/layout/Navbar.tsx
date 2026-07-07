@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { useState, useEffect } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
+import { useState, useEffect, useTransition } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
 import { LANGUAGES } from '@/i18n/language'
@@ -12,10 +12,12 @@ export interface NavbarProps {
 
 export function Navbar({ name }: NavbarProps) {
   const pathname = usePathname()
+  const router = useRouter()
   const locale = useLocale()
   const t = useTranslations('layout.Navbar')
   const [isOpen, setIsOpen] = useState(false)
   const [isLangOpen, setIsLangOpen] = useState(false)
+  const [isPending, startTransition] = useTransition()
 
   const langLabel = LANGUAGES.find((language) => language.code == locale)?.name || locale
 
@@ -28,8 +30,10 @@ export function Navbar({ name }: NavbarProps) {
   ]
 
   function handleLocaleChange(code: string) {
-    document.cookie = `NEXT_LOCALE=${code};path=/;max-age=31536000;samesite=lax`
-    window.location.reload()
+    startTransition(() => {
+      document.cookie = `NEXT_LOCALE=${code};path=/;max-age=315360000;samesite=lax`
+      router.refresh()
+    })
   }
 
   // Handle click outside to close language dropdown
