@@ -13,14 +13,17 @@ import { ContactMessages } from './collections/ContactMessages'
 import { env } from './configs/env'
 import { DEFAULT_LANGUAGE, LANGUAGES } from './i18n/language'
 import { resendAdapter } from '@payloadcms/email-resend'
+import { ArticleCategories, ArticleMedia, Articles } from './collections/Articles'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
-const generateCDNUrl = (cdnUrl: string) => ({ filename, prefix }: { filename: string; prefix?: string }) => {
-  const cleanPrefix = prefix ? `${prefix}/` : ''
-  return `${cdnUrl}/${cleanPrefix}${filename}`
-}
+const generateCDNUrl =
+  (cdnUrl: string) =>
+  ({ filename, prefix }: { filename: string; prefix?: string }) => {
+    const cleanPrefix = prefix ? `${prefix}/` : ''
+    return `${cdnUrl}/${cleanPrefix}${filename}`
+  }
 
 const cdnStorageConfig = {
   disablePayloadAccessControl: true as const,
@@ -47,6 +50,9 @@ export default buildConfig({
     Projects,
     ProjectsMedia,
     ContactMessages,
+    Articles,
+    ArticleCategories,
+    ArticleMedia,
   ],
   globals: [Profile],
   localization: {

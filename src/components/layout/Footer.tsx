@@ -37,7 +37,7 @@ export function Footer({ profile }: FooterProps) {
           {/* Col 2: Quick Links */}
           <div>
             <span className="block font-mono text-xs font-semibold tracking-wider text-accent uppercase mb-4">
-              // {tFooter('nav')}
+              {"// "}{tFooter('nav')}
             </span>
             <ul className="space-y-2.5">
               <li>
@@ -94,7 +94,7 @@ export function Footer({ profile }: FooterProps) {
           {/* Col 3: Connect (Socials) */}
           <div>
             <span className="block font-mono text-xs font-semibold tracking-wider text-accent uppercase mb-4">
-              // {tFooter('connect')}
+              {"// "}{tFooter('connect')}
             </span>
             <ul className="space-y-3">
               {profile.socials && profile.socials.length > 0 ? (

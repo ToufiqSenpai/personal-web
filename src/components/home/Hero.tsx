@@ -84,8 +84,10 @@ export function Hero({ profile }: HeroProps) {
     if (!isDeletingRole && typedRole === currentWord) {
       timer = setTimeout(() => setIsDeletingRole(true), 1500)
     } else if (isDeletingRole && typedRole === '') {
-      setIsDeletingRole(false)
-      setRoleIdx((prev) => (prev + 1) % rolesList.length)
+      timer = setTimeout(() => {
+        setIsDeletingRole(false)
+        setRoleIdx((prev) => (prev + 1) % rolesList.length)
+      }, 0)
     }
 
     return () => clearTimeout(timer)

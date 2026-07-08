@@ -56,7 +56,7 @@ export function HomeAbout({ profile }: HomeAboutProps) {
           <div className="md:col-span-7 flex flex-col items-start text-left">
             <Reveal delay={100}>
               <p className="mb-3 font-mono text-xs uppercase tracking-wider text-accent">
-                // WHOAMI
+                {"// WHOAMI"}
               </p>
             </Reveal>
             
