@@ -23,12 +23,7 @@ function EmbedBlock({ html }: { html: string }) {
     }
   }, [html])
 
-  return (
-    <div
-      className="my-4 overflow-hidden rounded-xl"
-      dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
-    />
-  )
+  return <div className="my-4 overflow-hidden rounded-xl" dangerouslySetInnerHTML={{ __html: sanitizedHtml }} />
 }
 
 export function FeedCard({ feed }: { feed: Feed }) {
@@ -64,11 +59,19 @@ export function FeedCard({ feed }: { feed: Feed }) {
         <div className="prose prose-sm dark:prose-invert max-w-none text-muted">
           <RichText
             data={feed.body}
-            converters={({ defaultConverters }: any) => ({
+            converters={({ defaultConverters }) => ({
               ...defaultConverters,
               blocks: {
                 ...defaultConverters?.blocks,
-                embed: ({ node }: any) => <EmbedBlock html={node?.fields?.html || ''} />,
+                embed: ({
+                  node,
+                }: {
+                  node: {
+                    fields: {
+                      html: string
+                    }
+                  }
+                }) => <EmbedBlock html={node?.fields?.html || ''} />,
               },
             })}
           />
@@ -77,4 +80,3 @@ export function FeedCard({ feed }: { feed: Feed }) {
     </div>
   )
 }
-

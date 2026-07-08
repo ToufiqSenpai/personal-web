@@ -17,7 +17,7 @@ export function Navbar({ name }: NavbarProps) {
   const t = useTranslations('layout.Navbar')
   const [isOpen, setIsOpen] = useState(false)
   const [isLangOpen, setIsLangOpen] = useState(false)
-  const [isPending, startTransition] = useTransition()
+  const [, startTransition] = useTransition()
 
   const langLabel = LANGUAGES.find((language) => language.code == locale)?.name || locale
 

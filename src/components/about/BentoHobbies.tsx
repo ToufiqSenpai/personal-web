@@ -40,19 +40,19 @@ export function BentoHobbies({ profile }: BentoHobbiesProps) {
           <p className="mb-2 font-mono text-xs uppercase tracking-wider text-accent">{t('hobbies.eyebrow')}</p>
           <h2 className="mb-8 text-2xl font-bold text-ink">{t('hobbies.title')}</h2>
         </Reveal>
- 
+
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           {hobbiesItems.map((hobby, index) => {
             const layout = getLayout(index)
             const tiltClass = TILT_CLASSES[index % TILT_CLASSES.length]
- 
+
             let imageUrl = ''
             let altText = hobby.title
             if (hobby.image && typeof hobby.image === 'object') {
               imageUrl = hobby.image.url || ''
               altText = hobby.image.alt || hobby.title
             }
- 
+
             return (
               <Reveal
                 key={index}

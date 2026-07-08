@@ -1,11 +1,11 @@
 'use client'
-
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useTranslations } from 'next-intl'
 import { FeedCard } from './FeedCard'
+import type { Feed } from '../../payload-types'
 
 type Props = {
-  initialFeeds: any[]
+  initialFeeds: Feed[]
   initialHasNextPage: boolean
   initialNextPage: number | null | undefined
 }
@@ -17,7 +17,7 @@ export function FeedList({ initialFeeds, initialHasNextPage, initialNextPage }: 
   const [nextPage, setNextPage] = useState(initialNextPage)
   const [isLoading, setIsLoading] = useState(false)
   const isLoadingRef = useRef(false)
-  
+
   const observerTarget = useRef<HTMLDivElement>(null)
 
   const loadMore = useCallback(async () => {
@@ -27,9 +27,9 @@ export function FeedList({ initialFeeds, initialHasNextPage, initialNextPage }: 
     try {
       const res = await fetch(`/api/feeds?limit=5&sort=-createdAt&page=${nextPage}`)
       const data = await res.json()
-      
+
       if (data.docs) {
-        setFeeds(prev => [...prev, ...data.docs])
+        setFeeds((prev) => [...prev, ...data.docs])
         setHasNextPage(data.hasNextPage)
         setNextPage(data.nextPage)
       }
@@ -45,12 +45,12 @@ export function FeedList({ initialFeeds, initialHasNextPage, initialNextPage }: 
     if (isLoading) return
 
     const observer = new IntersectionObserver(
-      entries => {
+      (entries) => {
         if (entries[0]?.isIntersecting) {
           loadMore()
         }
       },
-      { threshold: 0.1, rootMargin: '100px' }
+      { threshold: 0.1, rootMargin: '100px' },
     )
 
     if (observerTarget.current) {
@@ -65,24 +65,20 @@ export function FeedList({ initialFeeds, initialHasNextPage, initialNextPage }: 
       {feeds.map((feed) => (
         <FeedCard key={feed.id} feed={feed} />
       ))}
-      
+
       {hasNextPage && (
         <div ref={observerTarget} className="h-20 flex items-center justify-center">
           <div className="h-4 w-4 rounded-full border-2 border-accent border-t-transparent animate-spin" />
         </div>
       )}
-      
+
       {!hasNextPage && feeds.length > 0 && (
         <div className="pt-8 pb-4 font-mono text-xs text-muted">
           <span className="text-accent">EOF</span>
         </div>
       )}
 
-      {feeds.length === 0 && (
-        <div className="py-8 font-mono text-xs text-muted">
-          $ echo &quot;{t('noFeeds')}&quot;
-        </div>
-      )}
+      {feeds.length === 0 && <div className="py-8 font-mono text-xs text-muted">$ echo &quot;{t('noFeeds')}&quot;</div>}
     </div>
   )
 }

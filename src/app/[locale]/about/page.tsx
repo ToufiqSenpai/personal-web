@@ -2,7 +2,6 @@ import { AboutHero } from '@/components/about/AboutHero'
 import { Timeline } from '@/components/about/Timeline'
 import { BentoHobbies } from '@/components/about/BentoHobbies'
 import { CTA } from '@/components/home/CTA'
-import { getLocale } from 'next-intl/server'
 import { setRequestLocale } from 'next-intl/server'
 import { getProfile } from '@/data/queries'
 

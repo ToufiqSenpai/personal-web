@@ -3,11 +3,12 @@ import createNextIntlPlugin from 'next-intl/plugin'
 import type { NextConfig } from 'next'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import type { RemotePattern } from 'next/dist/shared/lib/image-config'
 
 const __filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(__filename)
 
-const remotePatterns: any[] = [
+const remotePatterns: RemotePattern[] = [
   {
     protocol: 'https',
     hostname: 'cdn.mhmtaufiq.foo',
@@ -19,7 +20,7 @@ if (process.env.S3_CDN_URL) {
   try {
     const url = new URL(process.env.S3_CDN_URL)
     remotePatterns.push({
-      protocol: url.protocol.replace(':', ''),
+      protocol: url.protocol.replace(':', '') as 'https' | 'http' | undefined,
       hostname: url.hostname,
       port: url.port || '',
       pathname: '/**',

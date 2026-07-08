@@ -33,7 +33,7 @@ export async function getFeaturedProjects(locale: Locale) {
     collection: 'projects',
     limit: 3,
     sort: '-createdAt',
-    locale: locale as any,
+    locale: locale,
     depth: 1,
   })
   return docs
@@ -47,7 +47,7 @@ export async function getAllProjects(locale: Locale) {
   const payload = await getPayloadClient()
   const { docs } = await payload.find({
     collection: 'projects',
-    locale: locale as any,
+    locale: locale,
     sort: '-createdAt',
     depth: 1,
   })

@@ -11,7 +11,7 @@ export function Reveal({
   children: ReactNode
   delay?: number
   className?: string
-  [key: string]: any
+  [key: string]: unknown
 }) {
   const ref = useRef<HTMLDivElement>(null)
   const [isVisible, setIsVisible] = useState(false)

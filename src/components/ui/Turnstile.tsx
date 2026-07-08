@@ -18,6 +18,12 @@ export function Turnstile({ onVerify, onError, onExpire }: TurnstileProps) {
   const { resolvedTheme } = useTheme()
   const locale = useLocale()
 
+  const callbacksRef = useRef({ onVerify, onError, onExpire })
+
+  useEffect(() => {
+    callbacksRef.current = { onVerify, onError, onExpire }
+  }, [onVerify, onError, onExpire])
+
   const renderWidget = useCallback(() => {
     if (!window.turnstile || !containerRef.current) return
     if (widgetIdRef.current !== null) return
@@ -26,13 +32,13 @@ export function Turnstile({ onVerify, onError, onExpire }: TurnstileProps) {
 
     widgetIdRef.current = window.turnstile.render(containerRef.current, {
       sitekey: clientEnv.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
-      callback: onVerify,
-      'error-callback': onError,
-      'expired-callback': onExpire,
+      callback: (token: string) => callbacksRef.current.onVerify(token),
+      'error-callback': () => callbacksRef.current.onError?.(),
+      'expired-callback': () => callbacksRef.current.onExpire?.(),
       theme,
       language: locale,
     })
-  }, [resolvedTheme, locale, onVerify, onError, onExpire])
+  }, [resolvedTheme, locale])
 
   useEffect(() => {
     if (window.turnstile && containerRef.current) {

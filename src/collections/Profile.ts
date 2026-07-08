@@ -126,7 +126,7 @@ export const Profile: GlobalConfig = {
           admin: {
             condition: (data, siblingData) => !siblingData?.present,
           },
-          validate: (val: unknown, { siblingData }: any) => {
+          validate: (val: unknown, { siblingData }: { siblingData: { present?: boolean } }) => {
             if (!siblingData?.present && !val) {
               return 'Year end is required if this is not your current / present journey.'
             }
@@ -153,7 +153,6 @@ export const Profile: GlobalConfig = {
           type: 'textarea',
           required: true,
         },
-
       ],
     },
     {

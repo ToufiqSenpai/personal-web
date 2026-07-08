@@ -18,7 +18,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
           return code.split('-')[0].toLowerCase()
         })
       matchedLocale = preferredLocales.find((code) =>
-        routing.locales.includes(code as any)
+        routing.locales.includes(code as typeof routing.locales[number])
       )
     }
 

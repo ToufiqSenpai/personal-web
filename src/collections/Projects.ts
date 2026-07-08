@@ -1,6 +1,12 @@
 import { CollectionConfig } from 'payload'
 import { revalidateProjectsCache, revalidateProjectsDeleteCache } from '@/hooks/revalidateCache'
 import { COMMON_IMAGE_MIMETYPES } from '@/constants/mimetype'
+import { Octokit } from '@octokit/rest'
+import { env } from '../configs/env'
+
+const github = new Octokit({
+  auth: env.GITHUB_PAT,
+})
 
 export const ProjectsMedia: CollectionConfig = {
   slug: 'projects-media',
@@ -68,25 +74,14 @@ export const Projects: CollectionConfig = {
           return Response.json({ error: 'Unauthorized' }, { status: 401 })
         }
 
-        const pat = process.env.GITHUB_PAT
-        if (!pat) {
-          return Response.json({ error: 'GITHUB_PAT not configured' }, { status: 500 })
-        }
-
         try {
-          const response = await fetch('https://api.github.com/user/repos?sort=updated&per_page=100', {
-            headers: {
-              Authorization: `Bearer ${pat}`,
-              Accept: 'application/vnd.github.v3+json',
-            },
+          const { data } = await github.repos.listForAuthenticatedUser({
+            sort: 'updated',
+            type: 'owner',
+            per_page: 100,
           })
 
-          if (!response.ok) {
-            return Response.json({ error: 'Failed to fetch repositories' }, { status: response.status })
-          }
-
-          const data = await response.json()
-          const repos = data.map((repo: any) => ({
+          const repos = data.map((repo) => ({
             id: repo.id,
             name: repo.name,
             full_name: repo.full_name,
@@ -97,6 +92,7 @@ export const Projects: CollectionConfig = {
 
           return Response.json({ repos })
         } catch (error) {
+          req.payload.logger.error((error as Error).message)
           return Response.json({ error: 'Internal server error' }, { status: 500 })
         }
       },

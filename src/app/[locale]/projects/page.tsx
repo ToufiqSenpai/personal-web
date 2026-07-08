@@ -10,10 +10,7 @@ interface ProjectsPageProps {
 export async function generateMetadata({ params }: ProjectsPageProps): Promise<Metadata> {
   const resolvedParams = await params
   const locale = resolvedParams.locale as 'en' | 'id' | 'ja'
-  const [t, profile] = await Promise.all([
-    getTranslations({ locale, namespace: 'pages.Projects' }),
-    getProfile(locale),
-  ])
+  const [t, profile] = await Promise.all([getTranslations({ locale, namespace: 'pages.Projects' }), getProfile(locale)])
 
   const title = t('title', { defaultMessage: 'Projects' })
   const description = t('subtitle')
@@ -40,7 +37,6 @@ export async function generateMetadata({ params }: ProjectsPageProps): Promise<M
 }
 
 export default async function ProjectsPage({ params }: ProjectsPageProps) {
-
   const resolvedParams = await params
   const locale = resolvedParams.locale
   setRequestLocale(locale)
@@ -56,16 +52,17 @@ export default async function ProjectsPage({ params }: ProjectsPageProps) {
           <h1 className="font-mono text-4xl font-bold tracking-tight text-ink sm:text-5xl">
             {t('title', { defaultMessage: 'Projects' })}
           </h1>
-          <p className="mt-4 max-w-lg text-muted leading-relaxed">
-            {t('subtitle')}
-          </p>
+          <p className="mt-4 max-w-lg text-muted leading-relaxed">{t('subtitle')}</p>
         </header>
 
         <div className="mt-12">
           {projects.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
+            <div
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in-up"
+              style={{ animationDelay: '100ms' }}
+            >
               {projects.map((project) => (
-                <ProjectCard key={project.id} project={project as any} />
+                <ProjectCard key={project.id} project={project} />
               ))}
             </div>
           ) : (
