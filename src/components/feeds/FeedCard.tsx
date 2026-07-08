@@ -1,7 +1,35 @@
-import DOMPurify from 'isomorphic-dompurify'
+import { useState, useEffect } from 'react'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import { useLocale } from 'next-intl'
 import type { Feed } from '@/payload-types'
+
+function EmbedBlock({ html }: { html: string }) {
+  const [sanitizedHtml, setSanitizedHtml] = useState('')
+
+  useEffect(() => {
+    let active = true
+    import('isomorphic-dompurify').then((mod) => {
+      if (!active) return
+      const DOMPurify = mod.default
+      setSanitizedHtml(
+        DOMPurify.sanitize(html || '', {
+          ADD_TAGS: ['iframe'],
+          ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling'],
+        }),
+      )
+    })
+    return () => {
+      active = false
+    }
+  }, [html])
+
+  return (
+    <div
+      className="my-4 overflow-hidden rounded-xl"
+      dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
+    />
+  )
+}
 
 export function FeedCard({ feed }: { feed: Feed }) {
   const locale = useLocale()
@@ -40,17 +68,7 @@ export function FeedCard({ feed }: { feed: Feed }) {
               ...defaultConverters,
               blocks: {
                 ...defaultConverters?.blocks,
-                embed: ({ node }: any) => (
-                  <div
-                    className="my-4 overflow-hidden rounded-xl"
-                    dangerouslySetInnerHTML={{
-                      __html: DOMPurify.sanitize(node?.fields?.html || '', {
-                        ADD_TAGS: ['iframe'],
-                        ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling'],
-                      }),
-                    }}
-                  />
-                ),
+                embed: ({ node }: any) => <EmbedBlock html={node?.fields?.html || ''} />,
               },
             })}
           />
@@ -59,3 +77,4 @@ export function FeedCard({ feed }: { feed: Feed }) {
     </div>
   )
 }
+
