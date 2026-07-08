@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next'
+import { clientEnv } from '@/configs/client-env'
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -9,6 +10,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/admin', '/api'],
       },
     ],
-    host: 'https://mhmtaufiq.foo',
+    host: clientEnv.NEXT_PUBLIC_SITE_URL,
   }
 }

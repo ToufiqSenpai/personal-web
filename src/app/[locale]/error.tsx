@@ -3,6 +3,7 @@
 import { useEffect } from 'react'
 import { useTranslations } from 'next-intl'
 import { Reveal } from '@/components/ui/Reveal'
+import { clientEnv } from '../../configs/client-env'
 
 export interface ErrorProps {
   error: Error & { digest?: string }
@@ -13,7 +14,7 @@ export default function Error({ error, reset }: ErrorProps) {
   const t = useTranslations('pages.Error')
 
   useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
+    if (clientEnv.NODE_ENV === 'development') {
       console.error('Unhandled dynamic exception:', error)
     }
   }, [error])
@@ -32,26 +33,22 @@ export default function Error({ error, reset }: ErrorProps) {
         </Reveal>
 
         <Reveal delay={100}>
-          <h1 className="mb-4 font-mono text-sm uppercase tracking-widest text-red-500 font-bold">
-            {t('title')}
-          </h1>
+          <h1 className="mb-4 font-mono text-sm uppercase tracking-widest text-red-500 font-bold">{t('title')}</h1>
         </Reveal>
 
         <Reveal delay={200}>
-          <p className="mb-6 text-sm sm:text-base text-muted leading-relaxed">
-            {t('subtitle')}
-          </p>
+          <p className="mb-6 text-sm sm:text-base text-muted leading-relaxed">{t('subtitle')}</p>
         </Reveal>
 
         {/* Diagnostic console */}
         <Reveal delay={250}>
           <div className="mb-8 w-full rounded-xl border border-border/60 bg-canvas/60 p-4 font-mono text-[10px] text-left text-muted/80 overflow-auto max-h-[140px] shadow-inner select-all">
             <div className="text-red-500 font-semibold mb-1">
-              {process.env.NODE_ENV === 'development' ? "FATAL EXCEPTION [SYSTEM_FAULT]:" : "ERROR_LOG:"}
+              {clientEnv.NODE_ENV === 'development' ? 'FATAL EXCEPTION [SYSTEM_FAULT]:' : 'ERROR_LOG:'}
             </div>
             <div>
-              {process.env.NODE_ENV === 'development'
-                ? (error.message || 'Unknown runtime error occurred.')
+              {clientEnv.NODE_ENV === 'development'
+                ? error.message || 'Unknown runtime error occurred.'
                 : t('genericError')}
             </div>
             {error.digest && <div className="mt-1 text-[8px] text-muted/50">digest: {error.digest}</div>}
@@ -60,7 +57,9 @@ export default function Error({ error, reset }: ErrorProps) {
 
         <Reveal delay={300}>
           <button
-            onClick={() => reset()}
+            onClick={() => {
+              reset()
+            }}
             className="group inline-flex items-center justify-center rounded-lg bg-accent px-6 py-2.5 text-sm font-semibold text-white shadow-md shadow-accent/10 hover:bg-accent/90 transition-all hover:shadow-lg hover:shadow-accent/20"
           >
             <svg

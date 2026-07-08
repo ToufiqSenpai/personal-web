@@ -111,7 +111,7 @@ export function Navbar({ name }: NavbarProps) {
                 className="flex items-center gap-1 font-mono text-xs font-medium text-muted transition-colors hover:text-accent"
                 aria-label={t('selectLanguage')}
               >
-                <span className="text-ink">{LANGUAGES.find((language) => language.code == locale)!.name}</span>
+                <span className="text-ink">{LANGUAGES.find((language) => language.code == locale)?.name}</span>
                 <svg
                   width="12"
                   height="12"

@@ -1,5 +1,4 @@
 'use client'
-
 import { useCallback, useEffect, useRef } from 'react'
 import Script from 'next/script'
 import { useTheme } from 'next-themes'
@@ -59,11 +58,7 @@ export function Turnstile({ onVerify, onError, onExpire }: TurnstileProps) {
 
   return (
     <>
-      <Script
-        src="https://challenges.cloudflare.com/turnstile/v0/api.js"
-        strategy="lazyOnload"
-        onLoad={onScriptLoad}
-      />
+      <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" strategy="lazyOnload" onLoad={onScriptLoad} />
       <div ref={containerRef} className="mt-1" />
     </>
   )

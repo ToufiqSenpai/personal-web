@@ -1,10 +1,46 @@
+import type { Metadata } from 'next'
 import { ContactHeader } from '@/components/contact/ContactHeader'
-import { setRequestLocale } from 'next-intl/server'
+import { setRequestLocale, getTranslations } from 'next-intl/server'
 import { ContactForm } from '@/components/contact/ContactForm'
 import { ContactInfo } from '@/components/contact/ContactInfo'
+import { getProfile } from '@/data/queries'
+import { clientEnv } from '@/configs/client-env'
 
 interface ContactPageProps {
   params: Promise<{ locale: string }>
+}
+
+export async function generateMetadata({ params }: ContactPageProps): Promise<Metadata> {
+  const { locale } = await params
+  const typedLocale = locale as 'en' | 'id' | 'ja'
+  const [profile, t] = await Promise.all([
+    getProfile(typedLocale),
+    getTranslations({ locale, namespace: 'pages.Contact' }),
+  ])
+
+  const title = t('meta.title')
+  const description = t('meta.description')
+  const url = `${clientEnv.NEXT_PUBLIC_SITE_URL}/contact`
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title: `${title} | ${profile.name}`,
+      description,
+      url,
+      type: 'website',
+      locale,
+    },
+    twitter: {
+      card: 'summary',
+      title: `${title} | ${profile.name}`,
+      description,
+    },
+  }
 }
 
 export default async function ContactPage({ params }: ContactPageProps) {

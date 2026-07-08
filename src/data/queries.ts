@@ -66,3 +66,24 @@ export async function getLatestFeeds() {
     limit: 5,
   })
 }
+
+export async function getFeaturedArticles(locale: Locale) {
+  'use cache'
+  cacheLife('hours')
+  cacheTag('articles')
+
+  const payload = await getPayloadClient()
+  const { docs } = await payload.find({
+    collection: 'articles',
+    limit: 3,
+    sort: '-publishedAt',
+    where: {
+      status: {
+        equals: 'published',
+      },
+    },
+    locale: locale,
+    depth: 1,
+  })
+  return docs
+}

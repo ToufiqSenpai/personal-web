@@ -11,6 +11,7 @@ import { Navbar } from '@/components/layout/Navbar'
 import { ThemeProvider } from '@/components/ui/ThemeProvider'
 import { getProfile } from '@/data/queries'
 import { routing } from '@/i18n/routing'
+import { clientEnv } from '@/configs/client-env'
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }))
@@ -29,7 +30,7 @@ export async function generateMetadata({ params }: Pick<RootLayoutProps, 'params
   const siteName = profile.name || 'My Name'
 
   return {
-    metadataBase: new URL('https://mhmtaufiq.foo'),
+    metadataBase: new URL(clientEnv.NEXT_PUBLIC_SITE_URL),
     title: {
       default: siteName,
       template: `%s | ${siteName}`,
@@ -40,7 +41,7 @@ export async function generateMetadata({ params }: Pick<RootLayoutProps, 'params
       siteName,
       title: siteName,
       description: profile.intro || t('cta.description'),
-      url: 'https://mhmtaufiq.foo',
+      url: clientEnv.NEXT_PUBLIC_SITE_URL,
     },
   }
 }

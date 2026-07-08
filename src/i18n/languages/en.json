@@ -49,6 +49,10 @@
     },
     "About": {
       "present": "Present",
+      "meta": {
+        "title": "About",
+        "description": "Learn more about my background, career journey, and what keeps me going beyond the screen."
+      },
       "timeline": {
         "eyebrow": "My Journey",
         "title": "Career & Education"
@@ -67,6 +71,10 @@
     "Contact": {
       "title": "Get in touch",
       "subtitle": "Have a project in mind, a question, or just want to say hello? I read every message.",
+      "meta": {
+        "title": "Contact",
+        "description": "Have a project in mind, a question, or just want to say hello? I read every message."
+      },
       "emailLabel": "Email",
       "socialsLabel": "Socials",
       "nameLabel": "Name",
@@ -87,7 +95,11 @@
     "Feeds": {
       "title": "Feeds",
       "subtitle": "Short-form thoughts, quick links, and small updates.",
-      "noFeeds": "No feeds found."
+      "noFeeds": "No feeds found.",
+      "meta": {
+        "title": "Feeds",
+        "description": "Short-form thoughts, quick links, and small updates."
+      }
     },
     "NotFound": {
       "title": "404 // ROUTE_NOT_FOUND",

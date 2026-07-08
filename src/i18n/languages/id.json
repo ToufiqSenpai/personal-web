@@ -49,6 +49,10 @@
     },
     "About": {
       "present": "Sekarang",
+      "meta": {
+        "title": "Tentang",
+        "description": "Pelajari lebih lanjut tentang latar belakang, perjalanan karier, dan hal-hal yang saya lakukan di luar layar."
+      },
       "timeline": {
         "eyebrow": "Perjalanan Saya",
         "title": "Karier & Pendidikan"
@@ -67,6 +71,10 @@
     "Contact": {
       "title": "Hubungi saya",
       "subtitle": "Ada proyek yang ingin digarap, pertanyaan, atau sekadar ingin menyapa? Saya membaca setiap pesan.",
+      "meta": {
+        "title": "Kontak",
+        "description": "Ada proyek yang ingin digarap, pertanyaan, atau sekadar ingin menyapa? Saya membaca setiap pesan."
+      },
       "emailLabel": "Email",
       "socialsLabel": "Media Sosial",
       "nameLabel": "Nama",
@@ -87,7 +95,11 @@
     "Feeds": {
       "title": "Kabar",
       "subtitle": "Opini singkat, tautan menarik, dan pembaruan kecil.",
-      "noFeeds": "Tidak ada kabar yang ditemukan."
+      "noFeeds": "Tidak ada kabar yang ditemukan.",
+      "meta": {
+        "title": "Kabar",
+        "description": "Opini singkat, tautan menarik, dan pembaruan kecil."
+      }
     },
     "NotFound": {
       "title": "404 // ALAMAT_TIDAK_DITEMUKAN",

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { getAllProjects, getProfile } from '@/data/queries'
 import { ProjectCard } from '@/components/projects/ProjectCard'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { clientEnv } from '@/configs/client-env'
 
 interface ProjectsPageProps {
   params: Promise<{ locale: string }>
@@ -14,7 +15,7 @@ export async function generateMetadata({ params }: ProjectsPageProps): Promise<M
 
   const title = t('title', { defaultMessage: 'Projects' })
   const description = t('subtitle')
-  const url = 'https://mhmtaufiq.foo/projects'
+  const url = `${clientEnv.NEXT_PUBLIC_SITE_URL}/projects`
 
   return {
     title,
@@ -27,6 +28,7 @@ export async function generateMetadata({ params }: ProjectsPageProps): Promise<M
       description,
       url,
       type: 'website',
+      locale,
     },
     twitter: {
       card: 'summary',
