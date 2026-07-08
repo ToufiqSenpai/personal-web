@@ -80,7 +80,9 @@
       "successTitle": "Pesan terkirim",
       "successSubtitle": "Terima kasih telah menghubungi saya. Saya akan segera membalasnya.",
       "sendAnother": "Kirim lagi",
-      "errorSubmitFailed": "Gagal mengirim pesan. Silakan coba lagi."
+      "errorSubmitFailed": "Gagal mengirim pesan. Silakan coba lagi.",
+      "captchaError": "Verifikasi captcha gagal. Silakan coba lagi.",
+      "captchaRequired": "Silakan selesaikan verifikasi captcha."
     },
     "Feeds": {
       "title": "Kabar",

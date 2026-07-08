@@ -1,6 +1,6 @@
 {
   "name": "personal-web",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A blank template to get started with Payload 3.0",
   "license": "MIT",
   "type": "module",
@@ -26,6 +26,7 @@
     "@payloadcms/ui": "3.85.2",
     "@react-email/components": "^1.0.12",
     "@react-email/render": "^2.0.10",
+    "@sindresorhus/slugify": "^3.0.0",
     "@tailwindcss/typography": "^0.5.20",
     "cross-env": "^7.0.3",
     "dotenv": "16.4.7",

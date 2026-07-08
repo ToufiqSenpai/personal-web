@@ -13,6 +13,7 @@ const envSchema = z.object({
   RESEND_API_KEY: z.string().optional(),
   CONTACT_EMAIL_TO: z.string().email().optional(),
   CONTACT_EMAIL_FROM: z.string().email().optional(),
+  TURNSTILE_SECRET_KEY: z.string().min(1),
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
 })
 

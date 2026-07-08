@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from 'react'
 import { useTranslations } from 'next-intl'
+import { Turnstile } from '@/components/ui/Turnstile'
 
 type FormState = 'idle' | 'loading' | 'success'
 
@@ -10,6 +11,7 @@ type Errors = {
   email?: string
   subject?: string
   message?: string
+  captcha?: string
   submit?: string
 }
 
@@ -17,6 +19,7 @@ export function ContactForm() {
   const t = useTranslations('pages.Contact')
   const [formState, setFormState] = useState<FormState>('idle')
   const [errors, setErrors] = useState<Errors>({})
+  const [turnstileToken, setTurnstileToken] = useState('')
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -37,6 +40,7 @@ export function ContactForm() {
           email: formData.get('email'),
           subject: formData.get('subject'),
           message: formData.get('message'),
+          _turnstileToken: turnstileToken,
         }),
       })
 
@@ -57,6 +61,8 @@ export function ContactForm() {
             if (hasFieldErrors) {
               setErrors(fieldErrors)
               setFormState('idle')
+              window.turnstile?.reset()
+              setTurnstileToken('')
               return
             }
           }
@@ -68,12 +74,16 @@ export function ContactForm() {
 
       setFormState('success')
       form.reset()
+      setTurnstileToken('')
+      window.turnstile?.reset()
     } catch (err) {
       console.error(err)
       setErrors({
         submit: t('errorSubmitFailed') || 'Failed to send message. Please try again.',
       })
       setFormState('idle')
+      window.turnstile?.reset()
+      setTurnstileToken('')
     }
   }
 
@@ -167,11 +177,20 @@ export function ContactForm() {
         {errors.message && <p className="mt-1 text-xs text-accent">{errors.message}</p>}
       </div>
 
+      <div className="mt-5">
+        <Turnstile
+          onVerify={setTurnstileToken}
+          onExpire={() => setTurnstileToken('')}
+          onError={() => setTurnstileToken('')}
+        />
+        {errors.captcha && <p className="mt-1 text-xs text-accent">{errors.captcha}</p>}
+      </div>
+
       {errors.submit && <p className="mt-4 text-sm text-accent">{errors.submit}</p>}
 
       <button
         type="submit"
-        disabled={formState === 'loading'}
+        disabled={formState === 'loading' || !turnstileToken}
         className="mt-6 w-full rounded-lg bg-accent px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent/90 disabled:opacity-60 sm:w-auto"
       >
         {formState === 'loading' ? t('sending') : t('send')}

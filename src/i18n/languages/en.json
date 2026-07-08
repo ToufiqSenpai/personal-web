@@ -80,7 +80,9 @@
       "successTitle": "Message sent",
       "successSubtitle": "Thanks for reaching out. I'll get back to you soon.",
       "sendAnother": "Send another",
-      "errorSubmitFailed": "Failed to send message. Please try again."
+      "errorSubmitFailed": "Failed to send message. Please try again.",
+      "captchaError": "Captcha verification failed. Please try again.",
+      "captchaRequired": "Please complete the captcha verification."
     },
     "Feeds": {
       "title": "Feeds",

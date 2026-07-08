@@ -80,7 +80,9 @@
       "successTitle": "送信完了",
       "successSubtitle": "ご連絡ありがとうございます。近いうちにご返信いたします。",
       "sendAnother": "別のメッセージを送信",
-      "errorSubmitFailed": "メッセージの送信に失敗しました。もう一度お試しください。"
+      "errorSubmitFailed": "メッセージの送信に失敗しました。もう一度お試しください。",
+      "captchaError": "キャプチャの検証に失敗しました。もう一度お試しください。",
+      "captchaRequired": "キャプチャの検証を完了してください。"
     },
     "Feeds": {
       "title": "フィード",

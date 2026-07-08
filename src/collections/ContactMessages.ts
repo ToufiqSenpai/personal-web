@@ -1,8 +1,13 @@
-import { CollectionConfig } from 'payload'
+import { APIError, CollectionConfig } from 'payload'
 import { render } from '@react-email/render'
 import { ContactEmail } from '../emails/ContactEmail'
 import { env } from '../configs/env'
+import { verifyTurnstileToken } from '../lib/turnstile'
 import React from 'react'
+
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>()
+const RATE_LIMIT_MAX = 5
+const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000 // 15 minutes
 
 export const ContactMessages: CollectionConfig = {
   slug: 'contact-messages',
@@ -18,6 +23,47 @@ export const ContactMessages: CollectionConfig = {
     delete: ({ req: { user } }) => !!user,
   },
   hooks: {
+    beforeChange: [
+      async ({ data, operation, req }) => {
+        if (operation !== 'create' || !data) return data
+
+        const clientIp =
+          req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+          req.headers.get('x-real-ip') ||
+          'unknown'
+
+        // Rate limiting
+        const entry = rateLimitMap.get(clientIp)
+        if (entry) {
+          if (Date.now() > entry.resetAt) {
+            entry.count = 0
+            entry.resetAt = Date.now() + RATE_LIMIT_WINDOW_MS
+          }
+          if (entry.count >= RATE_LIMIT_MAX) {
+            throw new APIError('Too many submissions. Please try again later.', 429)
+          }
+          entry.count++
+        } else {
+          rateLimitMap.set(clientIp, { count: 1, resetAt: Date.now() + RATE_LIMIT_WINDOW_MS })
+        }
+
+        // Turnstile CAPTCHA validation
+        const token = data._turnstileToken as string | undefined
+        if (!token) {
+          throw new APIError('Captcha verification is required.', 400)
+        }
+
+        const result = await verifyTurnstileToken(token, clientIp)
+        if (!result.success) {
+          throw new APIError('Captcha verification failed.', 400)
+        }
+
+        // Remove token before saving to DB
+        delete data._turnstileToken
+
+        return data
+      },
+    ],
     afterChange: [
       async ({ doc, operation, req }) => {
         if (operation === 'create') {
