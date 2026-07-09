@@ -15,7 +15,7 @@ import './styles.css'
 
 interface RootLayoutProps {
   children: React.ReactNode
-  params: Promise<{ locale: Locale }>
+  params: Promise<{ locale: string }>
 }
 
 export function generateStaticParams() {
@@ -24,7 +24,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: Pick<RootLayoutProps, 'params'>): Promise<Metadata> {
   const { locale } = await params
-  const profile = await getProfile(locale)
+  const profile = await getProfile(locale as Locale)
   const t = await getTranslations({ locale, namespace: 'pages.Home' })
   const siteName = profile.name || 'My Name'
 
@@ -50,7 +50,7 @@ export default async function RootLayout({ children, params }: RootLayoutProps) 
 
   setRequestLocale(locale)
 
-  const profile = await getProfile(locale)
+  const profile = await getProfile(locale as Locale)
 
   return (
     <html lang={locale} className={`${GeistSans.variable} ${GeistMono.variable}`} suppressHydrationWarning>
