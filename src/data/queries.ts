@@ -1,9 +1,8 @@
-import { cache } from 'react'
-import { getPayload } from 'payload'
-import configPromise from '@payload-config'
 import { cacheLife, cacheTag } from 'next/cache'
-
-type Locale = 'en' | 'id' | 'ja'
+import { cache } from 'react'
+import configPromise from '@payload-config'
+import { getPayload } from 'payload'
+import { Locale } from '../constants/language'
 
 // React.cache() — deduplicates within a single request
 // So layout.tsx + page.tsx calling getProfile() only hits DB once

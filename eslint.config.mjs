@@ -1,4 +1,5 @@
 import nextVitals from 'eslint-config-next/core-web-vitals'
+
 // import tseslint from 'typescript-eslint'
 
 const eslintConfig = tseslint.config(

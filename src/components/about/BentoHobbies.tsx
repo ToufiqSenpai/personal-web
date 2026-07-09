@@ -1,6 +1,6 @@
+import { useTranslations } from 'next-intl'
 import { Reveal } from '@/components/ui/Reveal'
 import type { Profile } from '@/payload-types'
-import { useTranslations } from 'next-intl'
 
 export interface BentoHobbiesProps {
   profile: Profile

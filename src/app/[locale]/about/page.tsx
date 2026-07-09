@@ -1,11 +1,11 @@
 import type { Metadata } from 'next'
-import { AboutHero } from '@/components/about/AboutHero'
-import { Timeline } from '@/components/about/Timeline'
-import { BentoHobbies } from '@/components/about/BentoHobbies'
-import { CTA } from '@/components/home/CTA'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import { getProfile } from '@/data/queries'
+import { AboutHero } from '@/components/about/AboutHero'
+import { BentoHobbies } from '@/components/about/BentoHobbies'
+import { Timeline } from '@/components/about/Timeline'
+import { CTA } from '@/components/home/CTA'
 import { clientEnv } from '@/configs/client-env'
+import { getProfile } from '@/data/queries'
 
 interface AboutPageProps {
   params: Promise<{ locale: string }>

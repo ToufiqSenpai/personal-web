@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, type FormEvent } from 'react'
 import { useTranslations } from 'next-intl'
+import { useState, type FormEvent } from 'react'
 import { Turnstile } from '@/components/ui/Turnstile'
 
 type FormState = 'idle' | 'loading' | 'success'

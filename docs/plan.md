@@ -21,6 +21,7 @@ All-in-one personal branding website untuk Software Developer & AI enthusiast. W
 - Static untuk halaman statis (about, contact, homepage)
 
 **Subdomain Structure:**
+
 ```
 example.com            → Main site (projects, about, contact)
 articles.example.com   → Articles subdomain (same app, different layout)
@@ -33,6 +34,7 @@ articles.example.com   → Articles subdomain (same app, different layout)
 ## Page Structure
 
 ### Main Site (`example.com`)
+
 ```
 /[locale]              → Homepage
 /[locale]/about        → About Me + Skills
@@ -46,6 +48,7 @@ articles.example.com   → Articles subdomain (same app, different layout)
 **i18n:** Menggunakan `next-intl` dengan locale prefix di URL (e.g. `/en`, `/id`). Default locale: `en`.
 
 ### Articles Zone (`articles.example.com`)
+
 ```
 /                  → Articles list
 /[slug]            → Article detail
@@ -115,28 +118,29 @@ articles.example.com   → Articles subdomain (same app, different layout)
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
-| Framework | Next.js 16 (App Router, Turbopack) |
-| CMS | Payload CMS 3.x (embedded) |
-| Language | TypeScript |
-| Styling | Tailwind CSS v4 (CSS-first config, `@theme` tokens) |
-| Fonts | Geist Sans + Geist Mono (`geist` package) |
-| Dark Mode | `next-themes` (`class` strategy, default dark) |
-| UI Components | Custom components (no component library) |
-| i18n | next-intl (planned) |
-| Database | MongoDB Atlas |
-| Deployment | Vercel |
-| Image | next/image |
-| Sitemap | next-sitemap (planned) |
-| GitHub | GitHub API (client-side, planned) |
-| Email | Resend / Nodemailer (optional, planned) |
+| Layer         | Technology                                          |
+| ------------- | --------------------------------------------------- |
+| Framework     | Next.js 16 (App Router, Turbopack)                  |
+| CMS           | Payload CMS 3.x (embedded)                          |
+| Language      | TypeScript                                          |
+| Styling       | Tailwind CSS v4 (CSS-first config, `@theme` tokens) |
+| Fonts         | Geist Sans + Geist Mono (`geist` package)           |
+| Dark Mode     | `next-themes` (`class` strategy, default dark)      |
+| UI Components | Custom components (no component library)            |
+| i18n          | next-intl (planned)                                 |
+| Database      | MongoDB Atlas                                       |
+| Deployment    | Vercel                                              |
+| Image         | next/image                                          |
+| Sitemap       | next-sitemap (planned)                              |
+| GitHub        | GitHub API (client-side, planned)                   |
+| Email         | Resend / Nodemailer (optional, planned)             |
 
 ---
 
 ## Visual Design & Tone
 
 ### Style
+
 - Minimalis clean dengan white space yang cukup
 - Typography-focused — konten yang berbicara
 - Animasi subtle (fade-in, smooth scroll, scroll-reveal)
@@ -146,24 +150,24 @@ articles.example.com   → Articles subdomain (same app, different layout)
 
 Dark-first design dengan token CSS yang switch berdasarkan class `.dark` di `<html>`.
 
-| Token | Light | Dark | Usage |
-|-------|-------|------|-------|
-| `canvas` | `#FAFAFA` | `#09090B` | Page background |
-| `surface` | `#FFFFFF` | `#18181B` | Cards, form inputs, navbar |
-| `ink` | `#18181B` | `#FAFAFA` | Primary text |
-| `muted` | `#71717A` | `#A1A1AA` | Secondary text, labels |
-| `accent` | `#7C3AED` | `#8B5CF6` | Links, buttons, highlights, focus ring |
-| `accent-soft` | `#EDE9FE` | `#1E1B30` | CTA background, category badges |
-| `border` | `#E4E4E7` | `#27272A` | Card borders, dividers, input borders |
+| Token         | Light     | Dark      | Usage                                  |
+| ------------- | --------- | --------- | -------------------------------------- |
+| `canvas`      | `#FAFAFA` | `#09090B` | Page background                        |
+| `surface`     | `#FFFFFF` | `#18181B` | Cards, form inputs, navbar             |
+| `ink`         | `#18181B` | `#FAFAFA` | Primary text                           |
+| `muted`       | `#71717A` | `#A1A1AA` | Secondary text, labels                 |
+| `accent`      | `#7C3AED` | `#8B5CF6` | Links, buttons, highlights, focus ring |
+| `accent-soft` | `#EDE9FE` | `#1E1B30` | CTA background, category badges        |
+| `border`      | `#E4E4E7` | `#27272A` | Card borders, dividers, input borders  |
 
 Tokens didefinisikan di `src/app/(frontend)/styles.css` sebagai `@theme` variables dan auto-generate utility classes Tailwind (e.g., `bg-canvas`, `text-ink`, `border-border`).
 
 ### Typography
 
-| Role | Font | Usage |
-|------|------|-------|
+| Role           | Font           | Usage                                                                                               |
+| -------------- | -------------- | --------------------------------------------------------------------------------------------------- |
 | Display / Mono | **Geist Mono** | Hero headline, section eyebrows (`$ whoami`, `# cat about.md`), tech badges, field labels, nav logo |
-| Body | **Geist Sans** | All body text, headings (non-hero), buttons, navigation links |
+| Body           | **Geist Sans** | All body text, headings (non-hero), buttons, navigation links                                       |
 
 Type scale: hero `text-6xl` → section titles `text-3xl` → body `text-base` → labels/captions `text-xs`.
 
@@ -179,12 +183,12 @@ Fonts loaded via `geist` package dengan `variable` strategy di `layout.tsx` (`Ge
 
 ### Animations
 
-| Animation | Trigger | Implementation |
-|-----------|---------|----------------|
-| `fade-in-up` | Page load (Hero) | CSS keyframes, `0.6s ease-out both` |
+| Animation     | Trigger          | Implementation                                                                     |
+| ------------- | ---------------- | ---------------------------------------------------------------------------------- |
+| `fade-in-up`  | Page load (Hero) | CSS keyframes, `0.6s ease-out both`                                                |
 | Scroll reveal | Scroll into view | `IntersectionObserver` via `Reveal` component, `opacity` + `translateY` transition |
-| Card hover | Mouse hover | `transition-all` + `hover:-translate-y-1` + `hover:border-accent` |
-| Cursor blink | Continuous | `animate-pulse` pada hero cursor element |
+| Card hover    | Mouse hover      | `transition-all` + `hover:-translate-y-1` + `hover:border-accent`                  |
+| Cursor blink  | Continuous       | `animate-pulse` pada hero cursor element                                           |
 
 Semua animasi respect `prefers-reduced-motion: reduce` — duration di-set ke `0.01ms`, reveal langsung visible.
 
@@ -196,6 +200,7 @@ Semua animasi respect `prefers-reduced-motion: reduce` — duration di-set ke `0
 - **No flash:** `suppressHydrationWarning` di `<html>`, theme applied before paint
 
 ### Tone
+
 - Profesional tapi approachable
 - Story-driven — show the journey, bukan hanya resume
 - Developer-friendly — code snippets, tech details, terminal aesthetic
@@ -205,6 +210,7 @@ Semua animasi respect `prefers-reduced-motion: reduce` — duration di-set ke `0
 ## Data Model (Payload CMS Collections)
 
 ### `projects`
+
 - `title`, `slug`, `description`, `content` (rich text)
 - `techStack` (array)
 - `thumbnail`, `gallery` (images)
@@ -212,17 +218,21 @@ Semua animasi respect `prefers-reduced-motion: reduce` — duration di-set ke `0
 - `category`, `featured`, `publishedAt`, `status`
 
 ### `categories`
+
 - `name`, `slug`, `description`
 
 ### `profile` (singleton)
+
 - `name`, `title`, `bio`, `avatar`
 - `skills`, `techStack`
 - `socialLinks`, `email`, `availabilityStatus`
 
 ### `contactMessages`
+
 - `name`, `email`, `subject`, `message`, `readAt`
 
 ### `feeds`
+
 - `title` (text)
 - `body` (rich text dengan HTML embed support — video, musik, iframe, dll)
 - `createdAt` (timestamp, auto-generated)
@@ -232,7 +242,7 @@ Semua animasi respect `prefers-reduced-motion: reduce` — duration di-set ke `0
 ## Non-Functional Requirements
 
 - **Performance:** Lighthouse score > 90 untuk semua metrics
-- **SEO:** 
+- **SEO:**
   - Main site: `noindex, nofollow` — tidak diindeks search engine dan AI search engine
   - Articles zone: SEO optimized, proper meta tags, OG images, sitemap auto-generated
 - **Accessibility:** WCAG 2.1 AA compliance

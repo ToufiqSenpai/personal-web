@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect } from 'react'
 import { useTranslations } from 'next-intl'
+import { useEffect } from 'react'
 import { Reveal } from '@/components/ui/Reveal'
 import { clientEnv } from '../../configs/client-env'
 

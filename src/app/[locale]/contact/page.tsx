@@ -1,10 +1,10 @@
 import type { Metadata } from 'next'
-import { ContactHeader } from '@/components/contact/ContactHeader'
 import { setRequestLocale, getTranslations } from 'next-intl/server'
 import { ContactForm } from '@/components/contact/ContactForm'
+import { ContactHeader } from '@/components/contact/ContactHeader'
 import { ContactInfo } from '@/components/contact/ContactInfo'
-import { getProfile } from '@/data/queries'
 import { clientEnv } from '@/configs/client-env'
+import { getProfile } from '@/data/queries'
 
 interface ContactPageProps {
   params: Promise<{ locale: string }>

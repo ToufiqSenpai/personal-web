@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
-import { RichText } from '@payloadcms/richtext-lexical/react'
 import { useLocale } from 'next-intl'
+import { useState, useEffect } from 'react'
 import type { Feed } from '@/payload-types'
+import { RichText } from '@payloadcms/richtext-lexical/react'
 
 function EmbedBlock({ html }: { html: string }) {
   const [sanitizedHtml, setSanitizedHtml] = useState('')

@@ -27,19 +27,19 @@ A portfolio, blog, and personal branding platform built as a single Next.js appl
 
 ## Tech Stack
 
-| Layer | Technology |
-| --- | --- |
-| Framework | Next.js 16 (App Router, Turbopack) |
-| CMS | Payload CMS 3.85 (embedded, admin at `/admin`) |
-| Database | MongoDB (Atlas or local) |
-| Language | TypeScript 5.7 (strict mode) |
-| Styling | Tailwind CSS v4 + `@tailwindcss/typography` |
-| Fonts | Geist Sans + Geist Mono |
-| i18n | `next-intl` v4 |
-| Theme | `next-themes` (class-based, dark default) |
-| Media | S3-compatible storage via `@payloadcms/storage-s3` |
-| Rich Text | Lexical editor |
-| Testing | Vitest + Playwright |
+| Layer     | Technology                                         |
+| --------- | -------------------------------------------------- |
+| Framework | Next.js 16 (App Router, Turbopack)                 |
+| CMS       | Payload CMS 3.85 (embedded, admin at `/admin`)     |
+| Database  | MongoDB (Atlas or local)                           |
+| Language  | TypeScript 5.7 (strict mode)                       |
+| Styling   | Tailwind CSS v4 + `@tailwindcss/typography`        |
+| Fonts     | Geist Sans + Geist Mono                            |
+| i18n      | `next-intl` v4                                     |
+| Theme     | `next-themes` (class-based, dark default)          |
+| Media     | S3-compatible storage via `@payloadcms/storage-s3` |
+| Rich Text | Lexical editor                                     |
+| Testing   | Vitest + Playwright                                |
 
 ## Getting Started
 
@@ -52,15 +52,18 @@ A portfolio, blog, and personal branding platform built as a single Next.js appl
 ### Setup
 
 1. **Clone the repository**
+
    ```bash
    git clone <repo-url>
    cd personal-web
    ```
 
 2. **Configure environment variables**
+
    ```bash
    cp .env.example .env
    ```
+
    Fill in all required values — see the table below.
 
 3. **Install dependencies and start**
@@ -77,16 +80,16 @@ A portfolio, blog, and personal branding platform built as a single Next.js appl
 
 All variables are validated at startup via Zod. The app will not start if any required value is missing.
 
-| Variable | Description |
-| --- | --- |
-| `DATABASE_URL` | MongoDB connection string |
-| `PAYLOAD_SECRET` | Secret key for Payload CMS |
-| `S3_BUCKET` | S3 bucket name |
-| `S3_ACCESS_KEY_ID` | S3 access key |
-| `S3_SECRET_ACCESS_KEY` | S3 secret key |
-| `S3_REGION` | S3 region (defaults to `auto`) |
-| `S3_ENDPOINT` | S3 endpoint URL |
-| `NODE_ENV` | `development`, `production`, or `test` |
+| Variable               | Description                            |
+| ---------------------- | -------------------------------------- |
+| `DATABASE_URL`         | MongoDB connection string              |
+| `PAYLOAD_SECRET`       | Secret key for Payload CMS             |
+| `S3_BUCKET`            | S3 bucket name                         |
+| `S3_ACCESS_KEY_ID`     | S3 access key                          |
+| `S3_SECRET_ACCESS_KEY` | S3 secret key                          |
+| `S3_REGION`            | S3 region (defaults to `auto`)         |
+| `S3_ENDPOINT`          | S3 endpoint URL                        |
+| `NODE_ENV`             | `development`, `production`, or `test` |
 
 ### Docker (Optional)
 
@@ -101,13 +104,13 @@ docker-compose up -d
 
 ## Development
 
-| Command | Description |
-| --- | --- |
-| `npm run dev` | Start dev server with Turbopack |
-| `npm run devsafe` | Clear `.next` cache, then start dev server |
-| `npm run lint` | Run ESLint |
-| `npm run generate:types` | Regenerate Payload CMS types |
-| `npm run generate:importmap` | Regenerate Payload import map |
+| Command                      | Description                                |
+| ---------------------------- | ------------------------------------------ |
+| `npm run dev`                | Start dev server with Turbopack            |
+| `npm run devsafe`            | Clear `.next` cache, then start dev server |
+| `npm run lint`               | Run ESLint                                 |
+| `npm run generate:types`     | Regenerate Payload CMS types               |
+| `npm run generate:importmap` | Regenerate Payload import map              |
 
 > [!IMPORTANT]
 > After modifying any Payload collection, always run `npm run generate:types` to keep `src/payload-types.ts` in sync. Never edit this file manually.

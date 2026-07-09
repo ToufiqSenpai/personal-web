@@ -1,9 +1,9 @@
-import { APIError, CollectionConfig } from 'payload'
-import { render } from '@react-email/render'
-import { ContactEmail } from '../emails/ContactEmail'
-import { env } from '../configs/env'
-import { verifyTurnstileToken } from '../lib/turnstile'
 import React from 'react'
+import { render } from '@react-email/render'
+import { APIError, CollectionConfig } from 'payload'
+import { env } from '../configs/env'
+import { ContactEmail } from '../emails/ContactEmail'
+import { verifyTurnstileToken } from '../lib/turnstile'
 
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>()
 const RATE_LIMIT_MAX = 5
@@ -28,9 +28,7 @@ export const ContactMessages: CollectionConfig = {
         if (operation !== 'create' || !data) return data
 
         const clientIp =
-          req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
-          req.headers.get('x-real-ip') ||
-          'unknown'
+          req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || req.headers.get('x-real-ip') || 'unknown'
 
         // Rate limiting
         const entry = rateLimitMap.get(clientIp)
@@ -72,7 +70,7 @@ export const ContactMessages: CollectionConfig = {
 
           if (!emailTo) {
             req.payload.logger.warn(
-              'CONTACT_EMAIL_TO environment variable is not set. Skipping contact email notification.'
+              'CONTACT_EMAIL_TO environment variable is not set. Skipping contact email notification.',
             )
             return
           }
@@ -84,7 +82,7 @@ export const ContactMessages: CollectionConfig = {
                 email: doc.email,
                 subject: doc.subject,
                 message: doc.message,
-              })
+              }),
             )
 
             await req.payload.sendEmail({

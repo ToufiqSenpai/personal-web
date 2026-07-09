@@ -1,7 +1,7 @@
-import { z } from 'zod'
 import { COMMON_IMAGE_MIMETYPES } from '@/constants/mimetype'
-import type { GlobalConfig, CollectionConfig } from 'payload'
 import { revalidateProfileCache } from '@/hooks/revalidateCache'
+import type { GlobalConfig, CollectionConfig } from 'payload'
+import { z } from 'zod'
 
 export const Profile: GlobalConfig = {
   slug: 'profile',

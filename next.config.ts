@@ -1,33 +1,27 @@
-import { withPayload } from '@payloadcms/next/withPayload'
-import createNextIntlPlugin from 'next-intl/plugin'
 import type { NextConfig } from 'next'
+import createNextIntlPlugin from 'next-intl/plugin'
+import type { RemotePattern } from 'next/dist/shared/lib/image-config'
+import { withPayload } from '@payloadcms/next/withPayload'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import type { RemotePattern } from 'next/dist/shared/lib/image-config'
 
 const __filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(__filename)
 
-const remotePatterns: RemotePattern[] = [
-  {
-    protocol: 'https',
-    hostname: 'cdn.mhmtaufiq.foo',
-    pathname: '/**',
-  },
-]
+const remotePatterns: RemotePattern[] = []
 
-if (process.env.S3_CDN_URL) {
-  try {
-    const url = new URL(process.env.S3_CDN_URL)
-    remotePatterns.push({
-      protocol: url.protocol.replace(':', '') as 'https' | 'http' | undefined,
-      hostname: url.hostname,
-      port: url.port || '',
-      pathname: '/**',
-    })
-  } catch (e) {
-    console.error('Invalid S3_CDN_URL in next.config.ts:', e)
-  }
+try {
+  const url = new URL(process.env.S3_CDN_URL ?? '')
+  remotePatterns.push({
+    protocol: url.protocol.replace(':', '') as Exclude<RemotePattern['protocol'], undefined>,
+    hostname: url.hostname,
+    port: url.port || '',
+    pathname: '/**',
+  })
+} catch (e) {
+  console.error('Invalid S3_CDN_URL in next.config.ts:', e)
+
+  throw e
 }
 
 const nextConfig: NextConfig = {
@@ -69,6 +63,6 @@ const nextConfig: NextConfig = {
   },
 }
 
-const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts')
+const withNextIntl = createNextIntlPlugin('./src/i18n.config.ts')
 
 export default withPayload(withNextIntl(nextConfig), { devBundleServerPackages: false })

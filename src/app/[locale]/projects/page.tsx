@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
-import { getAllProjects, getProfile } from '@/data/queries'
-import { ProjectCard } from '@/components/projects/ProjectCard'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { ProjectCard } from '@/components/projects/ProjectCard'
 import { clientEnv } from '@/configs/client-env'
+import { getAllProjects, getProfile } from '@/data/queries'
 
 interface ProjectsPageProps {
   params: Promise<{ locale: string }>

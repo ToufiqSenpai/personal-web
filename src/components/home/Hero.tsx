@@ -1,8 +1,8 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useEffect, useState, useMemo } from 'react'
-import { useTranslations } from 'next-intl'
 import type { Profile } from '@/payload-types'
 
 export interface HeroProps {
@@ -114,9 +114,7 @@ export function Hero({ profile }: HeroProps) {
             <span className="inline-block w-[2px] h-[15px] bg-accent ml-1 animate-pulse"></span>
           </p>
 
-          <p className="mt-6 text-sm sm:text-base text-muted leading-relaxed max-w-lg">
-            {profile.intro}
-          </p>
+          <p className="mt-6 text-sm sm:text-base text-muted leading-relaxed max-w-lg">{profile.intro}</p>
 
           <div className="mt-8 flex flex-wrap items-center gap-4">
             <Link

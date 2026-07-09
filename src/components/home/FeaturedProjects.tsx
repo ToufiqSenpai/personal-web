@@ -1,7 +1,7 @@
-import { Reveal } from '@/components/ui/Reveal'
-import { ProjectCard } from '@/components/projects/ProjectCard'
-import type { Project } from '@/payload-types'
 import { useTranslations } from 'next-intl'
+import { ProjectCard } from '@/components/projects/ProjectCard'
+import { Reveal } from '@/components/ui/Reveal'
+import type { Project } from '@/payload-types'
 
 export interface FeaturedProjectsProps {
   projects: Project[]

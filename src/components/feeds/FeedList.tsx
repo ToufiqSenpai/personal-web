@@ -1,8 +1,8 @@
 'use client'
-import { useState, useEffect, useRef, useCallback } from 'react'
 import { useTranslations } from 'next-intl'
-import { FeedCard } from './FeedCard'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import type { Feed } from '../../payload-types'
+import { FeedCard } from './FeedCard'
 
 type Props = {
   initialFeeds: Feed[]

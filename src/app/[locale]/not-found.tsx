@@ -1,7 +1,7 @@
 'use client'
 
-import Link from 'next/link'
 import { useTranslations } from 'next-intl'
+import Link from 'next/link'
 import { Reveal } from '@/components/ui/Reveal'
 
 export default function NotFound() {
@@ -21,15 +21,11 @@ export default function NotFound() {
         </Reveal>
 
         <Reveal delay={100}>
-          <h1 className="mb-4 font-mono text-sm uppercase tracking-widest text-red-500 font-bold">
-            {t('title')}
-          </h1>
+          <h1 className="mb-4 font-mono text-sm uppercase tracking-widest text-red-500 font-bold">{t('title')}</h1>
         </Reveal>
 
         <Reveal delay={200}>
-          <p className="mb-8 text-sm sm:text-base text-muted leading-relaxed">
-            {t('subtitle')}
-          </p>
+          <p className="mb-8 text-sm sm:text-base text-muted leading-relaxed">{t('subtitle')}</p>
         </Reveal>
 
         <Reveal delay={300}>

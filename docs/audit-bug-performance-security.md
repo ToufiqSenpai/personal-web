@@ -6,6 +6,7 @@ Scope: Read-only inspection of the Next.js + Payload CMS codebase
 ## Summary
 
 This document captures concrete findings found during a code inspection of the project. The focus is on:
+
 - potential bugs
 - performance issues
 - security risks
@@ -15,11 +16,13 @@ This is not a full runtime audit. No build, lint, test, or live exploit validati
 ## Priority Summary
 
 ### High
+
 1. Stored XSS risk in feed rendering
 2. Public GitHub repository endpoint exposes private repository metadata
 3. Contact form is open to abuse and email spam
 
 ### Medium
+
 4. Homepage likely breaks because `@/data/mock` is missing
 5. Articles are linked in the UI but not fully wired in the app/CMS
 6. Error boundary exposes raw runtime messages to users
@@ -29,6 +32,7 @@ This is not a full runtime audit. No build, lint, test, or live exploit validati
 10. Feed infinite scroll can overfetch under repeated intersections
 
 ### Low
+
 11. Locale switching is brittle because it relies on client cookie mutation and full reload
 
 ---
@@ -36,6 +40,7 @@ This is not a full runtime audit. No build, lint, test, or live exploit validati
 ## Findings
 
 ### 1. Stored XSS risk in feed rendering
+
 - Severity: High
 - Category: Security
 - Evidence:
@@ -55,6 +60,7 @@ This is not a full runtime audit. No build, lint, test, or live exploit validati
   - Avoid falling back to raw `dangerouslySetInnerHTML` for `feed.body` unless the source is guaranteed safe.
 
 ### 2. Public GitHub repository endpoint exposes private repository metadata
+
 - Severity: High
 - Category: Security
 - Evidence:
@@ -72,6 +78,7 @@ This is not a full runtime audit. No build, lint, test, or live exploit validati
   - Reduce returned fields to the minimum required.
 
 ### 3. Contact form is open to abuse and email spam
+
 - Severity: High
 - Category: Security / Reliability
 - Evidence:
@@ -93,6 +100,7 @@ This is not a full runtime audit. No build, lint, test, or live exploit validati
   - Add monitoring for spikes in contact submissions.
 
 ### 4. Homepage likely breaks because `@/data/mock` is missing
+
 - Severity: Medium
 - Category: Bug
 - Evidence:
@@ -108,6 +116,7 @@ This is not a full runtime audit. No build, lint, test, or live exploit validati
   - If it does not, either create it intentionally or replace the component with a real data source.
 
 ### 5. Articles are linked in the UI but not fully wired in the app/CMS (Still in development)
+
 - Severity: Medium
 - Category: Bug / Product consistency
 - Evidence:
@@ -124,6 +133,7 @@ This is not a full runtime audit. No build, lint, test, or live exploit validati
   - Either complete the article feature end to end or remove/hide article links until it is ready.
 
 ### 6. Error boundary exposes raw runtime messages to users
+
 - Severity: Medium
 - Category: Security / UX
 - Evidence:
@@ -140,6 +150,7 @@ This is not a full runtime audit. No build, lint, test, or live exploit validati
   - Keep detailed diagnostics in server logs or development-only views.
 
 ### 7. Cache invalidation does not handle deletes
+
 - Severity: Medium
 - Category: Bug / Performance correctness
 - Evidence:
@@ -156,6 +167,7 @@ This is not a full runtime audit. No build, lint, test, or live exploit validati
   - Add delete-time invalidation hooks for all tagged cached entities.
 
 ### 8. `npm test` is inconsistent with the documented package manager
+
 - Severity: Medium
 - Category: Bug / DX
 - Evidence:
@@ -169,6 +181,7 @@ This is not a full runtime audit. No build, lint, test, or live exploit validati
   - If pnpm is the real requirement, update the documentation accordingly.
 
 ### 9. Project listing query will degrade as content grows
+
 - Severity: Medium
 - Category: Performance
 - Evidence:
@@ -185,6 +198,7 @@ This is not a full runtime audit. No build, lint, test, or live exploit validati
   - Introduce pagination or smaller data slices if the collection grows.
 
 ### 10. Feed infinite scroll can overfetch under repeated intersections
+
 - Severity: Medium
 - Category: Performance / Reliability
 - Evidence:
@@ -200,6 +214,7 @@ This is not a full runtime audit. No build, lint, test, or live exploit validati
   - Consider disconnecting the observer while a request is active.
 
 ### 11. Locale switching is brittle because it relies on client cookie mutation and full reload
+
 - Severity: Low
 - Category: Bug / UX reliability
 - Evidence:
@@ -218,16 +233,19 @@ This is not a full runtime audit. No build, lint, test, or live exploit validati
 ## Recommended Remediation Order
 
 ### Phase 1: Security-critical
+
 1. Lock down `/api/projects/github-repos`
 2. Remove or sanitize raw HTML feed rendering
 3. Add anti-abuse protections to contact submissions
 
 ### Phase 2: User-facing bugs
+
 4. Verify or fix `@/data/mock`
 5. Align articles UI with actual routes and CMS config
 6. Stop exposing raw runtime messages in the error page
 
 ### Phase 3: Reliability and performance
+
 7. Add cache invalidation for deletes
 8. Fix package manager/test script inconsistency
 9. Optimize project listing data fetching

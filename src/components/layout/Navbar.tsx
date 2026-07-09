@@ -1,10 +1,10 @@
 'use client'
+import { useLocale, useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useState, useEffect, useTransition } from 'react'
-import { useLocale, useTranslations } from 'next-intl'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
-import { LANGUAGES } from '@/i18n/language'
+import { LANGUAGES, LOCALE_COOKIE_KEY } from '@/constants/language'
 
 export interface NavbarProps {
   name: string
@@ -31,7 +31,7 @@ export function Navbar({ name }: NavbarProps) {
 
   function handleLocaleChange(code: string) {
     startTransition(() => {
-      document.cookie = `NEXT_LOCALE=${code};path=/;max-age=315360000;samesite=lax`
+      document.cookie = `${LOCALE_COOKIE_KEY}=${code};path=/;max-age=315360000;samesite=lax`
       router.refresh()
     })
   }

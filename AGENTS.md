@@ -12,24 +12,24 @@ Personal portfolio/website built with **Next.js 16** (App Router) and **Payload 
 
 ### Key Technologies
 
-| Layer         | Technology                                           |
-| ------------- | ---------------------------------------------------- |
-| Framework     | Next.js 16 (App Router, Turbopack)                   |
-| CMS           | Payload CMS 3.85 (admin at `/admin`)                 |
-| Database      | MongoDB via `@payloadcms/db-mongodb` (Mongoose)      |
-| Language      | TypeScript 5.7 (strict mode)                         |
-| Styling       | Tailwind CSS v4 + `@tailwindcss/typography`          |
-| Fonts         | Geist Sans / Geist Mono (`geist` package)            |
-| i18n          | `next-intl` v4 — locales: `en`, `id`, `ja`          |
-| Theme         | `next-themes` (dark mode default, class-based)       |
-| Media Storage | S3-compatible via `@payloadcms/storage-s3`           |
-| Rich Text     | Lexical editor (`@payloadcms/richtext-lexical`)      |
-| Image Processing | `sharp`                                           |
-| Testing       | Vitest (integration) + Playwright (e2e)              |
-| Linting       | ESLint 9 (flat config, `next/core-web-vitals`)       |
-| Formatting    | Prettier (single quotes, no semicolons, 120 width)   |
-| Package Mgr   | npm                                                  |
-| Containerization | Docker + Docker Compose                           |
+| Layer            | Technology                                         |
+| ---------------- | -------------------------------------------------- |
+| Framework        | Next.js 16 (App Router, Turbopack)                 |
+| CMS              | Payload CMS 3.85 (admin at `/admin`)               |
+| Database         | MongoDB via `@payloadcms/db-mongodb` (Mongoose)    |
+| Language         | TypeScript 5.7 (strict mode)                       |
+| Styling          | Tailwind CSS v4 + `@tailwindcss/typography`        |
+| Fonts            | Geist Sans / Geist Mono (`geist` package)          |
+| i18n             | `next-intl` v4 — locales: `en`, `id`, `ja`         |
+| Theme            | `next-themes` (dark mode default, class-based)     |
+| Media Storage    | S3-compatible via `@payloadcms/storage-s3`         |
+| Rich Text        | Lexical editor (`@payloadcms/richtext-lexical`)    |
+| Image Processing | `sharp`                                            |
+| Testing          | Vitest (integration) + Playwright (e2e)            |
+| Linting          | ESLint 9 (flat config, `next/core-web-vitals`)     |
+| Formatting       | Prettier (single quotes, no semicolons, 120 width) |
+| Package Mgr      | npm                                                |
+| Containerization | Docker + Docker Compose                            |
 
 ## Architecture
 
@@ -105,6 +105,7 @@ articles.example.com     → Articles zone (same app, different layout)
 ```
 
 Articles zone (`articles.example.com`):
+
 ```
 /                          → Articles list (filter by category & tags, search)
 /[slug]                    → Article detail (rich text, code blocks, images)
@@ -123,24 +124,24 @@ Articles zone (`articles.example.com`):
 
 Dark-first design with CSS `@theme` tokens that switch via `.dark` class on `<html>`.
 
-| Token | Light | Dark | Usage |
-| --- | --- | --- | --- |
-| `canvas` | `#FAFAFA` | `#09090B` | Page background |
-| `surface` | `#FFFFFF` | `#18181B` | Cards, form inputs, navbar |
-| `ink` | `#18181B` | `#FAFAFA` | Primary text |
-| `muted` | `#71717A` | `#A1A1AA` | Secondary text, labels |
-| `accent` | `#7C3AED` | `#8B5CF6` | Links, buttons, highlights, focus ring |
-| `accent-soft` | `#EDE9FE` | `#1E1B30` | CTA background, category badges |
-| `border` | `#E4E4E7` | `#27272A` | Card borders, dividers, input borders |
+| Token         | Light     | Dark      | Usage                                  |
+| ------------- | --------- | --------- | -------------------------------------- |
+| `canvas`      | `#FAFAFA` | `#09090B` | Page background                        |
+| `surface`     | `#FFFFFF` | `#18181B` | Cards, form inputs, navbar             |
+| `ink`         | `#18181B` | `#FAFAFA` | Primary text                           |
+| `muted`       | `#71717A` | `#A1A1AA` | Secondary text, labels                 |
+| `accent`      | `#7C3AED` | `#8B5CF6` | Links, buttons, highlights, focus ring |
+| `accent-soft` | `#EDE9FE` | `#1E1B30` | CTA background, category badges        |
+| `border`      | `#E4E4E7` | `#27272A` | Card borders, dividers, input borders  |
 
 Tokens are defined in `src/app/[locale]/styles.css` as `@theme` variables generating Tailwind utilities (e.g., `bg-canvas`, `text-ink`, `border-border`).
 
 ### Typography
 
-| Role | Font | Usage |
-| --- | --- | --- |
+| Role           | Font           | Usage                                                                                               |
+| -------------- | -------------- | --------------------------------------------------------------------------------------------------- |
 | Display / Mono | **Geist Mono** | Hero headline, section eyebrows (`$ whoami`, `# cat about.md`), tech badges, field labels, nav logo |
-| Body | **Geist Sans** | All body text, headings (non-hero), buttons, navigation links |
+| Body           | **Geist Sans** | All body text, headings (non-hero), buttons, navigation links                                       |
 
 Type scale: hero `text-6xl` → section titles `text-3xl` → body `text-base` → labels/captions `text-xs`.
 
@@ -156,12 +157,12 @@ Fonts loaded via `geist` package with `variable` strategy in `layout.tsx`.
 
 ### Animations
 
-| Animation | Trigger | Implementation |
-| --- | --- | --- |
-| `fade-in-up` | Page load (Hero) | CSS keyframes, `0.6s ease-out both` |
-| Scroll reveal | Scroll into view | `IntersectionObserver` via `Reveal` component |
-| Card hover | Mouse hover | `transition-all` + `hover:-translate-y-1` + `hover:border-accent` |
-| Cursor blink | Continuous | `animate-pulse` on hero cursor element |
+| Animation     | Trigger          | Implementation                                                    |
+| ------------- | ---------------- | ----------------------------------------------------------------- |
+| `fade-in-up`  | Page load (Hero) | CSS keyframes, `0.6s ease-out both`                               |
+| Scroll reveal | Scroll into view | `IntersectionObserver` via `Reveal` component                     |
+| Card hover    | Mouse hover      | `transition-all` + `hover:-translate-y-1` + `hover:border-accent` |
+| Cursor blink  | Continuous       | `animate-pulse` on hero cursor element                            |
 
 All animations respect `prefers-reduced-motion: reduce`.
 
@@ -181,20 +182,25 @@ All animations respect `prefers-reduced-motion: reduce`.
 ### Planned Collections
 
 #### `projects`
+
 - `title`, `slug`, `description`, `content` (rich text)
 - `techStack` (array), `thumbnail`, `gallery` (images)
 - `demoUrl`, `repoUrl`, `category`, `featured`, `publishedAt`, `status`
 
 #### `categories`
+
 - `name`, `slug`, `description`
 
 #### `contactMessages`
+
 - `name`, `email`, `subject`, `message`, `readAt`
 
 #### `feeds` (existing, evolving)
+
 - `title` (text), `body` (rich text with HTML embed support), `createdAt` (auto-generated)
 
 ### Profile Global (existing)
+
 - `name`, `title`, `bio`, `avatar`, `skills`, `techStack`, `socialLinks`, `email`, `availabilityStatus`
 
 ## Setup Commands
@@ -216,16 +222,16 @@ cp .env.example .env
 
 **Required variables** (validated by Zod at runtime in `src/configs/env.ts`):
 
-| Variable              | Description                          |
-| --------------------- | ------------------------------------ |
-| `DATABASE_URL`        | MongoDB connection string            |
-| `PAYLOAD_SECRET`      | Secret key for Payload CMS           |
-| `S3_BUCKET`           | S3 bucket name                       |
-| `S3_ACCESS_KEY_ID`    | S3 access key                        |
-| `S3_SECRET_ACCESS_KEY`| S3 secret key                        |
-| `S3_REGION`           | S3 region (defaults to `auto`)       |
-| `S3_ENDPOINT`         | S3 endpoint URL                      |
-| `NODE_ENV`            | `development`, `production`, or `test` |
+| Variable               | Description                            |
+| ---------------------- | -------------------------------------- |
+| `DATABASE_URL`         | MongoDB connection string              |
+| `PAYLOAD_SECRET`       | Secret key for Payload CMS             |
+| `S3_BUCKET`            | S3 bucket name                         |
+| `S3_ACCESS_KEY_ID`     | S3 access key                          |
+| `S3_SECRET_ACCESS_KEY` | S3 secret key                          |
+| `S3_REGION`            | S3 region (defaults to `auto`)         |
+| `S3_ENDPOINT`          | S3 endpoint URL                        |
+| `NODE_ENV`             | `development`, `production`, or `test` |
 
 ### Install & Run
 
@@ -466,14 +472,14 @@ Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
 
 ### Common Issues
 
-| Problem | Solution |
-| ------- | -------- |
-| `payload-types.ts` is stale | Run `npm run generate:types` |
-| `.next` cache issues | Run `npm run devsafe` to clear cache and restart |
-| MongoDB connection failed | Check `DATABASE_URL` in `.env`; ensure MongoDB is running |
-| S3 upload errors | Verify all `S3_*` env vars; check bucket permissions |
-| Import map errors | Run `npm run generate:importmap` |
-| Deprecation warnings | Already suppressed via `--no-deprecation` flag |
+| Problem                     | Solution                                                  |
+| --------------------------- | --------------------------------------------------------- |
+| `payload-types.ts` is stale | Run `npm run generate:types`                              |
+| `.next` cache issues        | Run `npm run devsafe` to clear cache and restart          |
+| MongoDB connection failed   | Check `DATABASE_URL` in `.env`; ensure MongoDB is running |
+| S3 upload errors            | Verify all `S3_*` env vars; check bucket permissions      |
+| Import map errors           | Run `npm run generate:importmap`                          |
+| Deprecation warnings        | Already suppressed via `--no-deprecation` flag            |
 
 ### Key Generated Files (Do Not Edit)
 

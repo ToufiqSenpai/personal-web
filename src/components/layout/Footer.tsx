@@ -1,8 +1,8 @@
 'use client'
 
-import Link from 'next/link'
-import Image from 'next/image'
 import { useTranslations } from 'next-intl'
+import Image from 'next/image'
+import Link from 'next/link'
 import type { Profile, ProfileIcon } from '@/payload-types'
 
 export interface FooterProps {
@@ -18,7 +18,6 @@ export function Footer({ profile }: FooterProps) {
     <footer className="border-t border-border bg-canvas/30">
       <div className="mx-auto max-w-6xl px-6 py-12 md:py-16">
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-3">
-          
           {/* Col 1: Bio & System Status Monitor */}
           <div className="flex flex-col gap-4">
             <Link
@@ -28,16 +27,14 @@ export function Footer({ profile }: FooterProps) {
               {profile.name}
               <span className="text-accent animate-pulse">_</span>
             </Link>
-            <p className="text-xs text-muted leading-relaxed max-w-[240px]">
-              {profile.intro}
-            </p>
-
+            <p className="text-xs text-muted leading-relaxed max-w-[240px]">{profile.intro}</p>
           </div>
 
           {/* Col 2: Quick Links */}
           <div>
             <span className="block font-mono text-xs font-semibold tracking-wider text-accent uppercase mb-4">
-              {"// "}{tFooter('nav')}
+              {'// '}
+              {tFooter('nav')}
             </span>
             <ul className="space-y-2.5">
               <li>
@@ -94,7 +91,8 @@ export function Footer({ profile }: FooterProps) {
           {/* Col 3: Connect (Socials) */}
           <div>
             <span className="block font-mono text-xs font-semibold tracking-wider text-accent uppercase mb-4">
-              {"// "}{tFooter('connect')}
+              {'// '}
+              {tFooter('connect')}
             </span>
             <ul className="space-y-3">
               {profile.socials && profile.socials.length > 0 ? (
@@ -127,12 +125,13 @@ export function Footer({ profile }: FooterProps) {
               )}
             </ul>
           </div>
-
         </div>
 
         {/* Bottom copyright info */}
         <div className="mt-12 pt-6 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-mono text-muted">
-          <p>© {year} {profile.name}. All rights reserved.</p>
+          <p>
+            © {year} {profile.name}. All rights reserved.
+          </p>
           <p className="flex items-center gap-1.5">
             <span>{tFooter('builtWith')}</span>
             <a

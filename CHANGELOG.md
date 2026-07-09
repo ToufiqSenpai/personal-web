@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.2.2] - 2026-07-08
 
 ### Added
+
 - **Cloudflare Turnstile CAPTCHA**: Integrated Turnstile protection on client and server sides to secure the contact form against automated spam and DDoS abuse.
 - **Client IP Rate Limiting**: Implemented a server-side in-memory rate limiter on contact form submissions, limiting submissions to a maximum of 5 requests per IP per 15-minute window.
 - **Theme & Locale CAPTCHA Integration**: Built a reusable client-side `<Turnstile>` component that automatically adapts its theme and language depending on the website's active settings.
@@ -15,10 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.2.1] - 2026-07-07
 
 ### Added
+
 - **HTML Sanitization to Feeds**: Integrated `isomorphic-dompurify` to prevent Stored XSS injection vectors while preserving legitimate `iframe` embedding layout properties.
 - **Dynamic Browser Language Detection**: Leveraged `headers()` in `src/i18n/request.ts` to parse `Accept-Language` headers and dynamically set the default locale on the first visit.
 
 ### Changed
+
 - **Secure GitHub Repositories Endpoint**: Enforced user authentication checks (`if (!req.user)`) inside `/api/projects/repositories` and changed the path from `/github-repos` to `/repositories`.
 - **Sanitized UI Error Boundary**: Configured `src/app/[locale]/error.tsx` to conditionally display detailed stack traces only in development, showing a generic error code and safe message in production.
 - **Standardized Package Manager**: Cleaned up `package.json` pnpm engine properties and refactored dev, testing, and compose build pipelines to use `npm`.

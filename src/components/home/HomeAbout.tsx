@@ -1,8 +1,8 @@
 'use client'
 
-import Link from 'next/link'
-import Image from 'next/image'
 import { useTranslations } from 'next-intl'
+import Image from 'next/image'
+import Link from 'next/link'
 import { Reveal } from '@/components/ui/Reveal'
 import type { Profile, ProfileAvatar } from '@/payload-types'
 
@@ -21,11 +21,10 @@ export function HomeAbout({ profile }: HomeAboutProps) {
     <section className="px-6 py-20 border-b border-border/50 bg-canvas/10">
       <div className="mx-auto max-w-6xl">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-12 items-center">
-          
           {/* Left Column: Avatar image */}
           <div className="md:col-span-5 flex justify-center">
             <Reveal>
-              <div 
+              <div
                 tabIndex={0}
                 className="group relative h-72 w-72 sm:h-80 sm:w-80 md:h-96 md:w-96 overflow-hidden rounded-2xl border border-border shadow-lg bg-surface/50 focus:outline-none focus:ring-2 focus:ring-accent/25"
               >
@@ -55,23 +54,19 @@ export function HomeAbout({ profile }: HomeAboutProps) {
           {/* Right Column: Bio text & CTA */}
           <div className="md:col-span-7 flex flex-col items-start text-left">
             <Reveal delay={100}>
-              <p className="mb-3 font-mono text-xs uppercase tracking-wider text-accent">
-                {"// WHOAMI"}
-              </p>
+              <p className="mb-3 font-mono text-xs uppercase tracking-wider text-accent">{'// WHOAMI'}</p>
             </Reveal>
-            
+
             <Reveal delay={200}>
               <h2 className="mb-6 text-2xl font-bold text-ink sm:text-3xl tracking-tight leading-tight">
                 {t('title')}
               </h2>
             </Reveal>
-            
+
             <Reveal delay={300}>
-              <p className="mb-8 text-sm sm:text-base text-muted leading-relaxed max-w-xl">
-                {profile.bio}
-              </p>
+              <p className="mb-8 text-sm sm:text-base text-muted leading-relaxed max-w-xl">{profile.bio}</p>
             </Reveal>
-            
+
             <Reveal delay={400}>
               <Link
                 href="/about"
@@ -96,7 +91,6 @@ export function HomeAbout({ profile }: HomeAboutProps) {
               </Link>
             </Reveal>
           </div>
-
         </div>
       </div>
     </section>

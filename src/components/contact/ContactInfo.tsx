@@ -1,8 +1,8 @@
-import Link from 'next/link'
+import { getTranslations } from 'next-intl/server'
 import Image from 'next/image'
+import Link from 'next/link'
 import { getProfile } from '@/data/queries'
 import { ProfileIcon } from '@/payload-types'
-import { getTranslations } from 'next-intl/server'
 
 export async function ContactInfo({ locale }: { locale: string }) {
   const t = await getTranslations('pages.Contact')

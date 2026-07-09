@@ -22,7 +22,7 @@ export function ProjectFilter({ tags, allLabel = 'All' }: ProjectFilterProps) {
     } else {
       params.set('tech', tag)
     }
-    
+
     startTransition(() => {
       router.push(`${pathname}?${params.toString()}`, { scroll: false })
     })
@@ -33,14 +33,14 @@ export function ProjectFilter({ tags, allLabel = 'All' }: ProjectFilterProps) {
       <button
         onClick={() => handleTagClick('')}
         className={`text-sm font-medium transition-all hover:text-ink relative ${
-          !currentTag 
-            ? 'text-ink after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-[2px] after:bg-ink' 
+          !currentTag
+            ? 'text-ink after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-[2px] after:bg-ink'
             : 'text-muted'
         }`}
       >
         {allLabel}
       </button>
-      
+
       {tags.map((tag) => (
         <button
           key={tag}

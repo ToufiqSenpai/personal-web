@@ -1,6 +1,6 @@
+import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { Reveal } from '@/components/ui/Reveal'
-import { useTranslations } from 'next-intl'
 import type { Article, ArticleCategory } from '@/payload-types'
 
 function ArticleVisual({ article, index }: { article: Article; index: number }) {

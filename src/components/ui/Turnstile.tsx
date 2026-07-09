@@ -1,8 +1,8 @@
 'use client'
-import { useCallback, useEffect, useRef } from 'react'
-import Script from 'next/script'
-import { useTheme } from 'next-themes'
 import { useLocale } from 'next-intl'
+import { useTheme } from 'next-themes'
+import Script from 'next/script'
+import { useCallback, useEffect, useRef } from 'react'
 import { clientEnv } from '@/configs/client-env'
 
 interface TurnstileProps {

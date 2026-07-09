@@ -1,15 +1,5 @@
-import {
-  Html,
-  Head,
-  Preview,
-  Body,
-  Container,
-  Section,
-  Heading,
-  Text,
-  Hr,
-} from '@react-email/components'
 import * as React from 'react'
+import { Html, Head, Preview, Body, Container, Section, Heading, Text, Hr } from '@react-email/components'
 
 interface ContactEmailProps {
   name: string
@@ -26,9 +16,7 @@ export const ContactEmail = ({ name, email, subject, message }: ContactEmailProp
       <Body style={main}>
         <Container style={container}>
           <Heading style={h1}>New Contact Form Submission</Heading>
-          <Text style={text}>
-            You have received a new message from the contact form on your personal website.
-          </Text>
+          <Text style={text}>You have received a new message from the contact form on your personal website.</Text>
           <Section style={section}>
             <Text style={label}>From</Text>
             <Text style={value}>

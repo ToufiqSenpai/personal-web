@@ -1,7 +1,7 @@
-import { CollectionConfig } from 'payload'
-import { revalidateProjectsCache, revalidateProjectsDeleteCache } from '@/hooks/revalidateCache'
 import { COMMON_IMAGE_MIMETYPES } from '@/constants/mimetype'
+import { revalidateProjectsCache, revalidateProjectsDeleteCache } from '@/hooks/revalidateCache'
 import { Octokit } from '@octokit/rest'
+import { CollectionConfig } from 'payload'
 import { env } from '../configs/env'
 
 const github = new Octokit({

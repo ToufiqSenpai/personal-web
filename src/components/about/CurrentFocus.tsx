@@ -16,9 +16,7 @@ export function CurrentFocus({ items = [] }: CurrentFocusProps) {
     <section className="px-6 py-12">
       <div className="mx-auto max-w-4xl">
         <Reveal>
-          <p className="mb-2 font-mono text-xs uppercase tracking-wider text-accent">
-            What I&apos;m Into Now
-          </p>
+          <p className="mb-2 font-mono text-xs uppercase tracking-wider text-accent">What I&apos;m Into Now</p>
           <h2 className="mb-8 text-2xl font-bold text-ink">Current focus</h2>
         </Reveal>
 

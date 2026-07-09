@@ -1,7 +1,7 @@
-import { CollectionConfig, Block } from 'payload'
-import { lexicalEditor, BlocksFeature, UploadFeature } from '@payloadcms/richtext-lexical'
 import { COMMON_IMAGE_MIMETYPES } from '@/constants/mimetype'
 import { revalidateFeedsCache, revalidateFeedsDeleteCache } from '@/hooks/revalidateCache'
+import { lexicalEditor, BlocksFeature, UploadFeature } from '@payloadcms/richtext-lexical'
+import { CollectionConfig, Block } from 'payload'
 
 export const FeedsMedia: CollectionConfig = {
   slug: 'feeds-media',
@@ -103,7 +103,7 @@ export const Feeds: CollectionConfig = {
                   {
                     name: 'caption',
                     type: 'text',
-                  }
+                  },
                 ],
               },
             },

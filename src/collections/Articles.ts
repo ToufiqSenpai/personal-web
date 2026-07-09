@@ -1,7 +1,8 @@
-import slugify from '@sindresorhus/slugify'
 import { lexicalEditor, UploadFeature } from '@payloadcms/richtext-lexical'
 import { convertLexicalToPlaintext } from '@payloadcms/richtext-lexical/plaintext'
+import slugify from '@sindresorhus/slugify'
 import { CollectionConfig } from 'payload'
+import { COMMON_IMAGE_MIMETYPES } from '../constants/mimetype'
 
 export const Articles: CollectionConfig = {
   slug: 'articles',
@@ -130,107 +131,105 @@ export const Articles: CollectionConfig = {
 }
 
 export const ArticleCategories: CollectionConfig = {
-  slug: "article-categories",
+  slug: 'article-categories',
   admin: {
-    useAsTitle: "title",
-    group: "Article",
+    useAsTitle: 'title',
+    group: 'Article',
   },
   fields: [
     {
-      name: "title",
-      type: "text",
+      name: 'title',
+      type: 'text',
       required: true,
     },
     {
-      name: "slug",
-      type: "text",
+      name: 'slug',
+      type: 'text',
       unique: true,
       index: true,
       required: true,
       hooks: {
         beforeChange: [
           ({ siblingData, value, operation }) => {
-            if (operation === "create") {
-              return value || slugify(siblingData.title);
+            if (operation === 'create') {
+              return value || slugify(siblingData.title)
             }
-            return value;
+            return value
           },
         ],
       },
     },
     {
-      name: "description",
-      type: "textarea",
+      name: 'description',
+      type: 'textarea',
     },
   ],
   timestamps: true,
-};
-
-import { COMMON_IMAGE_MIMETYPES } from "../constants/mimetype";
+}
 
 export const ArticleMedia: CollectionConfig = {
-  slug: "article-media",
+  slug: 'article-media',
   access: {
     read: () => true,
   },
   admin: {
-    useAsTitle: "alt",
-    group: "Article",
+    useAsTitle: 'alt',
+    group: 'Article',
   },
   fields: [
     {
-      name: "alt",
-      type: "text",
+      name: 'alt',
+      type: 'text',
       required: true,
     },
     {
-      name: "caption",
-      type: "text",
+      name: 'caption',
+      type: 'text',
     },
   ],
   upload: {
-    staticDir: "article-media",
+    staticDir: 'article-media',
     mimeTypes: COMMON_IMAGE_MIMETYPES,
-    adminThumbnail: "thumbnail",
+    adminThumbnail: 'thumbnail',
     formatOptions: {
-      format: "avif",
+      format: 'avif',
       options: {
         quality: 75,
       },
     },
     imageSizes: [
       {
-        name: "thumbnail",
+        name: 'thumbnail',
         width: 400,
         height: 210,
         formatOptions: {
-          format: "avif",
+          format: 'avif',
         },
       },
       {
-        name: "card",
+        name: 'card',
         width: 800,
         height: 420,
         formatOptions: {
-          format: "avif",
+          format: 'avif',
         },
       },
       {
-        name: "og",
+        name: 'og',
         width: 1200,
         height: 630,
         formatOptions: {
-          format: "avif",
+          format: 'avif',
         },
       },
       {
-        name: "hero",
+        name: 'hero',
         width: 1600,
         height: 840,
         formatOptions: {
-          format: "avif",
+          format: 'avif',
         },
       },
     ],
   },
-};
+}

@@ -7,10 +7,7 @@ interface TurnstileVerifyResponse {
   hostname?: string
 }
 
-export async function verifyTurnstileToken(
-  token: string,
-  ip?: string,
-): Promise<{ success: boolean; error?: string }> {
+export async function verifyTurnstileToken(token: string, ip?: string): Promise<{ success: boolean; error?: string }> {
   try {
     const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
       method: 'POST',
