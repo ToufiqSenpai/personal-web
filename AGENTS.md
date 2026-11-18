@@ -14,12 +14,4 @@ Uploads all live in one `media` collection (`folders` + `tags` hierarchies, AVIF
 
 ### Issue tracker
 
-Issues and specs live in the Personal Web Linear project (`P-MUH-2`, team `MUH`), tracked with the Linear MCP tools. See `docs/agents/issue-tracker.md`.
-
-### Triage labels
-
-Five canonical triage roles map to Linear labels in Title Case (`Needs Triage`, `Needs Info`, `Ready for Agent`, `Ready for Human`, `Wont Fix`). See `docs/agents/triage-labels.md`.
-
-### Domain docs
-
-Single-context: one `GLOSSARY.md` and `docs/adr/` at the repo root. See `docs/agents/domain.md`.
+Issues and specs for this repo live in the **Personal Web** Linear project (`P-MUH-2`, team `MUH`) at https://linear.app/muhammad-taufiqurrahman/project/personal-web-6bce0292147b/overview. Use the Linear MCP tools for all operations — never `gh issue`. Create with `save_issue` (`team: "MUH"`, project `P-MUH-2`), read with `get_issue` + `list_comments`, list with `list_issues` scoped to the project, comment with `create_comment`, and update status via `save_issue` using the team's statuses (`Backlog`, `Todo`, `In Progress`, `In Review`, `Done`, `Canceled`, `Duplicate`). Use existing labels `Feature`/`Bug`/`Improvement` plus the triage labels (`Needs Triage`, `Needs Info`, `Ready for Agent`, `Ready for Human`, `Wont Fix`). Use Linear sub-issues for parent/child and `Blocked by` relations for blockers. When a skill says "publish to the issue tracker", create a Linear issue in `P-MUH-2`; when it says "fetch the relevant ticket", read it with `get_issue`.
