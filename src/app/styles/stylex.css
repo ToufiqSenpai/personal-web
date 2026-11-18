@@ -1,0 +1,4 @@
+/* @stylexjs/unplugin appends the compiled StyleX rules to this asset at build time
+   (see `cssInjectionTarget` in vite.config.ts). Layer order is declared here so the
+   appended `@layer priorityN` blocks keep their intended precedence. */
+@layer priority1, priority2, priority3, priority4;

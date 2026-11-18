@@ -20,7 +20,14 @@ export default defineConfig(
         // or Paraglide transform the modules. Otherwise the admin layout is dropped from
         // the server render and hydration fails on /admin.
         rsc(pluginOptions.rsc),
-        stylex.vite({ useCSSLayers: true }),
+        stylex.vite({
+          useCSSLayers: true,
+          // The plugin appends the collected rules to the first emitted CSS asset unless
+          // told which one to use — without this they landed on a Payload admin chunk and
+          // the frontend never linked them. The frontend entry's CSS chunk is emitted as
+          // `index-<hash>.css`; TanStack Start links it on every route.
+          cssInjectionTarget: (fileName) => /(^|\/)index(-[\w-]+)?\.css$/.test(fileName),
+        }),
         paraglideVitePlugin(paraglideOptions),
         tanstackStart(pluginOptions.tanstackStart),
         viteReact(pluginOptions.react),

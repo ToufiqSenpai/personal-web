@@ -29,6 +29,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         {children}
+        {/* StyleX dev HMR: TanStack Start's custom document bypasses Vite's
+            `transformIndexHtml`, so the plugin's runtime is injected here instead. */}
+        {import.meta.env.DEV && <script type="module" src="/@id/virtual:stylex:runtime" />}
         <Scripts />
       </body>
     </html>

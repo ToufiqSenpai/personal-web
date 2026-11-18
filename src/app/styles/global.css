@@ -57,7 +57,8 @@ svg,
 video {
   display: block;
   max-width: 100%;
-  height: auto;
+  /* Do not set `height: auto` here: this rule is unlayered, so it would beat
+     StyleX's layered `height: 100%` on images that must fill their container. */
 }
 
 a {

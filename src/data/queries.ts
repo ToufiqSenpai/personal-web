@@ -9,9 +9,7 @@ const getPayloadClient = async () => getPayload({ config: configPromise })
 // Public pages read through the Local API on the server, so `overrideAccess: true` is
 // explicit — Payload 4 enforces access control on Local API calls by default.
 
-// Payload documents carry `_transforms` maps that the strict output check rejects,
-// but they are plain JSON at runtime.
-const query = createServerFn({ method: 'GET', strict: { output: false } })
+const query = createServerFn({ method: 'GET' })
 
 export const getProfileFn = query.handler(async (): Promise<Profile> => {
   const payload = await getPayloadClient()
@@ -58,7 +56,7 @@ export const getLatestFeedsFn = query.handler(async (): Promise<PaginatedDocs<Fe
   })
 })
 
-export const getMoreFeedsFn = createServerFn({ method: 'GET', strict: { output: false } })
+export const getMoreFeedsFn = createServerFn({ method: 'GET' })
   .validator((page: number) => page)
   .handler(async ({ data: page }): Promise<PaginatedDocs<Feed>> => {
     const payload = await getPayloadClient()

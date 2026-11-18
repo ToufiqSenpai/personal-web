@@ -6,6 +6,7 @@ import { Hero } from '@/components/home/Hero'
 import { HomeAbout } from '@/components/home/HomeAbout'
 import { getFeaturedArticlesFn, getFeaturedProjectsFn, getProfileFn } from '@/data/queries'
 import { buildHead } from '@/lib/seo'
+import type { Profile } from '@/payload-types'
 import { m } from '@/paraglide/messages'
 
 export const Route = createFileRoute('/_frontend/')({
@@ -18,13 +19,18 @@ export const Route = createFileRoute('/_frontend/')({
 
     return { profile, projects, articles }
   },
-  head: ({ loaderData }) =>
-    buildHead({
-      title: loaderData?.profile.name ?? m.layout_navbar_home(),
-      description: loaderData?.profile.intro ?? m.pages_home_cta_description(),
+  head: ({ loaderData }) => {
+    // `profile` is nullable at runtime on a fresh database even though the generated
+    // type marks it as present, so head must not assume authored content.
+    const profile = loaderData?.profile as Partial<Profile> | null | undefined
+
+    return buildHead({
+      title: profile?.name ?? m.layout_navbar_home(),
+      description: profile?.intro ?? m.pages_home_cta_description(),
       path: '/',
-      siteName: loaderData?.profile.name,
-    }),
+      siteName: profile?.name,
+    })
+  },
   component: HomePage,
 })
 
