@@ -47,7 +47,7 @@ A portfolio, blog, and personal branding platform built as a single TanStack Sta
 ### Prerequisites
 
 - [Node.js](https://nodejs.org/) `^24.22.3` or `>=26.13.1`
-- A running PostgreSQL instance (local, Docker, or [Neon](https://neon.tech))
+- A running PostgreSQL instance (local or [Neon](https://neon.tech))
 - S3-compatible storage for media uploads
 
 ### Setup
@@ -147,6 +147,5 @@ Document ids are UUIDv7 (`idType: 'uuidv7'`): sortable by creation time and gene
 ## Deployment
 
 1. Set `output` env vars and `DATABASE_URL` for the target environment.
-2. Run `npm run migrate` against the production database (needs the repository, not the runner image — run it in CI or the Docker build stage).
+2. Run `npm run migrate` against the production database before starting the app (or in CI).
 3. Run `npm run build`, then `npm start` (served by `srvx`).
-4. `Dockerfile` and `docker-compose.yml` are provided for containerized deployments (Postgres included).
