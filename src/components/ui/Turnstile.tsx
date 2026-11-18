@@ -24,12 +24,16 @@ export function Turnstile({ onVerify, onError, onExpire }: TurnstileProps) {
   const renderWidget = useCallback(() => {
     if (!window.turnstile || !containerRef.current || widgetIdRef.current !== null) return
 
+    const scheme = document.querySelector<HTMLMetaElement>('meta[name="color-scheme"]')?.content
+    const dark =
+      scheme === 'dark' || (scheme === 'light dark' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+
     widgetIdRef.current = window.turnstile.render(containerRef.current, {
       sitekey: clientEnv.VITE_TURNSTILE_SITE_KEY,
       callback: (token) => callbacksRef.current.onVerify(token),
       'error-callback': () => callbacksRef.current.onError?.(),
       'expired-callback': () => callbacksRef.current.onExpire?.(),
-      theme: document.documentElement.classList.contains('dark') ? 'dark' : 'light',
+      theme: dark ? 'dark' : 'light',
       language: getLocale(),
     })
   }, [])

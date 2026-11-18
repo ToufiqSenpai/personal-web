@@ -10,13 +10,15 @@ export const Route = createRootRoute({
   notFoundComponent: NotFoundPage,
 })
 
-// Runs before first paint so the stored theme never flashes.
+// Only prevents a flash of the wrong scheme: apply the stored override to the
+// meta before first paint. CSS maps the meta back to `color-scheme`, so no
+// classes or inline styles are written here and the page works without JS.
 const themeScript = `
 try {
-  var stored = localStorage.getItem('theme')
-  var dark = stored ? stored === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches
-  document.documentElement.classList.toggle('dark', dark)
-  document.documentElement.style.colorScheme = dark ? 'dark' : 'light'
+  var stored = localStorage.getItem('color-scheme')
+  if (stored === 'light' || stored === 'dark') {
+    document.querySelector('meta[name="color-scheme"]').content = stored
+  }
 } catch (error) {}
 `
 
@@ -24,6 +26,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   return (
     <html lang={getLocale()} suppressHydrationWarning>
       <head>
+        <meta name="color-scheme" content="light dark" suppressHydrationWarning />
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <HeadContent />
       </head>
