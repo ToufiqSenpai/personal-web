@@ -1,29 +1,157 @@
 'use client'
 
-import { useTranslations } from 'next-intl'
+import * as stylex from '@stylexjs/stylex'
 import { useState, type FormEvent } from 'react'
 import { Turnstile } from '@/components/ui/Turnstile'
+import { m } from '@/paraglide/messages'
 
 type FormState = 'idle' | 'loading' | 'success'
-
-type Errors = {
+type Field = 'name' | 'email' | 'subject' | 'message' | 'captcha' | 'submit'
+type Errors = Partial<Record<Field, string>>
+interface PayloadError {
+  message: string
+  path?: string
   name?: string
-  email?: string
-  subject?: string
-  message?: string
-  captcha?: string
-  submit?: string
 }
 
+const styles = stylex.create({
+  form: {
+    padding: { default: '1.5rem', '@media (min-width: 640px)': '2rem' },
+    borderRadius: '0.75rem',
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: 'var(--color-border)',
+    backgroundColor: 'var(--color-surface)',
+  },
+  row: {
+    display: 'grid',
+    gap: '1.25rem',
+    '@media (min-width: 640px)': {
+      gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+    },
+  },
+  fieldGroup: {
+    marginTop: '1.25rem',
+  },
+  label: {
+    display: 'block',
+    marginBottom: '0.375rem',
+    fontFamily: 'var(--font-mono)',
+    fontSize: '0.75rem',
+    color: 'var(--color-muted)',
+  },
+  input: {
+    width: '100%',
+    paddingInline: '0.75rem',
+    paddingBlock: '0.5rem',
+    borderRadius: '0.5rem',
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: 'var(--color-border)',
+    backgroundColor: 'var(--color-canvas)',
+    color: 'var(--color-ink)',
+    fontFamily: 'inherit',
+    fontSize: '0.875rem',
+    outline: 'none',
+    transitionProperty: 'border-color',
+    transitionDuration: '150ms',
+    ':focus': {
+      borderColor: 'var(--color-accent)',
+    },
+  },
+  textarea: {
+    resize: 'none',
+  },
+  error: {
+    marginTop: '0.25rem',
+    marginBottom: 0,
+    fontSize: '0.75rem',
+    color: 'var(--color-accent)',
+  },
+  submit: {
+    width: { default: '100%', '@media (min-width: 640px)': 'auto' },
+    marginTop: '1.5rem',
+    paddingInline: '1.5rem',
+    paddingBlock: '0.625rem',
+    borderRadius: '0.5rem',
+    borderWidth: 0,
+    backgroundColor: 'var(--color-accent)',
+    color: '#ffffff',
+    fontSize: '0.875rem',
+    fontWeight: 500,
+    cursor: 'pointer',
+    ':disabled': {
+      opacity: 0.6,
+    },
+  },
+  successCard: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: '400px',
+    padding: '2rem',
+    borderRadius: '0.75rem',
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: 'var(--color-border)',
+    backgroundColor: 'var(--color-surface)',
+    textAlign: 'center',
+  },
+  successIcon: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '3rem',
+    height: '3rem',
+    marginBottom: '1rem',
+    borderRadius: '9999px',
+    backgroundColor: 'var(--color-accent-soft)',
+    color: 'var(--color-accent)',
+  },
+  successTitle: {
+    marginTop: 0,
+    marginRight: 0,
+    marginLeft: 0,
+    marginBottom: '0.5rem',
+    fontSize: '1.125rem',
+    fontWeight: 600,
+    color: 'var(--color-ink)',
+  },
+  successSubtitle: {
+    marginTop: 0,
+    marginBottom: '1.5rem',
+    fontSize: '0.875rem',
+    color: 'var(--color-muted)',
+  },
+  reset: {
+    paddingInline: '1.25rem',
+    paddingBlock: '0.5rem',
+    borderRadius: '0.5rem',
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: 'var(--color-border)',
+    backgroundColor: 'transparent',
+    color: 'var(--color-ink)',
+    fontSize: '0.875rem',
+    fontWeight: 500,
+    cursor: 'pointer',
+  },
+})
+
 export function ContactForm() {
-  const t = useTranslations('pages.Contact')
   const [formState, setFormState] = useState<FormState>('idle')
   const [errors, setErrors] = useState<Errors>({})
   const [turnstileToken, setTurnstileToken] = useState('')
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    const form = e.currentTarget
+  function resetCaptcha() {
+    window.turnstile?.reset()
+    setTurnstileToken('')
+  }
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const form = event.currentTarget
     const formData = new FormData(form)
 
     setErrors({})
@@ -32,9 +160,7 @@ export function ContactForm() {
     try {
       const response = await fetch('/api/contact-messages', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: formData.get('name'),
           email: formData.get('email'),
@@ -45,52 +171,38 @@ export function ContactForm() {
       })
 
       if (!response.ok) {
-        try {
-          const errorData = await response.json()
-          if (errorData.errors && Array.isArray(errorData.errors)) {
-            const fieldErrors: Errors = {}
-            let hasFieldErrors = false
-
-            errorData.errors.forEach((err: any) => {
-              if (err.field) {
-                fieldErrors[err.field as keyof Errors] = err.message
-                hasFieldErrors = true
-              }
-            })
-
-            if (hasFieldErrors) {
-              setErrors(fieldErrors)
-              setFormState('idle')
-              window.turnstile?.reset()
-              setTurnstileToken('')
-              return
-            }
-          }
-        } catch {
-          // Ignore and let it fall back to generic error
+        const body = (await response.json().catch(() => null)) as { errors?: PayloadError[] } | null
+        const fieldErrors: Errors = {}
+        for (const error of body?.errors ?? []) {
+          const field = (error.path ?? error.name) as Field | undefined
+          if (field) fieldErrors[field] = error.message
         }
+
+        if (Object.keys(fieldErrors).length > 0) {
+          setErrors(fieldErrors)
+          setFormState('idle')
+          resetCaptcha()
+          return
+        }
+
         throw new Error('Failed to submit form')
       }
 
       setFormState('success')
       form.reset()
-      setTurnstileToken('')
-      window.turnstile?.reset()
-    } catch (err) {
-      console.error(err)
-      setErrors({
-        submit: t('errorSubmitFailed') || 'Failed to send message. Please try again.',
-      })
+      resetCaptcha()
+    } catch (error) {
+      console.error(error)
+      setErrors({ submit: m.pages_contact_error_submit_failed() })
       setFormState('idle')
-      window.turnstile?.reset()
-      setTurnstileToken('')
+      resetCaptcha()
     }
   }
 
   if (formState === 'success') {
     return (
-      <div className="flex min-h-[400px] flex-col items-center justify-center rounded-xl border border-border bg-surface p-8 text-center">
-        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-accent-soft text-accent">
+      <div {...stylex.props(styles.successCard)}>
+        <div {...stylex.props(styles.successIcon)}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -105,95 +217,75 @@ export function ContactForm() {
             <path d="M20 6 9 17l-5-5" />
           </svg>
         </div>
-        <h3 className="mb-2 text-lg font-semibold text-ink">{t('successTitle')}</h3>
-        <p className="mb-6 text-sm text-muted">{t('successSubtitle')}</p>
-        <button
-          type="button"
-          onClick={() => setFormState('idle')}
-          className="rounded-lg border border-border px-5 py-2 text-sm font-medium text-ink transition-colors hover:border-accent hover:text-accent"
-        >
-          {t('sendAnother')}
+        <h3 {...stylex.props(styles.successTitle)}>{m.pages_contact_success_title()}</h3>
+        <p {...stylex.props(styles.successSubtitle)}>{m.pages_contact_success_subtitle()}</p>
+        <button type="button" onClick={() => setFormState('idle')} {...stylex.props(styles.reset)}>
+          {m.pages_contact_send_another()}
         </button>
       </div>
     )
   }
 
   return (
-    <form onSubmit={handleSubmit} className="rounded-xl border border-border bg-surface p-6 sm:p-8">
-      <div className="grid gap-5 sm:grid-cols-2">
+    <form onSubmit={handleSubmit} {...stylex.props(styles.form)}>
+      <div {...stylex.props(styles.row)}>
         <div>
-          <label htmlFor="name" className="mb-1.5 block font-mono text-xs text-muted">
-            {t('nameLabel')}
+          <label htmlFor="name" {...stylex.props(styles.label)}>
+            {m.pages_contact_name_label()}
           </label>
-          <input
-            id="name"
-            name="name"
-            type="text"
-            className="w-full rounded-lg border border-border bg-canvas px-3 py-2 text-sm text-ink outline-none transition-colors focus:border-accent"
-            placeholder="Jane Doe"
-          />
-          {errors.name && <p className="mt-1 text-xs text-accent">{errors.name}</p>}
+          <input id="name" name="name" type="text" placeholder="Jane Doe" {...stylex.props(styles.input)} />
+          {errors.name && <p {...stylex.props(styles.error)}>{errors.name}</p>}
         </div>
         <div>
-          <label htmlFor="email" className="mb-1.5 block font-mono text-xs text-muted">
-            {t('emailInputLabel')}
+          <label htmlFor="email" {...stylex.props(styles.label)}>
+            {m.pages_contact_email_input_label()}
           </label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            className="w-full rounded-lg border border-border bg-canvas px-3 py-2 text-sm text-ink outline-none transition-colors focus:border-accent"
-            placeholder="jane@example.com"
-          />
-          {errors.email && <p className="mt-1 text-xs text-accent">{errors.email}</p>}
+          <input id="email" name="email" type="email" placeholder="jane@example.com" {...stylex.props(styles.input)} />
+          {errors.email && <p {...stylex.props(styles.error)}>{errors.email}</p>}
         </div>
       </div>
 
-      <div className="mt-5">
-        <label htmlFor="subject" className="mb-1.5 block font-mono text-xs text-muted">
-          {t('subjectLabel')}
+      <div {...stylex.props(styles.fieldGroup)}>
+        <label htmlFor="subject" {...stylex.props(styles.label)}>
+          {m.pages_contact_subject_label()}
         </label>
         <input
           id="subject"
           name="subject"
           type="text"
-          className="w-full rounded-lg border border-border bg-canvas px-3 py-2 text-sm text-ink outline-none transition-colors focus:border-accent"
-          placeholder={t('subjectPlaceholder')}
+          placeholder={m.pages_contact_subject_placeholder()}
+          {...stylex.props(styles.input)}
         />
-        {errors.subject && <p className="mt-1 text-xs text-accent">{errors.subject}</p>}
+        {errors.subject && <p {...stylex.props(styles.error)}>{errors.subject}</p>}
       </div>
 
-      <div className="mt-5">
-        <label htmlFor="message" className="mb-1.5 block font-mono text-xs text-muted">
-          {t('messageLabel')}
+      <div {...stylex.props(styles.fieldGroup)}>
+        <label htmlFor="message" {...stylex.props(styles.label)}>
+          {m.pages_contact_message_label()}
         </label>
         <textarea
           id="message"
           name="message"
           rows={6}
-          className="w-full resize-none rounded-lg border border-border bg-canvas px-3 py-2 text-sm text-ink outline-none transition-colors focus:border-accent"
-          placeholder={t('messagePlaceholder')}
+          placeholder={m.pages_contact_message_placeholder()}
+          {...stylex.props(styles.input, styles.textarea)}
         />
-        {errors.message && <p className="mt-1 text-xs text-accent">{errors.message}</p>}
+        {errors.message && <p {...stylex.props(styles.error)}>{errors.message}</p>}
       </div>
 
-      <div className="mt-5">
+      <div {...stylex.props(styles.fieldGroup)}>
         <Turnstile
           onVerify={setTurnstileToken}
           onExpire={() => setTurnstileToken('')}
           onError={() => setTurnstileToken('')}
         />
-        {errors.captcha && <p className="mt-1 text-xs text-accent">{errors.captcha}</p>}
+        {errors.captcha && <p {...stylex.props(styles.error)}>{errors.captcha}</p>}
       </div>
 
-      {errors.submit && <p className="mt-4 text-sm text-accent">{errors.submit}</p>}
+      {errors.submit && <p {...stylex.props(styles.error)}>{errors.submit}</p>}
 
-      <button
-        type="submit"
-        disabled={formState === 'loading' || !turnstileToken}
-        className="mt-6 w-full rounded-lg bg-accent px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent/90 disabled:opacity-60 sm:w-auto"
-      >
-        {formState === 'loading' ? t('sending') : t('send')}
+      <button type="submit" disabled={formState === 'loading' || !turnstileToken} {...stylex.props(styles.submit)}>
+        {formState === 'loading' ? m.pages_contact_sending() : m.pages_contact_send()}
       </button>
     </form>
   )

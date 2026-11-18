@@ -1,0 +1,18 @@
+{
+  "printWidth": 120,
+  "semi": false,
+  "singleQuote": true,
+  "trailingComma": "all",
+  "ignorePatterns": [
+    ".next/**",
+    "dist/**",
+    "node_modules/**",
+    "project.inlang/**",
+    "src/app/_payload/**",
+    "src/migrations/**",
+    "src/paraglide/**",
+    "src/payload-types.ts",
+    "src/app/_payload/importMap.js",
+    "src/routeTree.gen.ts"
+  ]
+}

@@ -8,13 +8,12 @@ const envSchema = z.object({
   S3_SECRET_ACCESS_KEY: z.string().min(1),
   S3_REGION: z.string().default('auto'),
   S3_ENDPOINT: z.url(),
-  S3_CDN_URL: z.url(),
+  S3_CDN_URL: z.url().optional(),
   GITHUB_PAT: z.string().min(1),
   RESEND_API_KEY: z.string().min(1),
   CONTACT_EMAIL_TO: z.email(),
   CONTACT_EMAIL_FROM: z.email(),
   TURNSTILE_SECRET_KEY: z.string().min(1),
-  NEXT_PUBLIC_SITE_URL: z.url(),
 })
 
 export const env = envSchema.parse(process.env)

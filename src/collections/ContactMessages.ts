@@ -25,7 +25,7 @@ export const ContactMessages: CollectionConfig = {
   hooks: {
     beforeChange: [
       async ({ data, operation, req }) => {
-        if (operation !== 'create' || !data) return data
+        if (operation !== 'create') return data
 
         const clientIp =
           req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || req.headers.get('x-real-ip') || 'unknown'
@@ -93,7 +93,7 @@ export const ContactMessages: CollectionConfig = {
             })
             req.payload.logger.info(`Contact email notification sent successfully to ${emailTo}.`)
           } catch (err) {
-            req.payload.logger.error(`Error sending contact email notification: ${err}`)
+            req.payload.logger.error(`Error sending contact email notification: ${String(err)}`)
           }
         }
       },

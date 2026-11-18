@@ -1,80 +1,143 @@
-import { useLocale } from 'next-intl'
-import { useState, useEffect } from 'react'
+import * as stylex from '@stylexjs/stylex'
+import { RichText, type JSXConvertersFunction } from '@payloadcms/richtext-lexical/react'
+import { useEffect, useState } from 'react'
 import type { Feed } from '@/payload-types'
-import { RichText } from '@payloadcms/richtext-lexical/react'
+import { getLocale } from '@/paraglide/runtime'
+
+const styles = stylex.create({
+  wrapper: {
+    position: 'relative',
+  },
+  node: {
+    display: 'none',
+    '@media (min-width: 640px)': {
+      display: 'block',
+      position: 'absolute',
+      top: '0.375rem',
+      left: '-2.25rem',
+      width: '0.75rem',
+      height: '0.75rem',
+      borderRadius: '9999px',
+      borderWidth: 2,
+      borderStyle: 'solid',
+      borderColor: 'var(--color-canvas)',
+      backgroundColor: 'var(--color-muted)',
+    },
+  },
+  article: {
+    padding: '1.5rem',
+    borderRadius: '0.75rem',
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: 'var(--color-border)',
+    backgroundColor: 'var(--color-surface)',
+    transitionProperty: 'border-color',
+    transitionDuration: '150ms',
+    ':hover': {
+      borderColor: 'color-mix(in srgb, var(--color-accent) 50%, transparent)',
+    },
+  },
+  header: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: '1rem',
+    marginBottom: '0.75rem',
+  },
+  title: {
+    width: { default: '100%', '@media (min-width: 640px)': 'auto' },
+    margin: 0,
+    fontSize: '1.125rem',
+    fontWeight: 600,
+    color: 'var(--color-ink)',
+  },
+  time: {
+    marginLeft: 'auto',
+    fontFamily: 'var(--font-mono)',
+    fontSize: '0.75rem',
+    color: 'var(--color-muted)',
+  },
+  media: {
+    marginBottom: '1rem',
+    overflow: 'hidden',
+    borderRadius: '0.75rem',
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: 'var(--color-border)',
+  },
+  image: {
+    width: '100%',
+    objectFit: 'cover',
+  },
+  embed: {
+    marginBlock: '1rem',
+    overflow: 'hidden',
+    borderRadius: '0.75rem',
+  },
+})
+
+// The block converter is typed loosely because Payload's serialized block nodes are not generic.
+const converters: JSXConvertersFunction = ({ defaultConverters }) => ({
+  ...defaultConverters,
+  blocks: {
+    ...defaultConverters.blocks,
+    embed: ({ node }) => <EmbedBlock html={(node as unknown as { fields: { html: string } }).fields.html} />,
+  },
+})
 
 function EmbedBlock({ html }: { html: string }) {
-  const [sanitizedHtml, setSanitizedHtml] = useState('')
+  const [sanitized, setSanitized] = useState('')
 
   useEffect(() => {
     let active = true
-    import('isomorphic-dompurify').then((mod) => {
+    void import('isomorphic-dompurify').then((module) => {
       if (!active) return
-      const DOMPurify = mod.default
-      setSanitizedHtml(
-        DOMPurify.sanitize(html || '', {
+      setSanitized(
+        module.default.sanitize(html, {
           ADD_TAGS: ['iframe'],
           ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling'],
         }),
       )
     })
+
     return () => {
       active = false
     }
   }, [html])
 
-  return <div className="my-4 overflow-hidden rounded-xl" dangerouslySetInnerHTML={{ __html: sanitizedHtml }} />
+  return <div {...stylex.props(styles.embed)} dangerouslySetInnerHTML={{ __html: sanitized }} />
 }
 
 export function FeedCard({ feed }: { feed: Feed }) {
-  const locale = useLocale()
-  const date = new Date(feed.createdAt)
-  const formattedDate = new Intl.DateTimeFormat(locale, {
+  const formattedDate = new Intl.DateTimeFormat(getLocale(), {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
     hour: 'numeric',
     minute: 'numeric',
-  }).format(date)
+  }).format(new Date(feed.createdAt))
 
   return (
-    <div className="group relative">
-      {/* Timeline Node */}
-      <div className="hidden sm:block absolute -left-7.75 mt-1.5 h-3 w-3 rounded-full border-2 border-canvas bg-muted transition-colors group-hover:bg-accent" />
+    <div {...stylex.props(styles.wrapper)}>
+      <div {...stylex.props(styles.node)} />
 
-      <article className="rounded-xl border border-border bg-surface p-6 transition-colors hover:border-accent/50">
-        <header className="mb-3 flex flex-wrap items-center justify-between gap-4">
-          {feed.title && <h2 className="text-lg font-semibold text-ink w-full sm:w-auto">{feed.title}</h2>}
-          <time className="font-mono text-xs text-muted ml-auto" dateTime={feed.createdAt}>
+      <article {...stylex.props(styles.article)}>
+        <header {...stylex.props(styles.header)}>
+          {feed.title && <h2 {...stylex.props(styles.title)}>{feed.title}</h2>}
+          <time dateTime={feed.createdAt} {...stylex.props(styles.time)}>
             {formattedDate}
           </time>
         </header>
 
-        {feed.media && typeof feed.media === 'object' && feed.media.url && (
-          <div className="mb-4 overflow-hidden rounded-xl border border-border">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={feed.media.url} alt={feed.media.alt || ''} className="w-full object-cover" loading="lazy" />
+        {typeof feed.media === 'object' && feed.media?.url && (
+          <div {...stylex.props(styles.media)}>
+            <img src={feed.media.url} alt={feed.media.alt} loading="lazy" {...stylex.props(styles.image)} />
           </div>
         )}
-        <div className="prose prose-sm dark:prose-invert max-w-none text-muted">
-          <RichText
-            data={feed.body}
-            converters={({ defaultConverters }) => ({
-              ...defaultConverters,
-              blocks: {
-                ...defaultConverters?.blocks,
-                embed: ({
-                  node,
-                }: {
-                  node: {
-                    fields: {
-                      html: string
-                    }
-                  }
-                }) => <EmbedBlock html={node?.fields?.html || ''} />,
-              },
-            })}
-          />
+
+        <div className="prose">
+          <RichText data={feed.body} converters={converters} />
         </div>
       </article>
     </div>

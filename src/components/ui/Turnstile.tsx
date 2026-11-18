@@ -1,9 +1,8 @@
 'use client'
-import { useLocale } from 'next-intl'
-import { useTheme } from 'next-themes'
-import Script from 'next/script'
+
 import { useCallback, useEffect, useRef } from 'react'
 import { clientEnv } from '@/configs/client-env'
+import { getLocale } from '@/paraglide/runtime'
 
 interface TurnstileProps {
   onVerify: (token: string) => void
@@ -11,12 +10,11 @@ interface TurnstileProps {
   onExpire?: () => void
 }
 
+const SCRIPT_SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js'
+
 export function Turnstile({ onVerify, onError, onExpire }: TurnstileProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const widgetIdRef = useRef<string | null>(null)
-  const { resolvedTheme } = useTheme()
-  const locale = useLocale()
-
   const callbacksRef = useRef({ onVerify, onError, onExpire })
 
   useEffect(() => {
@@ -24,24 +22,33 @@ export function Turnstile({ onVerify, onError, onExpire }: TurnstileProps) {
   }, [onVerify, onError, onExpire])
 
   const renderWidget = useCallback(() => {
-    if (!window.turnstile || !containerRef.current) return
-    if (widgetIdRef.current !== null) return
-
-    const theme: 'light' | 'dark' = resolvedTheme === 'dark' ? 'dark' : 'light'
+    if (!window.turnstile || !containerRef.current || widgetIdRef.current !== null) return
 
     widgetIdRef.current = window.turnstile.render(containerRef.current, {
-      sitekey: clientEnv.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
-      callback: (token: string) => callbacksRef.current.onVerify(token),
+      sitekey: clientEnv.VITE_TURNSTILE_SITE_KEY,
+      callback: (token) => callbacksRef.current.onVerify(token),
       'error-callback': () => callbacksRef.current.onError?.(),
       'expired-callback': () => callbacksRef.current.onExpire?.(),
-      theme,
-      language: locale,
+      theme: document.documentElement.classList.contains('dark') ? 'dark' : 'light',
+      language: getLocale(),
     })
-  }, [resolvedTheme, locale])
+  }, [])
 
   useEffect(() => {
-    if (window.turnstile && containerRef.current) {
+    if (window.turnstile) {
       renderWidget()
+    } else {
+      let script = document.querySelector<HTMLScriptElement>(`script[src="${SCRIPT_SRC}"]`)
+      if (!script) {
+        script = document.createElement('script')
+        script.src = SCRIPT_SRC
+        script.async = true
+        document.head.append(script)
+      }
+      script.addEventListener('load', renderWidget)
+      return () => {
+        script.removeEventListener('load', renderWidget)
+      }
     }
 
     return () => {
@@ -52,14 +59,5 @@ export function Turnstile({ onVerify, onError, onExpire }: TurnstileProps) {
     }
   }, [renderWidget])
 
-  const onScriptLoad = useCallback(() => {
-    renderWidget()
-  }, [renderWidget])
-
-  return (
-    <>
-      <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" strategy="lazyOnload" onLoad={onScriptLoad} />
-      <div ref={containerRef} className="mt-1" />
-    </>
-  )
+  return <div ref={containerRef} style={{ marginTop: '0.25rem' }} />
 }

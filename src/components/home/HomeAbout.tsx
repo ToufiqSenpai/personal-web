@@ -1,78 +1,150 @@
 'use client'
 
-import { useTranslations } from 'next-intl'
-import Image from 'next/image'
-import Link from 'next/link'
+import * as stylex from '@stylexjs/stylex'
+import { Link } from '@tanstack/react-router'
 import { Reveal } from '@/components/ui/Reveal'
-import type { Profile, ProfileAvatar } from '@/payload-types'
+import { shared } from '@/components/ui/styles'
+import type { Media, Profile } from '@/payload-types'
+import { m } from '@/paraglide/messages'
 
-export interface HomeAboutProps {
-  profile: Profile
-}
+const styles = stylex.create({
+  section: {
+    backgroundColor: 'color-mix(in srgb, var(--color-canvas) 10%, transparent)',
+  },
+  grid: {
+    display: 'grid',
+    alignItems: 'center',
+    gap: '3rem',
+    gridTemplateColumns: { default: '1fr', '@media (min-width: 768px)': 'repeat(12, minmax(0, 1fr))' },
+  },
+  avatarColumn: {
+    display: 'flex',
+    justifyContent: 'center',
+    gridColumn: { default: 'auto', '@media (min-width: 768px)': 'span 5' },
+  },
+  avatarFrame: {
+    position: 'relative',
+    width: { default: '18rem', '@media (min-width: 640px)': '20rem', '@media (min-width: 768px)': '24rem' },
+    height: { default: '18rem', '@media (min-width: 640px)': '20rem', '@media (min-width: 768px)': '24rem' },
+    overflow: 'hidden',
+    borderRadius: '1rem',
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: 'var(--color-border)',
+    backgroundColor: 'color-mix(in srgb, var(--color-surface) 50%, transparent)',
+    boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
+  },
+  avatarImage: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+    filter: 'grayscale(1)',
+    transitionProperty: 'filter',
+    transitionDuration: '700ms',
+    ':hover': {
+      filter: 'grayscale(0)',
+    },
+  },
+  avatarFallback: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    height: '100%',
+    fontFamily: 'var(--font-mono)',
+    fontSize: '2.25rem',
+    fontWeight: 700,
+    color: 'var(--color-accent)',
+  },
+  textColumn: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    gridColumn: { default: 'auto', '@media (min-width: 768px)': 'span 7' },
+  },
+  title: {
+    marginTop: 0,
+    marginRight: 0,
+    marginLeft: 0,
+    marginBottom: '1.5rem',
+    fontSize: { default: '1.5rem', '@media (min-width: 640px)': '1.875rem' },
+    fontWeight: 700,
+    lineHeight: 1.25,
+    letterSpacing: '-0.025em',
+    color: 'var(--color-ink)',
+  },
+  bio: {
+    maxWidth: '36rem',
+    marginTop: 0,
+    marginBottom: '2rem',
+    fontSize: { default: '0.875rem', '@media (min-width: 640px)': '1rem' },
+    lineHeight: 1.625,
+    color: 'var(--color-muted)',
+  },
+  cta: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    fontSize: '0.875rem',
+    fontWeight: 600,
+    color: 'var(--color-accent)',
+    textDecorationLine: 'none',
+    transitionProperty: 'color',
+    transitionDuration: '150ms',
+    ':hover': {
+      color: 'color-mix(in srgb, var(--color-accent) 80%, transparent)',
+    },
+  },
+})
 
-export function HomeAbout({ profile }: HomeAboutProps) {
-  const t = useTranslations('pages.Home.about')
+function Avatar({ profile }: { profile: Profile }) {
+  const avatar = profile.avatar as Media
 
-  const avatar = profile.avatar as ProfileAvatar
-  const avatarUrl = avatar?.url
-  const avatarAlt = avatar?.alt || profile.name
+  if (avatar.url) {
+    return <img src={avatar.url} alt={avatar.alt} {...stylex.props(styles.avatarImage)} />
+  }
 
   return (
-    <section className="px-6 py-20 border-b border-border/50 bg-canvas/10">
-      <div className="mx-auto max-w-6xl">
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-12 items-center">
-          {/* Left Column: Avatar image */}
-          <div className="md:col-span-5 flex justify-center">
+    <div {...stylex.props(styles.avatarFallback)}>
+      {profile.name
+        .split(' ')
+        .map((word) => word[0])
+        .join('')
+        .slice(0, 2)
+        .toUpperCase()}
+    </div>
+  )
+}
+
+export function HomeAbout({ profile }: { profile: Profile }) {
+  return (
+    <section {...stylex.props(shared.section, shared.bordered, styles.section)}>
+      <div {...stylex.props(shared.container)}>
+        <div {...stylex.props(styles.grid)}>
+          <div {...stylex.props(styles.avatarColumn)}>
             <Reveal>
-              <div
-                tabIndex={0}
-                className="group relative h-72 w-72 sm:h-80 sm:w-80 md:h-96 md:w-96 overflow-hidden rounded-2xl border border-border shadow-lg bg-surface/50 focus:outline-none focus:ring-2 focus:ring-accent/25"
-              >
-                {avatarUrl ? (
-                  <Image
-                    src={avatarUrl}
-                    alt={avatarAlt}
-                    fill
-                    sizes="(max-w-768px) 288px, 384px"
-                    className="object-cover grayscale group-hover:grayscale-0 group-focus:grayscale-0 transition-all duration-700 ease-out"
-                    priority
-                  />
-                ) : (
-                  <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-accent/20 to-accent/5 font-mono text-4xl font-bold text-accent">
-                    {profile.name
-                      .split(' ')
-                      .map((word) => word[0])
-                      .join('')
-                      .slice(0, 2)
-                      .toUpperCase()}
-                  </div>
-                )}
+              <div tabIndex={0} {...stylex.props(styles.avatarFrame)}>
+                <Avatar profile={profile} />
               </div>
             </Reveal>
           </div>
 
-          {/* Right Column: Bio text & CTA */}
-          <div className="md:col-span-7 flex flex-col items-start text-left">
+          <div {...stylex.props(styles.textColumn)}>
             <Reveal delay={100}>
-              <p className="mb-3 font-mono text-xs uppercase tracking-wider text-accent">{'// WHOAMI'}</p>
+              <p {...stylex.props(shared.eyebrow)}>{'// WHOAMI'}</p>
             </Reveal>
 
             <Reveal delay={200}>
-              <h2 className="mb-6 text-2xl font-bold text-ink sm:text-3xl tracking-tight leading-tight">
-                {t('title')}
-              </h2>
+              <h2 {...stylex.props(styles.title)}>{m.pages_home_about_title()}</h2>
             </Reveal>
 
             <Reveal delay={300}>
-              <p className="mb-8 text-sm sm:text-base text-muted leading-relaxed max-w-xl">{profile.bio}</p>
+              <p {...stylex.props(styles.bio)}>{profile.bio}</p>
             </Reveal>
 
             <Reveal delay={400}>
-              <Link
-                href="/about"
-                className="group inline-flex items-center gap-2 text-sm font-semibold text-accent hover:text-accent/80 transition-colors"
-              >
-                <span>{t('cta')}</span>
+              <Link to="/about" {...stylex.props(styles.cta)}>
+                <span>{m.pages_home_about_cta()}</span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"
@@ -83,7 +155,6 @@ export function HomeAbout({ profile }: HomeAboutProps) {
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="transition-transform duration-300 group-hover:translate-x-1"
                 >
                   <line x1="5" y1="12" x2="19" y2="12" />
                   <polyline points="12 5 19 12 12 19" />

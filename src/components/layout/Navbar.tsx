@@ -1,189 +1,334 @@
 'use client'
-import { useLocale, useTranslations } from 'next-intl'
-import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
-import { useState, useEffect, useTransition } from 'react'
-import { ThemeToggle } from '@/components/ui/ThemeToggle'
-import { LANGUAGES, LOCALE_COOKIE_KEY } from '@/constants/language'
 
-export interface NavbarProps {
-  name: string
+import * as stylex from '@stylexjs/stylex'
+import { Link, useLocation } from '@tanstack/react-router'
+import { useState } from 'react'
+import { ThemeToggle } from '@/components/ui/ThemeToggle'
+import { LANGUAGES } from '@/constants/language'
+import { m } from '@/paraglide/messages'
+import { deLocalizeHref, getLocale, setLocale } from '@/paraglide/runtime'
+
+const styles = stylex.create({
+  header: {
+    position: 'sticky',
+    top: 0,
+    zIndex: 50,
+    borderBottomWidth: 1,
+    borderBottomStyle: 'solid',
+    borderBottomColor: 'var(--color-border)',
+    backgroundColor: 'color-mix(in srgb, var(--color-canvas) 80%, transparent)',
+    backdropFilter: 'blur(12px)',
+  },
+  nav: {
+    display: 'flex',
+    alignItems: 'center',
+    height: '4rem',
+    maxWidth: '72rem',
+    marginInline: 'auto',
+    paddingInline: '1.5rem',
+  },
+  logoWrap: {
+    flex: 1,
+  },
+  logo: {
+    fontFamily: 'var(--font-mono)',
+    fontSize: '0.875rem',
+    fontWeight: 600,
+    letterSpacing: '-0.025em',
+    color: 'var(--color-ink)',
+    textDecorationLine: 'none',
+    transitionProperty: 'color',
+    transitionDuration: '150ms',
+    ':hover': {
+      color: 'var(--color-accent)',
+    },
+  },
+  logoCursor: {
+    color: 'var(--color-accent)',
+    animationName: 'pulse',
+    animationDuration: '2s',
+    animationIterationCount: 'infinite',
+  },
+  links: {
+    display: 'none',
+    flex: 'none',
+    alignItems: 'center',
+    gap: '2rem',
+    '@media (min-width: 768px)': {
+      display: 'flex',
+    },
+  },
+  link: {
+    fontSize: '0.875rem',
+    color: 'var(--color-muted)',
+    textDecorationLine: 'none',
+    transitionProperty: 'color',
+    transitionDuration: '150ms',
+    ':hover': {
+      color: 'var(--color-accent)',
+    },
+  },
+  linkActive: {
+    fontWeight: 500,
+    color: 'var(--color-accent)',
+  },
+  controls: {
+    display: 'flex',
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    gap: '1rem',
+  },
+  desktopControls: {
+    display: 'none',
+    alignItems: 'center',
+    gap: '1.25rem',
+    '@media (min-width: 768px)': {
+      display: 'flex',
+    },
+  },
+  iconButton: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 0,
+    borderWidth: 0,
+    backgroundColor: 'transparent',
+    color: 'var(--color-muted)',
+    cursor: 'pointer',
+    transitionProperty: 'color',
+    transitionDuration: '150ms',
+    ':hover': {
+      color: 'var(--color-accent)',
+    },
+  },
+  langWrapper: {
+    position: 'relative',
+  },
+  langSummary: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.25rem',
+    fontFamily: 'var(--font-mono)',
+    fontSize: '0.75rem',
+    fontWeight: 500,
+    color: 'var(--color-muted)',
+    cursor: 'pointer',
+    listStyleType: 'none',
+    ':hover': {
+      color: 'var(--color-accent)',
+    },
+  },
+  langCurrent: {
+    color: 'var(--color-ink)',
+  },
+  langMenu: {
+    position: 'absolute',
+    top: '100%',
+    right: 0,
+    marginTop: '0.75rem',
+    display: 'flex',
+    width: '11rem',
+    flexDirection: 'column',
+    overflow: 'hidden',
+    borderRadius: '0.75rem',
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: 'var(--color-border)',
+    backgroundColor: 'var(--color-canvas)',
+    paddingBlock: '0.5rem',
+    boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
+    zIndex: 50,
+  },
+  langOption: {
+    paddingInline: '1rem',
+    paddingBlock: '0.5rem',
+    borderWidth: 0,
+    backgroundColor: 'transparent',
+    textAlign: 'left',
+    fontSize: '0.875rem',
+    color: 'var(--color-muted)',
+    cursor: 'pointer',
+    ':hover': {
+      backgroundColor: 'color-mix(in srgb, var(--color-muted) 10%, transparent)',
+      color: 'var(--color-ink)',
+    },
+  },
+  langOptionActive: {
+    fontWeight: 500,
+    color: 'var(--color-accent)',
+  },
+  mobileToggle: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '2.25rem',
+    height: '2.25rem',
+    borderRadius: '0.5rem',
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: 'var(--color-border)',
+    backgroundColor: 'transparent',
+    color: 'var(--color-muted)',
+    cursor: 'pointer',
+    '@media (min-width: 768px)': {
+      display: 'none',
+    },
+  },
+  mobileMenu: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '1rem',
+    borderTopWidth: 1,
+    borderTopStyle: 'solid',
+    borderTopColor: 'var(--color-border)',
+    paddingInline: '1.5rem',
+    paddingBlock: '1rem',
+    '@media (min-width: 768px)': {
+      display: 'none',
+    },
+  },
+  mobileLink: {
+    fontSize: '0.875rem',
+    color: 'var(--color-muted)',
+    textDecorationLine: 'none',
+  },
+  mobileFooter: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: '0.5rem',
+    borderTopWidth: 1,
+    borderTopStyle: 'solid',
+    borderTopColor: 'var(--color-border)',
+    paddingTop: '1rem',
+  },
+  mobileActions: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '1rem',
+  },
+})
+
+const navLinks = [
+  { to: '/about', label: m.layout_navbar_about },
+  { to: '/projects', label: m.layout_navbar_projects },
+  { to: '/feeds', label: m.layout_navbar_feeds },
+  { to: '/contact', label: m.layout_navbar_contact },
+] as const
+
+function ShareIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+      <polyline points="16 6 12 2 8 6" />
+      <line x1="12" x2="12" y1="2" y2="15" />
+    </svg>
+  )
 }
 
-export function Navbar({ name }: NavbarProps) {
-  const pathname = usePathname()
-  const router = useRouter()
-  const locale = useLocale()
-  const t = useTranslations('layout.Navbar')
-  const [isOpen, setIsOpen] = useState(false)
-  const [isLangOpen, setIsLangOpen] = useState(false)
-  const [, startTransition] = useTransition()
-
-  const langLabel = LANGUAGES.find((language) => language.code == locale)?.name || locale
-
-  const navLinks = [
-    { href: '/about', label: t('about') },
-    { href: '/projects', label: t('projects') },
-    { href: '/articles', label: t('articles') },
-    { href: '/feeds', label: t('feeds') },
-    { href: '/contact', label: t('contact') },
-  ]
-
-  function handleLocaleChange(code: string) {
-    startTransition(() => {
-      document.cookie = `${LOCALE_COOKIE_KEY}=${code};path=/;max-age=315360000;samesite=lax`
-      router.refresh()
-    })
-  }
-
-  // Handle click outside to close language dropdown
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as HTMLElement
-      if (!target.closest('[data-lang-dropdown]')) {
-        setIsLangOpen(false)
-      }
-    }
-    if (isLangOpen) {
-      document.addEventListener('mousedown', handleClickOutside)
-    }
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [isLangOpen])
-
-  const handleShare = async () => {
-    if (typeof navigator !== 'undefined' && navigator.share) {
-      try {
-        await navigator.share({
-          title: name,
-          text: `Check out ${name}'s portfolio!`,
-          url: window.location.href,
-        })
-      } catch (error) {
-        console.error('Error sharing:', error)
-      }
-    } else {
-      // Fallback: copy to clipboard
-      try {
-        await navigator.clipboard.writeText(window.location.href)
-        alert(t('copied'))
-      } catch (err) {
-        console.error('Failed to copy', err)
-      }
-    }
-  }
+function LanguageMenu() {
+  const locale = getLocale()
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-canvas/80 backdrop-blur-md">
-      <nav className="mx-auto flex h-16 max-w-6xl items-center px-6">
-        {/* Left: Logo */}
-        <div className="flex-1">
-          <Link
-            href="/"
-            className="group font-mono text-sm font-semibold tracking-tight text-ink transition-colors hover:text-accent"
+    <details {...stylex.props(styles.langWrapper)}>
+      <summary aria-label={m.layout_navbar_select_language()} {...stylex.props(styles.langSummary)}>
+        <span {...stylex.props(styles.langCurrent)}>{LANGUAGES.find((item) => item.code === locale)?.name}</span>
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      </summary>
+      <div {...stylex.props(styles.langMenu)}>
+        {LANGUAGES.map((item) => (
+          <button
+            key={item.code}
+            type="button"
+            onClick={() => void setLocale(item.code)}
+            {...stylex.props(styles.langOption, item.code === locale && styles.langOptionActive)}
           >
+            {item.name}
+          </button>
+        ))}
+      </div>
+    </details>
+  )
+}
+
+async function share(name: string) {
+  if (typeof navigator.share === 'function') {
+    try {
+      await navigator.share({ title: name, text: `Check out ${name}'s portfolio!`, url: window.location.href })
+    } catch {
+      // The user dismissed the share sheet.
+    }
+    return
+  }
+
+  await navigator.clipboard.writeText(window.location.href)
+  alert(m.layout_navbar_copied())
+}
+
+export function Navbar({ name }: { name: string }) {
+  const [isOpen, setIsOpen] = useState(false)
+  const pathname = deLocalizeHref(useLocation().pathname)
+
+  return (
+    <header {...stylex.props(styles.header)}>
+      <nav {...stylex.props(styles.nav)}>
+        <div {...stylex.props(styles.logoWrap)}>
+          <Link to="/" {...stylex.props(styles.logo)}>
             {name}
-            <span className="text-accent opacity-0 transition-opacity group-hover:opacity-100 animate-pulse">_</span>
+            <span {...stylex.props(styles.logoCursor)}>_</span>
           </Link>
         </div>
 
-        {/* Center: Nav links */}
-        <div className="hidden flex-none items-center gap-8 md:flex">
+        <div {...stylex.props(styles.links)}>
           {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`text-sm transition-colors hover:text-accent ${
-                pathname === link.href ? 'font-medium text-accent' : 'text-muted'
-              }`}
-            >
-              {link.label}
+            <Link key={link.to} to={link.to} {...stylex.props(styles.link, pathname === link.to && styles.linkActive)}>
+              {link.label()}
             </Link>
           ))}
         </div>
 
-        {/* Right: Controls */}
-        <div className="flex flex-1 items-center justify-end gap-4">
-          <div className="hidden items-center gap-5 md:flex">
-            {/* Language Dropdown */}
-            <div className="relative" data-lang-dropdown>
-              <button
-                onClick={() => setIsLangOpen(!isLangOpen)}
-                className="flex items-center gap-1 font-mono text-xs font-medium text-muted transition-colors hover:text-accent"
-                aria-label={t('selectLanguage')}
-              >
-                <span className="text-ink">{LANGUAGES.find((language) => language.code == locale)?.name}</span>
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className={`transition-transform duration-200 ${isLangOpen ? 'rotate-180' : ''}`}
-                >
-                  <polyline points="6 9 12 15 18 9" />
-                </svg>
-              </button>
-
-              <div
-                className={`absolute right-0 mt-6 flex w-44 origin-top-right flex-col overflow-hidden rounded-xl border border-border bg-canvas/95 py-2 shadow-lg backdrop-blur-md transition-all duration-200 z-50 ${
-                  isLangOpen
-                    ? 'pointer-events-auto visible translate-y-0 scale-100 opacity-100'
-                    : 'pointer-events-none invisible -translate-y-2 scale-95 opacity-0'
-                }`}
-              >
-                {LANGUAGES.map((l) => (
-                  <button
-                    key={l.code}
-                    onClick={() => {
-                      handleLocaleChange(l.code)
-                      setIsLangOpen(false)
-                    }}
-                    className={`px-4 py-2 text-left text-sm transition-colors hover:bg-muted/10 ${
-                      locale === l.code ? 'font-medium text-accent' : 'text-muted hover:text-ink'
-                    }`}
-                  >
-                    {l.name}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Share Button */}
+        <div {...stylex.props(styles.controls)}>
+          <div {...stylex.props(styles.desktopControls)}>
+            <LanguageMenu />
             <button
-              onClick={handleShare}
-              className="text-muted transition-colors hover:text-accent"
-              aria-label={t('sharePage')}
-              title={t('share')}
+              type="button"
+              onClick={() => void share(name)}
+              aria-label={m.layout_navbar_share_page()}
+              title={m.layout_navbar_share()}
+              {...stylex.props(styles.iconButton)}
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
-                <polyline points="16 6 12 2 8 6" />
-                <line x1="12" x2="12" y1="2" y2="15" />
-              </svg>
+              <ShareIcon />
             </button>
-
             <ThemeToggle />
           </div>
 
-          {/* Mobile Menu Toggle */}
           <button
             type="button"
             onClick={() => setIsOpen(!isOpen)}
-            className="flex h-9 w-9 items-center justify-center rounded-lg border border-border text-muted transition-colors hover:text-ink md:hidden"
-            aria-label={t('toggleMenu')}
+            aria-label={m.layout_navbar_toggle_menu()}
+            {...stylex.props(styles.mobileToggle)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -213,91 +358,32 @@ export function Navbar({ name }: NavbarProps) {
         </div>
       </nav>
 
-      {/* Mobile Dropdown */}
       {isOpen && (
-        <div className="flex flex-col gap-4 border-t border-border bg-canvas/95 px-6 py-4 backdrop-blur-md md:hidden">
+        <div {...stylex.props(styles.mobileMenu)}>
           {navLinks.map((link) => (
             <Link
-              key={link.href}
-              href={link.href}
+              key={link.to}
+              to={link.to}
               onClick={() => setIsOpen(false)}
-              className={`text-sm ${pathname === link.href ? 'font-medium text-accent' : 'text-muted'}`}
+              {...stylex.props(styles.mobileLink, pathname === link.to && styles.linkActive)}
             >
-              {link.label}
+              {link.label()}
             </Link>
           ))}
 
-          <div className="mt-2 flex items-center justify-between border-t border-border pt-4">
-            <div className="flex items-center gap-4">
+          <div {...stylex.props(styles.mobileFooter)}>
+            <div {...stylex.props(styles.mobileActions)}>
               <ThemeToggle />
-
               <button
-                onClick={handleShare}
-                className="flex h-9 w-9 items-center justify-center rounded-lg border border-border text-muted transition-colors hover:text-ink"
-                aria-label={t('sharePage')}
+                type="button"
+                onClick={() => void share(name)}
+                aria-label={m.layout_navbar_share_page()}
+                {...stylex.props(styles.mobileToggle)}
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
-                  <polyline points="16 6 12 2 8 6" />
-                  <line x1="12" x2="12" y1="2" y2="15" />
-                </svg>
+                <ShareIcon />
               </button>
             </div>
-
-            <div className="relative" data-lang-dropdown>
-              <button
-                onClick={() => setIsLangOpen(!isLangOpen)}
-                className="flex h-9 items-center justify-center gap-2 rounded-lg border border-border px-3 font-mono text-xs font-medium text-muted transition-colors hover:text-ink"
-              >
-                <span className="text-ink">{langLabel}</span>
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className={`transition-transform duration-200 ${isLangOpen ? 'rotate-180' : ''}`}
-                >
-                  <polyline points="6 9 12 15 18 9" />
-                </svg>
-              </button>
-
-              <div
-                className={`absolute bottom-full right-0 mb-2 flex w-44 origin-bottom-right flex-col overflow-hidden rounded-xl border border-border bg-canvas/95 py-2 shadow-lg backdrop-blur-md transition-all duration-200 z-50 ${
-                  isLangOpen
-                    ? 'pointer-events-auto visible translate-y-0 scale-100 opacity-100'
-                    : 'pointer-events-none invisible translate-y-2 scale-95 opacity-0'
-                }`}
-              >
-                {LANGUAGES.map((l) => (
-                  <button
-                    key={l.code}
-                    onClick={() => {
-                      handleLocaleChange(l.code)
-                      setIsLangOpen(false)
-                    }}
-                    className={`px-4 py-2 text-left text-sm transition-colors hover:bg-muted/10 ${
-                      locale === l.code ? 'font-medium text-accent' : 'text-muted hover:text-ink'
-                    }`}
-                  >
-                    {l.name}
-                  </button>
-                ))}
-              </div>
-            </div>
+            <LanguageMenu />
           </div>
         </div>
       )}

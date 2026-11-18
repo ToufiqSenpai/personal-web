@@ -1,57 +1,153 @@
-import { useTranslations } from 'next-intl'
+import * as stylex from '@stylexjs/stylex'
 import { Reveal } from '@/components/ui/Reveal'
+import { shared } from '@/components/ui/styles'
 import type { Profile } from '@/payload-types'
+import { m } from '@/paraglide/messages'
 
-export interface TimelineProps {
-  profile: Profile
-}
+const styles = stylex.create({
+  section: {
+    paddingInline: '1.5rem',
+    paddingBlock: '3rem',
+  },
+  container: {
+    maxWidth: '56rem',
+    marginInline: 'auto',
+  },
+  track: {
+    position: 'relative',
+  },
+  line: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: '15px',
+    width: '2px',
+    backgroundColor: 'var(--color-border)',
+    '@media (min-width: 768px)': {
+      left: '50%',
+      transform: 'translateX(-50%)',
+    },
+  },
+  items: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '2rem',
+  },
+  item: {
+    position: 'relative',
+    display: 'flex',
+    width: '100%',
+  },
+  dot: {
+    position: 'absolute',
+    top: '1.5rem',
+    left: '11px',
+    width: '0.75rem',
+    height: '0.75rem',
+    borderRadius: '9999px',
+    backgroundColor: 'var(--color-accent)',
+    boxShadow: '0 0 0 4px var(--color-canvas)',
+    '@media (min-width: 768px)': {
+      left: '50%',
+      marginLeft: '-0.375rem',
+    },
+  },
+  content: {
+    width: '100%',
+    marginLeft: '3rem',
+    '@media (min-width: 768px)': {
+      width: '50%',
+      marginLeft: 0,
+    },
+  },
+  contentEven: {
+    '@media (min-width: 768px)': {
+      marginRight: 'auto',
+      paddingRight: '3rem',
+      textAlign: 'right',
+    },
+  },
+  contentOdd: {
+    '@media (min-width: 768px)': {
+      marginLeft: 'auto',
+      paddingLeft: '3rem',
+      textAlign: 'left',
+    },
+  },
+  card: {
+    padding: '1.5rem',
+    borderRadius: '0.75rem',
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: 'var(--color-border)',
+    backgroundColor: 'var(--color-surface)',
+    boxShadow: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
+    transitionProperty: 'border-color',
+    transitionDuration: '150ms',
+    ':hover': {
+      borderColor: 'color-mix(in srgb, var(--color-accent) 50%, transparent)',
+    },
+  },
+  years: {
+    display: 'block',
+    marginBottom: '0.5rem',
+    fontFamily: 'var(--font-mono)',
+    fontSize: '0.75rem',
+    color: 'var(--color-accent)',
+  },
+  title: {
+    margin: 0,
+    fontSize: '1.125rem',
+    fontWeight: 700,
+    color: 'var(--color-ink)',
+  },
+  institution: {
+    marginTop: 0,
+    marginBottom: '0.75rem',
+    fontSize: '0.875rem',
+    fontWeight: 500,
+    color: 'var(--color-muted)',
+  },
+  description: {
+    margin: 0,
+    fontSize: '0.875rem',
+    lineHeight: 1.625,
+    color: 'var(--color-muted)',
+  },
+})
 
-export function Timeline({ profile }: TimelineProps) {
-  const t = useTranslations('pages.About')
-  const timelineItems = profile.timelines || []
+export function Timeline({ profile }: { profile: Profile }) {
+  const items = profile.timelines
 
   return (
-    <section className="px-6 py-12">
-      <div className="mx-auto max-w-4xl">
+    <section {...stylex.props(styles.section)}>
+      <div {...stylex.props(styles.container)}>
         <Reveal>
-          <p className="mb-2 font-mono text-xs uppercase tracking-wider text-accent">{t('timeline.eyebrow')}</p>
-          <h2 className="mb-12 text-2xl font-bold text-ink">{t('timeline.title')}</h2>
+          <p {...stylex.props(shared.eyebrow)}>{m.pages_about_timeline_eyebrow()}</p>
+          <h2 {...stylex.props(shared.sectionTitle)}>{m.pages_about_timeline_title()}</h2>
         </Reveal>
 
-        <div className="relative">
-          {/* Timeline Line */}
-          {timelineItems.length > 0 && (
-            <div className="absolute left-[15px] top-0 bottom-0 w-[2px] bg-border md:left-1/2 md:-translate-x-1/2" />
-          )}
+        <div {...stylex.props(styles.track)}>
+          {items.length > 0 && <div {...stylex.props(styles.line)} />}
 
-          <div className="flex flex-col gap-8">
-            {timelineItems.map((item, index) => {
-              const isEven = index % 2 === 0
-              return (
-                <Reveal key={index} delay={index * 100} className="relative flex w-full">
-                  {/* Dot */}
-                  <div className="absolute left-[11px] top-6 h-3 w-3 rounded-full bg-accent ring-4 ring-canvas md:left-1/2 md:-ml-1.5" />
-
-                  {/* Content Card */}
-                  <div
-                    className={`ml-12 w-full md:ml-0 md:w-1/2 ${
-                      isEven ? 'md:pr-12 md:mr-auto md:text-right' : 'md:pl-12 md:ml-auto md:text-left'
-                    }`}
-                  >
-                    <div
-                      className={`rounded-xl border border-border bg-surface p-6 shadow-sm transition-colors hover:border-accent/50 ${isEven ? 'md:text-right' : 'md:text-left'}`}
-                    >
-                      <span className="mb-2 block font-mono text-xs text-accent">
-                        {item.yearStart} — {item.present ? t('present') : item.yearEnd}
+          <div {...stylex.props(styles.items)}>
+            {items.map((item, index) => (
+              <Reveal key={item.id ?? index} delay={index * 100}>
+                <div {...stylex.props(styles.item)}>
+                  <div {...stylex.props(styles.dot)} />
+                  <div {...stylex.props(styles.content, index % 2 === 0 ? styles.contentEven : styles.contentOdd)}>
+                    <div {...stylex.props(styles.card)}>
+                      <span {...stylex.props(styles.years)}>
+                        {item.yearStart} — {item.present ? m.pages_about_present() : item.yearEnd}
                       </span>
-                      <h3 className="text-lg font-bold text-ink">{item.title}</h3>
-                      <p className="mb-3 text-sm font-medium text-muted">{item.institution}</p>
-                      <p className="text-sm leading-relaxed text-muted">{item.description}</p>
+                      <h3 {...stylex.props(styles.title)}>{item.title}</h3>
+                      <p {...stylex.props(styles.institution)}>{item.institution}</p>
+                      <p {...stylex.props(styles.description)}>{item.description}</p>
                     </div>
                   </div>
-                </Reveal>
-              )
-            })}
+                </div>
+              </Reveal>
+            ))}
           </div>
         </div>
       </div>

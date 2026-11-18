@@ -2,7 +2,6 @@ import { lexicalEditor, UploadFeature } from '@payloadcms/richtext-lexical'
 import { convertLexicalToPlaintext } from '@payloadcms/richtext-lexical/plaintext'
 import slugify from '@sindresorhus/slugify'
 import { CollectionConfig } from 'payload'
-import { COMMON_IMAGE_MIMETYPES } from '../constants/mimetype'
 
 export const Articles: CollectionConfig = {
   slug: 'articles',
@@ -49,7 +48,7 @@ export const Articles: CollectionConfig = {
     {
       name: 'mainImage',
       type: 'upload',
-      relationTo: 'article-media',
+      relationTo: 'media',
     },
     {
       name: 'categories',
@@ -66,7 +65,7 @@ export const Articles: CollectionConfig = {
           ...defaultFeatures,
           UploadFeature({
             collections: {
-              'article-media': {
+              media: {
                 fields: [],
               },
             },
@@ -165,71 +164,4 @@ export const ArticleCategories: CollectionConfig = {
     },
   ],
   timestamps: true,
-}
-
-export const ArticleMedia: CollectionConfig = {
-  slug: 'article-media',
-  access: {
-    read: () => true,
-  },
-  admin: {
-    useAsTitle: 'alt',
-    group: 'Article',
-  },
-  fields: [
-    {
-      name: 'alt',
-      type: 'text',
-      required: true,
-    },
-    {
-      name: 'caption',
-      type: 'text',
-    },
-  ],
-  upload: {
-    staticDir: 'article-media',
-    mimeTypes: COMMON_IMAGE_MIMETYPES,
-    adminThumbnail: 'thumbnail',
-    formatOptions: {
-      format: 'avif',
-      options: {
-        quality: 75,
-      },
-    },
-    imageSizes: [
-      {
-        name: 'thumbnail',
-        width: 400,
-        height: 210,
-        formatOptions: {
-          format: 'avif',
-        },
-      },
-      {
-        name: 'card',
-        width: 800,
-        height: 420,
-        formatOptions: {
-          format: 'avif',
-        },
-      },
-      {
-        name: 'og',
-        width: 1200,
-        height: 630,
-        formatOptions: {
-          format: 'avif',
-        },
-      },
-      {
-        name: 'hero',
-        width: 1600,
-        height: 840,
-        formatOptions: {
-          format: 'avif',
-        },
-      },
-    ],
-  },
 }

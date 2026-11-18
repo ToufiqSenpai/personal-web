@@ -1,88 +1,89 @@
-import { cacheLife, cacheTag } from 'next/cache'
-import { cache } from 'react'
+import { getLocale } from '@/paraglide/runtime'
 import configPromise from '@payload-config'
-import { getPayload } from 'payload'
-import { Locale } from '../constants/language'
+import { createServerFn } from '@tanstack/react-start'
+import { getPayload, type PaginatedDocs } from 'payload'
+import type { Article, Feed, Profile, Project } from '@/payload-types'
 
-// React.cache() — deduplicates within a single request
-// So layout.tsx + page.tsx calling getProfile() only hits DB once
-const getPayloadClient = cache(async () => {
-  return getPayload({ config: configPromise })
+const getPayloadClient = async () => getPayload({ config: configPromise })
+
+// Public pages read through the Local API on the server, so `overrideAccess: true` is
+// explicit — Payload 4 enforces access control on Local API calls by default.
+
+// Payload documents carry `_transforms` maps that the strict output check rejects,
+// but they are plain JSON at runtime.
+const query = createServerFn({ method: 'GET', strict: { output: false } })
+
+export const getProfileFn = query.handler(async (): Promise<Profile> => {
+  const payload = await getPayloadClient()
+
+  return payload.findGlobal({ slug: 'profile', locale: getLocale(), overrideAccess: true })
 })
 
-export async function getProfile(locale: Locale) {
-  'use cache'
-  cacheLife({ stale: 3600, revalidate: 43200, expire: 604800 }) // 1h stale, 12h revalidate, 7d expire
-  cacheTag('profile')
-
-  const payload = await getPayloadClient()
-  return payload.findGlobal({
-    slug: 'profile',
-    locale,
-  })
-}
-
-export async function getFeaturedProjects(locale: Locale) {
-  'use cache'
-  cacheLife('hours')
-  cacheTag('projects')
-
+export const getFeaturedProjectsFn = query.handler(async (): Promise<Project[]> => {
   const payload = await getPayloadClient()
   const { docs } = await payload.find({
     collection: 'projects',
     limit: 3,
     sort: '-createdAt',
-    locale: locale,
+    locale: getLocale(),
     depth: 1,
+    overrideAccess: true,
   })
+
   return docs
-}
+})
 
-export async function getAllProjects(locale: Locale) {
-  'use cache'
-  cacheLife('hours')
-  cacheTag('projects')
-
+export const getAllProjectsFn = query.handler(async (): Promise<Project[]> => {
   const payload = await getPayloadClient()
   const { docs } = await payload.find({
     collection: 'projects',
-    locale: locale,
     sort: '-createdAt',
+    locale: getLocale(),
     depth: 1,
+    overrideAccess: true,
   })
+
   return docs
-}
+})
 
-export async function getLatestFeeds() {
-  'use cache'
-  cacheLife('minutes')
-  cacheTag('feeds')
-
+export const getLatestFeedsFn = query.handler(async (): Promise<PaginatedDocs<Feed>> => {
   const payload = await getPayloadClient()
+
   return payload.find({
     collection: 'feeds',
     sort: '-createdAt',
     limit: 5,
+    depth: 1,
+    overrideAccess: true,
   })
-}
+})
 
-export async function getFeaturedArticles(locale: Locale) {
-  'use cache'
-  cacheLife('hours')
-  cacheTag('articles')
+export const getMoreFeedsFn = createServerFn({ method: 'GET', strict: { output: false } })
+  .validator((page: number) => page)
+  .handler(async ({ data: page }): Promise<PaginatedDocs<Feed>> => {
+    const payload = await getPayloadClient()
 
+    return payload.find({
+      collection: 'feeds',
+      sort: '-createdAt',
+      limit: 5,
+      page,
+      depth: 1,
+      overrideAccess: true,
+    })
+  })
+
+export const getFeaturedArticlesFn = query.handler(async (): Promise<Article[]> => {
   const payload = await getPayloadClient()
   const { docs } = await payload.find({
     collection: 'articles',
     limit: 3,
     sort: '-publishedAt',
-    where: {
-      status: {
-        equals: 'published',
-      },
-    },
-    locale: locale,
+    where: { status: { equals: 'published' } },
+    locale: getLocale(),
     depth: 1,
+    overrideAccess: true,
   })
+
   return docs
-}
+})

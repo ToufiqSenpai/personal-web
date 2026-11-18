@@ -1,153 +1,224 @@
 'use client'
 
-import { useTranslations } from 'next-intl'
-import Image from 'next/image'
-import Link from 'next/link'
-import type { Profile, ProfileIcon } from '@/payload-types'
+import * as stylex from '@stylexjs/stylex'
+import { Link } from '@tanstack/react-router'
+import type { Media, Profile } from '@/payload-types'
+import { m } from '@/paraglide/messages'
 
-export interface FooterProps {
-  profile: Profile
-}
+const styles = stylex.create({
+  footer: {
+    borderTopWidth: 1,
+    borderTopStyle: 'solid',
+    borderTopColor: 'var(--color-border)',
+    backgroundColor: 'color-mix(in srgb, var(--color-canvas) 30%, transparent)',
+  },
+  inner: {
+    maxWidth: '72rem',
+    marginInline: 'auto',
+    paddingInline: '1.5rem',
+    paddingBlock: { default: '3rem', '@media (min-width: 768px)': '4rem' },
+  },
+  grid: {
+    display: 'grid',
+    gridTemplateColumns: {
+      default: '1fr',
+      '@media (min-width: 640px)': 'repeat(2, minmax(0, 1fr))',
+      '@media (min-width: 768px)': 'repeat(3, minmax(0, 1fr))',
+    },
+    gap: '2.5rem',
+  },
+  column: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '1rem',
+  },
+  logo: {
+    fontFamily: 'var(--font-mono)',
+    fontSize: '0.875rem',
+    fontWeight: 600,
+    letterSpacing: '-0.025em',
+    color: 'var(--color-ink)',
+    textDecorationLine: 'none',
+  },
+  logoCursor: {
+    color: 'var(--color-accent)',
+    animationName: 'pulse',
+    animationDuration: '2s',
+    animationIterationCount: 'infinite',
+  },
+  intro: {
+    margin: 0,
+    maxWidth: '15rem',
+    fontSize: '0.75rem',
+    lineHeight: 1.625,
+    color: 'var(--color-muted)',
+  },
+  heading: {
+    display: 'block',
+    marginBottom: '1rem',
+    fontFamily: 'var(--font-mono)',
+    fontSize: '0.75rem',
+    fontWeight: 600,
+    letterSpacing: '0.05em',
+    textTransform: 'uppercase',
+    color: 'var(--color-accent)',
+  },
+  list: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.625rem',
+    margin: 0,
+    padding: 0,
+    listStyle: 'none',
+  },
+  link: {
+    display: 'inline-block',
+    fontSize: '0.875rem',
+    color: 'var(--color-muted)',
+    textDecorationLine: 'none',
+    transitionProperty: 'color, transform',
+    transitionDuration: '200ms',
+    ':hover': {
+      color: 'var(--color-ink)',
+      transform: 'translateX(0.25rem)',
+    },
+  },
+  social: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.625rem',
+    fontSize: '0.875rem',
+    color: 'var(--color-muted)',
+    textDecorationLine: 'none',
+    transitionProperty: 'color',
+    transitionDuration: '150ms',
+    ':hover': {
+      color: 'var(--color-ink)',
+    },
+  },
+  socialIcon: {
+    flexShrink: 0,
+  },
+  socialName: {
+    fontFamily: 'var(--font-mono)',
+    fontSize: '0.75rem',
+  },
+  bottom: {
+    display: 'flex',
+    flexDirection: { default: 'column', '@media (min-width: 768px)': 'row' },
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: '1rem',
+    marginTop: '3rem',
+    borderTopWidth: 1,
+    borderTopStyle: 'solid',
+    borderTopColor: 'var(--color-border)',
+    paddingTop: '1.5rem',
+    fontFamily: 'var(--font-mono)',
+    fontSize: '0.75rem',
+    color: 'var(--color-muted)',
+  },
+  builtWith: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.375rem',
+    margin: 0,
+  },
+  builtWithLink: {
+    color: 'var(--color-ink)',
+    textDecorationLine: 'none',
+  },
+})
 
-export function Footer({ profile }: FooterProps) {
-  const tNav = useTranslations('layout.Navbar')
-  const tFooter = useTranslations('layout.Footer')
-  const year = new Date().getFullYear()
+const links = [
+  { to: '/', label: m.layout_navbar_home },
+  { to: '/about', label: m.layout_navbar_about },
+  { to: '/projects', label: m.layout_navbar_projects },
+  { to: '/feeds', label: m.layout_navbar_feeds },
+  { to: '/contact', label: m.layout_navbar_contact },
+] as const
 
+const year = new Date().getFullYear()
+
+export function Footer({ profile }: { profile: Profile }) {
   return (
-    <footer className="border-t border-border bg-canvas/30">
-      <div className="mx-auto max-w-6xl px-6 py-12 md:py-16">
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-3">
-          {/* Col 1: Bio & System Status Monitor */}
-          <div className="flex flex-col gap-4">
-            <Link
-              href="/"
-              className="group font-mono text-sm font-semibold tracking-tight text-ink transition-colors hover:text-accent"
-            >
+    <footer {...stylex.props(styles.footer)}>
+      <div {...stylex.props(styles.inner)}>
+        <div {...stylex.props(styles.grid)}>
+          <div {...stylex.props(styles.column)}>
+            <Link to="/" {...stylex.props(styles.logo)}>
               {profile.name}
-              <span className="text-accent animate-pulse">_</span>
+              <span {...stylex.props(styles.logoCursor)}>_</span>
             </Link>
-            <p className="text-xs text-muted leading-relaxed max-w-[240px]">{profile.intro}</p>
+            <p {...stylex.props(styles.intro)}>{profile.intro}</p>
           </div>
 
-          {/* Col 2: Quick Links */}
           <div>
-            <span className="block font-mono text-xs font-semibold tracking-wider text-accent uppercase mb-4">
+            <span {...stylex.props(styles.heading)}>
               {'// '}
-              {tFooter('nav')}
+              {m.layout_footer_nav()}
             </span>
-            <ul className="space-y-2.5">
-              <li>
-                <Link
-                  href="/"
-                  className="text-sm text-muted hover:text-ink transition-all hover:translate-x-1 inline-block duration-200"
-                >
-                  {tNav('home')}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/about"
-                  className="text-sm text-muted hover:text-ink transition-all hover:translate-x-1 inline-block duration-200"
-                >
-                  {tNav('about')}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/projects"
-                  className="text-sm text-muted hover:text-ink transition-all hover:translate-x-1 inline-block duration-200"
-                >
-                  {tNav('projects')}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/articles"
-                  className="text-sm text-muted hover:text-ink transition-all hover:translate-x-1 inline-block duration-200"
-                >
-                  {tNav('articles')}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/feeds"
-                  className="text-sm text-muted hover:text-ink transition-all hover:translate-x-1 inline-block duration-200"
-                >
-                  {tNav('feeds')}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/contact"
-                  className="text-sm text-muted hover:text-ink transition-all hover:translate-x-1 inline-block duration-200"
-                >
-                  {tNav('contact')}
-                </Link>
-              </li>
+            <ul {...stylex.props(styles.list)}>
+              {links.map((link) => (
+                <li key={link.to}>
+                  <Link to={link.to} {...stylex.props(styles.link)}>
+                    {link.label()}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Col 3: Connect (Socials) */}
           <div>
-            <span className="block font-mono text-xs font-semibold tracking-wider text-accent uppercase mb-4">
+            <span {...stylex.props(styles.heading)}>
               {'// '}
-              {tFooter('connect')}
+              {m.layout_footer_connect()}
             </span>
-            <ul className="space-y-3">
-              {profile.socials && profile.socials.length > 0 ? (
-                profile.socials.map((social) => {
-                  const icon = social.icon as ProfileIcon
-                  return (
-                    <li key={social.id || social.name}>
-                      <a
-                        href={social.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2.5 text-sm text-muted hover:text-ink transition-colors"
-                      >
-                        {icon?.url && (
-                          <Image
-                            src={icon.url}
-                            alt={icon.alt || social.name}
-                            width={16}
-                            height={16}
-                            className="flex-shrink-0"
-                          />
-                        )}
-                        <span className="font-mono text-xs">{social.name}</span>
-                      </a>
-                    </li>
-                  )
-                })
-              ) : (
-                <p className="text-xs text-muted font-mono">No links configured</p>
-              )}
+            <ul {...stylex.props(styles.list)}>
+              {profile.socials?.map((social) => {
+                const icon = social.icon as Media
+
+                return (
+                  <li key={social.id ?? social.name}>
+                    <a href={social.url} target="_blank" rel="noopener noreferrer" {...stylex.props(styles.social)}>
+                      {icon.url && (
+                        <img
+                          src={icon.url}
+                          alt={icon.alt}
+                          width={16}
+                          height={16}
+                          {...stylex.props(styles.socialIcon)}
+                        />
+                      )}
+                      <span {...stylex.props(styles.socialName)}>{social.name}</span>
+                    </a>
+                  </li>
+                )
+              })}
             </ul>
           </div>
         </div>
 
-        {/* Bottom copyright info */}
-        <div className="mt-12 pt-6 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-mono text-muted">
+        <div {...stylex.props(styles.bottom)}>
           <p>
             © {year} {profile.name}. All rights reserved.
           </p>
-          <p className="flex items-center gap-1.5">
-            <span>{tFooter('builtWith')}</span>
+          <p {...stylex.props(styles.builtWith)}>
+            <span>{m.layout_footer_built_with()}</span>
             <a
-              href="https://nextjs.org"
+              href="https://tanstack.com/start"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-ink hover:text-accent transition-colors"
+              {...stylex.props(styles.builtWithLink)}
             >
-              Next.js
+              TanStack Start
             </a>
             <span>&</span>
             <a
               href="https://payloadcms.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-ink hover:text-accent transition-colors"
+              {...stylex.props(styles.builtWithLink)}
             >
               Payload CMS
             </a>

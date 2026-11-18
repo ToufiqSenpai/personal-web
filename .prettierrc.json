@@ -1,8 +1,0 @@
-{
-  "plugins": ["@trivago/prettier-plugin-sort-imports"],
-  "importOrder": ["^next", "^react", "^@", "^[a-z]", "^", "^#"],
-  "singleQuote": true,
-  "trailingComma": "all",
-  "printWidth": 120,
-  "semi": false
-}

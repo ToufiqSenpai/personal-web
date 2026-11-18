@@ -1,13 +1,11 @@
 import { z } from 'zod'
 
 const clientEnvSchema = z.object({
-  NEXT_PUBLIC_TURNSTILE_SITE_KEY: z.string().min(1),
-  NEXT_PUBLIC_SITE_URL: z.url(),
-  NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
+  VITE_SITE_URL: z.url(),
+  VITE_TURNSTILE_SITE_KEY: z.string().min(1),
 })
 
 export const clientEnv = clientEnvSchema.parse({
-  NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
-  NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
-  NODE_ENV: process.env.NODE_ENV,
+  VITE_SITE_URL: import.meta.env.VITE_SITE_URL,
+  VITE_TURNSTILE_SITE_KEY: import.meta.env.VITE_TURNSTILE_SITE_KEY,
 })

@@ -1,50 +1,5 @@
-import { COMMON_IMAGE_MIMETYPES } from '@/constants/mimetype'
-import { revalidateFeedsCache, revalidateFeedsDeleteCache } from '@/hooks/revalidateCache'
 import { lexicalEditor, BlocksFeature, UploadFeature } from '@payloadcms/richtext-lexical'
 import { CollectionConfig, Block } from 'payload'
-
-export const FeedsMedia: CollectionConfig = {
-  slug: 'feeds-media',
-  admin: {
-    group: 'Feeds',
-  },
-  access: {
-    read: () => true,
-  },
-  fields: [
-    {
-      name: 'alt',
-      type: 'text',
-      required: true,
-      localized: true,
-    },
-  ],
-  upload: {
-    staticDir: 'feeds-media',
-    mimeTypes: COMMON_IMAGE_MIMETYPES,
-    formatOptions: {
-      format: 'avif',
-      options: {
-        quality: 80,
-      },
-    },
-    imageSizes: [
-      {
-        name: 'thumbnail',
-        width: 400,
-        height: 400,
-        position: 'centre',
-      },
-      {
-        name: 'large',
-        width: 1024,
-        height: 1024,
-        position: 'centre',
-      },
-    ],
-    adminThumbnail: 'thumbnail',
-  },
-}
 
 const EmbedBlock: Block = {
   slug: 'embed',
@@ -70,10 +25,6 @@ export const Feeds: CollectionConfig = {
   access: {
     read: () => true,
   },
-  hooks: {
-    afterChange: [revalidateFeedsCache],
-    afterDelete: [revalidateFeedsDeleteCache],
-  },
   fields: [
     {
       name: 'title',
@@ -83,7 +34,7 @@ export const Feeds: CollectionConfig = {
     {
       name: 'media',
       type: 'upload',
-      relationTo: 'feeds-media',
+      relationTo: 'media',
       required: false,
     },
     {
@@ -98,7 +49,7 @@ export const Feeds: CollectionConfig = {
           }),
           UploadFeature({
             collections: {
-              'feeds-media': {
+              media: {
                 fields: [
                   {
                     name: 'caption',

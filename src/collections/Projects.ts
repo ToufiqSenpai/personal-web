@@ -1,5 +1,3 @@
-import { COMMON_IMAGE_MIMETYPES } from '@/constants/mimetype'
-import { revalidateProjectsCache, revalidateProjectsDeleteCache } from '@/hooks/revalidateCache'
 import { Octokit } from '@octokit/rest'
 import { CollectionConfig } from 'payload'
 import { env } from '../configs/env'
@@ -7,49 +5,6 @@ import { env } from '../configs/env'
 const github = new Octokit({
   auth: env.GITHUB_PAT,
 })
-
-export const ProjectsMedia: CollectionConfig = {
-  slug: 'projects-media',
-  admin: {
-    group: 'Projects',
-  },
-  access: {
-    read: () => true,
-  },
-  fields: [
-    {
-      name: 'alt',
-      type: 'text',
-      required: true,
-      localized: true,
-    },
-  ],
-  upload: {
-    staticDir: 'projects-media',
-    mimeTypes: COMMON_IMAGE_MIMETYPES,
-    formatOptions: {
-      format: 'avif',
-      options: {
-        quality: 80,
-      },
-    },
-    imageSizes: [
-      {
-        name: 'thumbnail',
-        width: 800,
-        height: 600,
-        position: 'centre',
-      },
-      {
-        name: 'large',
-        width: 1920,
-        height: 1080,
-        position: 'centre',
-      },
-    ],
-    adminThumbnail: 'thumbnail',
-  },
-}
 
 export const Projects: CollectionConfig = {
   slug: 'projects',
@@ -60,10 +15,6 @@ export const Projects: CollectionConfig = {
   },
   access: {
     read: () => true,
-  },
-  hooks: {
-    afterChange: [revalidateProjectsCache],
-    afterDelete: [revalidateProjectsDeleteCache],
   },
   endpoints: [
     {
@@ -142,7 +93,7 @@ export const Projects: CollectionConfig = {
     {
       name: 'thumbnail',
       type: 'upload',
-      relationTo: 'projects-media',
+      relationTo: 'media',
       required: true,
     },
     {

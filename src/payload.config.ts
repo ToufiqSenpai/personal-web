@@ -1,22 +1,33 @@
-import { mongooseAdapter } from '@payloadcms/db-mongodb'
+import { postgresAdapter } from '@payloadcms/db-postgres'
 import { resendAdapter } from '@payloadcms/email-resend'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { s3Storage } from '@payloadcms/storage-s3'
-import path from 'path'
-import { buildConfig } from 'payload'
-import sharp from 'sharp'
-import { fileURLToPath } from 'url'
-import { ArticleCategories, ArticleMedia, Articles } from './collections/Articles'
+import { sharpTransformer } from '@payloadcms/transformer-sharp'
+import path from 'node:path'
+import { buildConfig, type CollectionConfig, type GlobalConfig } from 'payload'
+import { fileURLToPath } from 'node:url'
+import { ArticleCategories, Articles } from './collections/Articles'
 import { ContactMessages } from './collections/ContactMessages'
-import { Feeds, FeedsMedia } from './collections/Feeds'
-import { Profile, ProfileAvatar, ProfileIcons, HobbiesMedia } from './collections/Profile'
-import { Projects, ProjectsMedia } from './collections/Projects'
+import { Feeds } from './collections/Feeds'
+import { Folders } from './collections/Folders'
+import { Media } from './collections/Media'
+import { Profile } from './collections/Profile'
+import { Projects } from './collections/Projects'
+import { Tags } from './collections/Tags'
 import { Users } from './collections/Users'
 import { env } from './configs/env'
-import { DEFAULT_LANGUAGE, LANGUAGES } from './constants/language'
+import { DEFAULT_LOCALE, LANGUAGES } from './constants/language'
 
-const filename = fileURLToPath(import.meta.url)
-const dirname = path.dirname(filename)
+const dirname = path.dirname(fileURLToPath(import.meta.url))
+
+// Payload 4 enables versions and authorship by default. This site never used either,
+// so opt out everywhere instead of growing a versions table per collection.
+const legacyDefaults = <T extends CollectionConfig | GlobalConfig>(collection: T) =>
+  ({
+    ...collection,
+    versions: false,
+    authorship: false,
+  }) as T
 
 const generateCDNUrl =
   (cdnUrl: string) =>
@@ -36,52 +47,57 @@ const cdnStorageConfig = {
 
 export default buildConfig({
   admin: {
+    user: Users.slug,
     importMap: {
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [
-    Users,
-    ProfileAvatar,
-    ProfileIcons,
-    HobbiesMedia,
-    Feeds,
-    FeedsMedia,
-    Projects,
-    ProjectsMedia,
-    ContactMessages,
-    Articles,
-    ArticleCategories,
-    ArticleMedia,
-  ],
-  globals: [Profile],
+  collections: [Users, Media, Folders, Tags, Feeds, Projects, ContactMessages, Articles, ArticleCategories].map(
+    legacyDefaults,
+  ),
+  globals: [Profile].map(legacyDefaults),
   localization: {
     locales: LANGUAGES.map((language) => language.code),
-    defaultLocale: DEFAULT_LANGUAGE.code,
+    defaultLocale: DEFAULT_LOCALE,
     fallback: true,
   },
+  // Payload 4 defaults to depth 1, this site relied on depth 2.
+  defaultDepth: 2,
   editor: lexicalEditor(),
   secret: env.PAYLOAD_SECRET,
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
-  db: mongooseAdapter({
-    url: env.DATABASE_URL,
+  db: postgresAdapter({
+    // UUIDv7 ids: time-sortable and generated app-side, so the schema stays portable.
+    idType: 'uuidv7',
+    // Schema changes ship as reviewed migrations in `src/migrations`, never as an
+    // implicit push against the database (development included).
+    push: false,
+    pool: {
+      connectionString: env.DATABASE_URL,
+    },
   }),
   email: resendAdapter({
-    defaultFromAddress: env.CONTACT_EMAIL_FROM || 'onboarding@resend.dev',
+    defaultFromAddress: env.CONTACT_EMAIL_FROM,
     defaultFromName: 'Personal Website',
-    apiKey: env.RESEND_API_KEY || '',
+    apiKey: env.RESEND_API_KEY,
   }),
-  sharp,
-  plugins: [
+  upload: {
+    transformers: [
+      sharpTransformer({
+        collections: {
+          media: {
+            formatOptions: { format: 'avif', options: { quality: 80 } },
+          },
+        },
+      }),
+    ],
+  },
+  storage: [
     s3Storage({
       collections: {
-        'profile-avatar': cdnStorageConfig,
-        'profile-icons': cdnStorageConfig,
-        'hobbies-media': cdnStorageConfig,
-        'feeds-media': cdnStorageConfig,
-        'projects-media': cdnStorageConfig,
+        media: cdnStorageConfig,
       },
       bucket: env.S3_BUCKET,
       config: {

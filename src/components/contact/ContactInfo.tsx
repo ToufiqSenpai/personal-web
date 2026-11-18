@@ -1,37 +1,96 @@
-import { getTranslations } from 'next-intl/server'
-import Image from 'next/image'
-import Link from 'next/link'
-import { getProfile } from '@/data/queries'
-import { ProfileIcon } from '@/payload-types'
+import * as stylex from '@stylexjs/stylex'
+import type { Media, Profile } from '@/payload-types'
+import { m } from '@/paraglide/messages'
 
-export async function ContactInfo({ locale }: { locale: string }) {
-  const t = await getTranslations('pages.Contact')
-  const profile = await getProfile(locale as 'en' | 'id' | 'ja')
+const styles = stylex.create({
+  list: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '1.5rem',
+  },
+  card: {
+    padding: '1.25rem',
+    borderRadius: '0.75rem',
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: 'var(--color-border)',
+    backgroundColor: 'var(--color-surface)',
+  },
+  label: {
+    marginTop: 0,
+    marginRight: 0,
+    marginLeft: 0,
+    marginBottom: '0.5rem',
+    fontFamily: 'var(--font-mono)',
+    fontSize: '0.75rem',
+    color: 'var(--color-muted)',
+  },
+  labelSpaced: {
+    marginBottom: '0.75rem',
+  },
+  email: {
+    fontSize: '0.875rem',
+    color: 'var(--color-ink)',
+    textDecorationLine: 'none',
+    transitionProperty: 'color',
+    transitionDuration: '150ms',
+    ':hover': {
+      color: 'var(--color-accent)',
+    },
+  },
+  socials: {
+    display: 'flex',
+    gap: '0.75rem',
+  },
+  social: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '2.25rem',
+    height: '2.25rem',
+    borderRadius: '0.5rem',
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: 'var(--color-border)',
+    color: 'var(--color-muted)',
+    transitionProperty: 'color, border-color',
+    transitionDuration: '150ms',
+    ':hover': {
+      borderColor: 'var(--color-accent)',
+      color: 'var(--color-accent)',
+    },
+  },
+})
 
+export function ContactInfo({ profile }: { profile: Profile }) {
   return (
-    <div className="flex flex-col gap-6">
-      <div className="rounded-xl border border-border bg-surface p-5">
-        <p className="mb-2 font-mono text-xs text-muted">{t('emailLabel')}</p>
-        <Link href={`mailto:${profile.email}`} className="text-sm text-ink transition-colors hover:text-accent">
+    <div {...stylex.props(styles.list)}>
+      <div {...stylex.props(styles.card)}>
+        <p {...stylex.props(styles.label)}>{m.pages_contact_email_label()}</p>
+        <a href={`mailto:${profile.email}`} {...stylex.props(styles.email)}>
           {profile.email}
-        </Link>
+        </a>
       </div>
 
-      <div className="rounded-xl border border-border bg-surface p-5">
-        <p className="mb-3 font-mono text-xs text-muted">{t('socialsLabel')}</p>
-        <div className="flex gap-3">
-          {profile.socials?.map((social) => (
-            <Link
-              key={social.name}
-              href={social.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex h-9 w-9 items-center justify-center rounded-lg border border-border text-muted transition-colors hover:border-accent hover:text-accent"
-              aria-label={social.name}
-            >
-              <Image src={(social.icon as ProfileIcon).url!} alt={social.name} width={18} height={18} />
-            </Link>
-          ))}
+      <div {...stylex.props(styles.card)}>
+        <p {...stylex.props(styles.label, styles.labelSpaced)}>{m.pages_contact_socials_label()}</p>
+        <div {...stylex.props(styles.socials)}>
+          {profile.socials?.map((social) => {
+            const icon = social.icon as Media
+
+            return (
+              <a
+                key={social.id ?? social.name}
+                href={social.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={social.name}
+                {...stylex.props(styles.social)}
+              >
+                {icon.url && <img src={icon.url} alt={social.name} width={18} height={18} />}
+              </a>
+            )
+          })}
         </div>
       </div>
     </div>

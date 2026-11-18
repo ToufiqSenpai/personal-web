@@ -7,6 +7,83 @@
  */
 
 /**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "UploadTransforms".
+ */
+export type UploadTransforms = {
+  /**
+   * Time range on the original, in milliseconds. Start inclusive, end exclusive.
+   */
+  clip?: {
+    endMs: number;
+    startMs: number;
+  };
+  /**
+   * Rectangle in original-file pixels, applied before resize and encoding.
+   */
+  crop?: {
+    height: number;
+    width: number;
+    x: number;
+    y: number;
+  };
+  /**
+   * Encoding settings for the output format. Does not select the format.
+   */
+  encoding?: {
+    [k: string]: unknown;
+  };
+  /**
+   * Mirror the image on one or both axes.
+   */
+  flip?: {
+    horizontal?: boolean;
+    vertical?: boolean;
+  };
+  /**
+   * Preferred point as percentages of the original, from 0 to 100.
+   */
+  focalPoint?: {
+    x: number;
+    y: number;
+  };
+  /**
+   * Keep or remove metadata embedded in the output file.
+   */
+  metadataPolicy?: {
+    mode: 'preserve' | 'strip';
+  };
+  /**
+   * One-based, inclusive page range on the original document.
+   */
+  pageRange?: {
+    endPage: number;
+    startPage: number;
+  };
+  /**
+   * Video frame to use as the poster, in milliseconds on the original.
+   */
+  posterFrame?: {
+    timestampMs: number;
+  };
+  /**
+   * Target size for visual media.
+   */
+  resize?: {
+    fit?: 'contain' | 'cover' | 'fill' | 'inside' | 'outside';
+    height?: number;
+    width?: number;
+    withoutEnlargement?: boolean;
+  };
+  /**
+   * Clockwise rotation in degrees.
+   */
+  rotate?: {
+    angle: number;
+  };
+  [k: string]: unknown;
+} | null;
+/**
  * Supported timezones in IANA format.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -59,1089 +136,811 @@ export type SupportedTimezones =
   | 'Pacific/Guam'
   | 'Pacific/Noumea'
   | 'Pacific/Auckland'
-  | 'Pacific/Fiji'
+  | 'Pacific/Fiji';
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LexicalNodes_63505DD6".
+ */
+export type LexicalNodes_63505DD6 =
+  | SerializedTextNode
+  | SerializedTabNode
+  | SerializedLineBreakNode
+  | SerializedParagraphNode<LexicalNodes_63505DD6>
+  | SerializedUploadNode<'media', LexicalUploadFields_7C90EEAC>
+  | SerializedBlockNode<Embed>
+  | SerializedHorizontalRuleNode
+  | SerializedQuoteNode<LexicalNodes_63505DD6>
+  | SerializedRelationshipNode<
+      | 'users'
+      | 'folders'
+      | 'tags'
+      | 'feeds'
+      | 'projects'
+      | 'contact-messages'
+      | 'articles'
+      | 'article-categories'
+      | 'payload-kv'
+      | 'payload-locked-documents'
+      | 'payload-preferences'
+      | 'payload-migrations'
+    >
+  | SerializedAutoLinkNode<LexicalNodes_63505DD6, LexicalLinkFields>
+  | SerializedLinkNode<LexicalNodes_63505DD6, LexicalLinkFields>
+  | SerializedListNode<LexicalNodes_63505DD6>
+  | SerializedListItemNode<LexicalNodes_63505DD6>
+  | SerializedHeadingNode<LexicalNodes_63505DD6>;
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LexicalNodes_346B7FBF".
+ */
+export type LexicalNodes_346B7FBF =
+  | SerializedTextNode
+  | SerializedTabNode
+  | SerializedLineBreakNode
+  | SerializedParagraphNode<LexicalNodes_346B7FBF>
+  | SerializedUploadNode<'media'>
+  | SerializedHorizontalRuleNode
+  | SerializedQuoteNode<LexicalNodes_346B7FBF>
+  | SerializedRelationshipNode<
+      | 'users'
+      | 'folders'
+      | 'tags'
+      | 'feeds'
+      | 'projects'
+      | 'contact-messages'
+      | 'articles'
+      | 'article-categories'
+      | 'payload-kv'
+      | 'payload-locked-documents'
+      | 'payload-preferences'
+      | 'payload-migrations'
+    >
+  | SerializedAutoLinkNode<LexicalNodes_346B7FBF, LexicalLinkFields>
+  | SerializedLinkNode<LexicalNodes_346B7FBF, LexicalLinkFields>
+  | SerializedListNode<LexicalNodes_346B7FBF>
+  | SerializedListItemNode<LexicalNodes_346B7FBF>
+  | SerializedHeadingNode<LexicalNodes_346B7FBF>;
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LexicalNodes_3DE324E4".
+ */
+export type LexicalNodes_3DE324E4 =
+  | SerializedTextNode
+  | SerializedTabNode
+  | SerializedLineBreakNode
+  | SerializedParagraphNode<LexicalNodes_3DE324E4>
+  | SerializedListNode<LexicalNodes_3DE324E4>
+  | SerializedListItemNode<LexicalNodes_3DE324E4>
+  | SerializedHeadingNode<LexicalNodes_3DE324E4, 'h2' | 'h3' | 'h4'>;
 
 export interface Config {
   auth: {
-    users: UserAuthOperations
-  }
-  blocks: {}
+    users: UserAuthOperations;
+  };
+  blocks: {};
   collections: {
-    users: User
-    'profile-avatar': ProfileAvatar
-    'profile-icons': ProfileIcon
-    'hobbies-media': HobbiesMedia
-    feeds: Feed
-    'feeds-media': FeedsMedia
-    projects: Project
-    'projects-media': ProjectsMedia
-    'contact-messages': ContactMessage
-    articles: Article
-    'article-categories': ArticleCategory
-    'article-media': ArticleMedia
-    'payload-kv': PayloadKv
-    'payload-locked-documents': PayloadLockedDocument
-    'payload-preferences': PayloadPreference
-    'payload-migrations': PayloadMigration
-  }
-  collectionsJoins: {}
+    users: User;
+    media: Media;
+    folders: Folder;
+    tags: Tag;
+    feeds: Feed;
+    projects: Project;
+    'contact-messages': ContactMessage;
+    articles: Article;
+    'article-categories': ArticleCategory;
+    'payload-kv': PayloadKv;
+    'payload-locked-documents': PayloadLockedDocument;
+    'payload-preferences': PayloadPreference;
+    'payload-migrations': PayloadMigration;
+    'payload-llm-instructions': PayloadLlmInstruction;
+  };
+  collectionsJoins: {};
   collectionsSelect: {
-    users: UsersSelect<false> | UsersSelect<true>
-    'profile-avatar': ProfileAvatarSelect<false> | ProfileAvatarSelect<true>
-    'profile-icons': ProfileIconsSelect<false> | ProfileIconsSelect<true>
-    'hobbies-media': HobbiesMediaSelect<false> | HobbiesMediaSelect<true>
-    feeds: FeedsSelect<false> | FeedsSelect<true>
-    'feeds-media': FeedsMediaSelect<false> | FeedsMediaSelect<true>
-    projects: ProjectsSelect<false> | ProjectsSelect<true>
-    'projects-media': ProjectsMediaSelect<false> | ProjectsMediaSelect<true>
-    'contact-messages': ContactMessagesSelect<false> | ContactMessagesSelect<true>
-    articles: ArticlesSelect<false> | ArticlesSelect<true>
-    'article-categories': ArticleCategoriesSelect<false> | ArticleCategoriesSelect<true>
-    'article-media': ArticleMediaSelect<false> | ArticleMediaSelect<true>
-    'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>
-    'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>
-    'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>
-    'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>
-  }
+    users: UsersSelect<false> | UsersSelect<true>;
+    media: MediaSelect<false> | MediaSelect<true>;
+    folders: FoldersSelect<false> | FoldersSelect<true>;
+    tags: TagsSelect<false> | TagsSelect<true>;
+    feeds: FeedsSelect<false> | FeedsSelect<true>;
+    projects: ProjectsSelect<false> | ProjectsSelect<true>;
+    'contact-messages': ContactMessagesSelect<false> | ContactMessagesSelect<true>;
+    articles: ArticlesSelect<false> | ArticlesSelect<true>;
+    'article-categories': ArticleCategoriesSelect<false> | ArticleCategoriesSelect<true>;
+    'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
+    'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
+    'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
+    'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
+    'payload-llm-instructions': PayloadLlmInstructionsSelect<false> | PayloadLlmInstructionsSelect<true>;
+  };
   db: {
-    defaultIDType: string
-  }
-  fallbackLocale: ('false' | 'none' | 'null') | false | null | ('en' | 'id' | 'ja') | ('en' | 'id' | 'ja')[]
+    defaultIDType: string;
+  };
+  fallbackLocale: ('false' | 'none' | 'null') | false | null | ('en' | 'id' | 'ja') | ('en' | 'id' | 'ja')[];
   globals: {
-    profile: Profile
-  }
+    profile: Profile;
+  };
   globalsSelect: {
-    profile: ProfileSelect<false> | ProfileSelect<true>
-  }
-  locale: 'en' | 'id' | 'ja'
+    profile: ProfileSelect<false> | ProfileSelect<true>;
+  };
+  locale: 'en' | 'id' | 'ja';
   widgets: {
-    collections: CollectionsWidget
-  }
-  user: User
+    welcome: WelcomeWidget;
+    collections: CollectionsWidget;
+    'collection-query': CollectionQueryWidget;
+    activity: ActivityWidget;
+    'upload-dropzone': UploadDropzoneWidget;
+  };
+  user: User;
   jobs: {
-    tasks: unknown
-    workflows: unknown
-  }
+    tasks: unknown;
+    workflows: unknown;
+  };
 }
 export interface UserAuthOperations {
   forgotPassword: {
-    email: string
-    password: string
-  }
+    email: string;
+    password: string;
+  };
   login: {
-    email: string
-    password: string
-  }
+    email: string;
+    password: string;
+  };
   registerFirstUser: {
-    email: string
-    password: string
-  }
+    email: string;
+    password: string;
+  };
   unlock: {
-    email: string
-    password: string
-  }
+    email: string;
+    password: string;
+  };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
-  id: string
-  updatedAt: string
-  createdAt: string
-  email: string
-  resetPasswordToken?: string | null
-  resetPasswordExpiration?: string | null
-  salt?: string | null
-  hash?: string | null
-  loginAttempts?: number | null
-  lockUntil?: string | null
+  id: string;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  resetPasswordRequestedAt?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
   sessions?:
     | {
-        id: string
-        createdAt?: string | null
-        expiresAt: string
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+        refreshCount?: number | null;
+        refreshedAt?: string | null;
+        label?: string | null;
+        type?: string | null;
+        metadata?:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
       }[]
-    | null
-  password?: string | null
-  collection: 'users'
+    | null;
+  password?: string | null;
+  collection: 'users';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "profile-avatar".
+ * via the `definition` "media".
  */
-export interface ProfileAvatar {
-  id: string
-  alt: string
-  updatedAt: string
-  createdAt: string
-  url?: string | null
-  thumbnailURL?: string | null
-  filename?: string | null
-  mimeType?: string | null
-  filesize?: number | null
-  width?: number | null
-  height?: number | null
-  focalX?: number | null
-  focalY?: number | null
-  sizes?: {
-    thumbnail?: {
-      url?: string | null
-      width?: number | null
-      height?: number | null
-      mimeType?: string | null
-      filesize?: number | null
-      filename?: string | null
-    }
-    medium?: {
-      url?: string | null
-      width?: number | null
-      height?: number | null
-      mimeType?: string | null
-      filesize?: number | null
-      filename?: string | null
-    }
-    large?: {
-      url?: string | null
-      width?: number | null
-      height?: number | null
-      mimeType?: string | null
-      filesize?: number | null
-      filename?: string | null
-    }
-  }
+export interface Media {
+  id: string;
+  alt: string;
+  caption?: string | null;
+  _h_folders?: (string | null) | Folder;
+  _h_tags?: (string | Tag)[] | null;
+  prefix?: string | null;
+  _objectKey?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  _stored?: boolean | null;
+  _transforms?: UploadTransforms;
+  original?: {
+    filename?: string | null;
+    url?: string | null;
+    mimeType?: string | null;
+    filesize?: number | null;
+    width?: number | null;
+    height?: number | null;
+    prefix?: string | null;
+    _objectKey?: string | null;
+    _stored?: boolean | null;
+  };
+  focalX?: number | null;
+  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "profile-icons".
+ * via the `definition` "folders".
  */
-export interface ProfileIcon {
-  id: string
-  alt: string
-  updatedAt: string
-  createdAt: string
-  url?: string | null
-  thumbnailURL?: string | null
-  filename?: string | null
-  mimeType?: string | null
-  filesize?: number | null
-  width?: number | null
-  height?: number | null
-  focalX?: number | null
-  focalY?: number | null
+export interface Folder {
+  id: string;
+  _h_folders?: (string | null) | Folder;
+  name: string;
+  updatedAt: string;
+  createdAt: string;
+  _h_slugPath?: string | null;
+  _h_titlePath?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "hobbies-media".
+ * via the `definition` "tags".
  */
-export interface HobbiesMedia {
-  id: string
-  alt: string
-  updatedAt: string
-  createdAt: string
-  url?: string | null
-  thumbnailURL?: string | null
-  filename?: string | null
-  mimeType?: string | null
-  filesize?: number | null
-  width?: number | null
-  height?: number | null
-  focalX?: number | null
-  focalY?: number | null
-  sizes?: {
-    thumbnail?: {
-      url?: string | null
-      width?: number | null
-      height?: number | null
-      mimeType?: string | null
-      filesize?: number | null
-      filename?: string | null
-    }
-    medium?: {
-      url?: string | null
-      width?: number | null
-      height?: number | null
-      mimeType?: string | null
-      filesize?: number | null
-      filename?: string | null
-    }
-    large?: {
-      url?: string | null
-      width?: number | null
-      height?: number | null
-      mimeType?: string | null
-      filesize?: number | null
-      filename?: string | null
-    }
-  }
+export interface Tag {
+  id: string;
+  _h_tags?: (string | null) | Tag;
+  name: string;
+  updatedAt: string;
+  createdAt: string;
+  _h_slugPath?: string | null;
+  _h_titlePath?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "feeds".
  */
 export interface Feed {
-  id: string
-  title?: string | null
-  media?: (string | null) | FeedsMedia
-  body: {
-    root: {
-      type: string
-      children: {
-        type: any
-        version: number
-        [k: string]: unknown
-      }[]
-      direction: ('ltr' | 'rtl') | null
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
-      indent: number
-      version: number
-    }
-    [k: string]: unknown
-  }
-  updatedAt: string
-  createdAt: string
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "feeds-media".
- */
-export interface FeedsMedia {
-  id: string
-  alt: string
-  updatedAt: string
-  createdAt: string
-  url?: string | null
-  thumbnailURL?: string | null
-  filename?: string | null
-  mimeType?: string | null
-  filesize?: number | null
-  width?: number | null
-  height?: number | null
-  focalX?: number | null
-  focalY?: number | null
-  sizes?: {
-    thumbnail?: {
-      url?: string | null
-      width?: number | null
-      height?: number | null
-      mimeType?: string | null
-      filesize?: number | null
-      filename?: string | null
-    }
-    large?: {
-      url?: string | null
-      width?: number | null
-      height?: number | null
-      mimeType?: string | null
-      filesize?: number | null
-      filename?: string | null
-    }
-  }
+  id: string;
+  title?: string | null;
+  media?: (string | null) | Media;
+  body: LexicalRichText<LexicalNodes_63505DD6>;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "projects".
  */
 export interface Project {
-  id: string
-  title: string
-  githubRepo?: string | null
+  id: string;
+  title: string;
+  githubRepo?: string | null;
   /**
    * A short description for the project card (1-2 sentences).
    */
-  description: string
+  description: string;
   /**
    * List of technologies used (e.g., React, Next.js, TailwindCSS)
    */
   techStacks: {
-    tag: string
-    id?: string | null
-  }[]
-  thumbnail: string | ProjectsMedia
-  demoUrl?: string | null
-  repositoryUrl?: string | null
-  projectType: 'public' | 'private'
-  updatedAt: string
-  createdAt: string
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "projects-media".
- */
-export interface ProjectsMedia {
-  id: string
-  alt: string
-  updatedAt: string
-  createdAt: string
-  url?: string | null
-  thumbnailURL?: string | null
-  filename?: string | null
-  mimeType?: string | null
-  filesize?: number | null
-  width?: number | null
-  height?: number | null
-  focalX?: number | null
-  focalY?: number | null
-  sizes?: {
-    thumbnail?: {
-      url?: string | null
-      width?: number | null
-      height?: number | null
-      mimeType?: string | null
-      filesize?: number | null
-      filename?: string | null
-    }
-    large?: {
-      url?: string | null
-      width?: number | null
-      height?: number | null
-      mimeType?: string | null
-      filesize?: number | null
-      filename?: string | null
-    }
-  }
+    tag: string;
+    id?: string | null;
+  }[];
+  thumbnail: string | Media;
+  demoUrl?: string | null;
+  repositoryUrl?: string | null;
+  projectType: 'public' | 'private';
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "contact-messages".
  */
 export interface ContactMessage {
-  id: string
-  name: string
-  email: string
-  subject: string
-  message: string
-  readAt?: string | null
-  updatedAt: string
-  createdAt: string
+  id: string;
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+  readAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "articles".
  */
 export interface Article {
-  id: string
-  title: string
-  slug: string
-  excerpt?: string | null
-  author: string | User
-  mainImage?: (string | null) | ArticleMedia
-  categories?: (string | ArticleCategory)[] | null
-  body: {
-    root: {
-      type: string
-      children: {
-        type: any
-        version: number
-        [k: string]: unknown
-      }[]
-      direction: ('ltr' | 'rtl') | null
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
-      indent: number
-      version: number
-    }
-    [k: string]: unknown
-  }
-  readingTime?: number | null
+  id: string;
+  title: string;
+  slug: string;
+  excerpt?: string | null;
+  author: string | User;
+  mainImage?: (string | null) | Media;
+  categories?: (string | ArticleCategory)[] | null;
+  body: LexicalRichText<LexicalNodes_346B7FBF>;
+  readingTime?: number | null;
   seo?: {
-    title?: string | null
-    description?: string | null
-  }
-  status: 'draft' | 'published' | 'archived'
-  publishedAt?: string | null
-  updatedAt: string
-  createdAt: string
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "article-media".
- */
-export interface ArticleMedia {
-  id: string
-  alt: string
-  caption?: string | null
-  updatedAt: string
-  createdAt: string
-  url?: string | null
-  thumbnailURL?: string | null
-  filename?: string | null
-  mimeType?: string | null
-  filesize?: number | null
-  width?: number | null
-  height?: number | null
-  focalX?: number | null
-  focalY?: number | null
-  sizes?: {
-    thumbnail?: {
-      url?: string | null
-      width?: number | null
-      height?: number | null
-      mimeType?: string | null
-      filesize?: number | null
-      filename?: string | null
-    }
-    card?: {
-      url?: string | null
-      width?: number | null
-      height?: number | null
-      mimeType?: string | null
-      filesize?: number | null
-      filename?: string | null
-    }
-    og?: {
-      url?: string | null
-      width?: number | null
-      height?: number | null
-      mimeType?: string | null
-      filesize?: number | null
-      filename?: string | null
-    }
-    hero?: {
-      url?: string | null
-      width?: number | null
-      height?: number | null
-      mimeType?: string | null
-      filesize?: number | null
-      filename?: string | null
-    }
-  }
+    title?: string | null;
+    description?: string | null;
+  };
+  status: 'draft' | 'published' | 'archived';
+  publishedAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "article-categories".
  */
 export interface ArticleCategory {
-  id: string
-  title: string
-  slug: string
-  description?: string | null
-  updatedAt: string
-  createdAt: string
+  id: string;
+  title: string;
+  slug: string;
+  description?: string | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
-  id: string
-  key: string
+  id: string;
+  key: string;
   data:
     | {
-        [k: string]: unknown
+        [k: string]: unknown;
       }
     | unknown[]
     | string
     | number
     | boolean
-    | null
+    | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
-  id: string
+  id: string;
   document?:
     | ({
-        relationTo: 'users'
-        value: string | User
+        relationTo: 'users';
+        value: string | User;
       } | null)
     | ({
-        relationTo: 'profile-avatar'
-        value: string | ProfileAvatar
+        relationTo: 'media';
+        value: string | Media;
       } | null)
     | ({
-        relationTo: 'profile-icons'
-        value: string | ProfileIcon
+        relationTo: 'folders';
+        value: string | Folder;
       } | null)
     | ({
-        relationTo: 'hobbies-media'
-        value: string | HobbiesMedia
+        relationTo: 'tags';
+        value: string | Tag;
       } | null)
     | ({
-        relationTo: 'feeds'
-        value: string | Feed
+        relationTo: 'feeds';
+        value: string | Feed;
       } | null)
     | ({
-        relationTo: 'feeds-media'
-        value: string | FeedsMedia
+        relationTo: 'projects';
+        value: string | Project;
       } | null)
     | ({
-        relationTo: 'projects'
-        value: string | Project
+        relationTo: 'contact-messages';
+        value: string | ContactMessage;
       } | null)
     | ({
-        relationTo: 'projects-media'
-        value: string | ProjectsMedia
+        relationTo: 'articles';
+        value: string | Article;
       } | null)
     | ({
-        relationTo: 'contact-messages'
-        value: string | ContactMessage
-      } | null)
-    | ({
-        relationTo: 'articles'
-        value: string | Article
-      } | null)
-    | ({
-        relationTo: 'article-categories'
-        value: string | ArticleCategory
-      } | null)
-    | ({
-        relationTo: 'article-media'
-        value: string | ArticleMedia
-      } | null)
-  globalSlug?: string | null
+        relationTo: 'article-categories';
+        value: string | ArticleCategory;
+      } | null);
+  globalSlug?: string | null;
   user: {
-    relationTo: 'users'
-    value: string | User
-  }
-  updatedAt: string
-  createdAt: string
+    relationTo: 'users';
+    value: string | User;
+  };
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: string
+  id: string;
   user: {
-    relationTo: 'users'
-    value: string | User
-  }
-  key?: string | null
+    relationTo: 'users';
+    value: string | User;
+  };
+  key?: string | null;
   value?:
     | {
-        [k: string]: unknown
+        [k: string]: unknown;
       }
     | unknown[]
     | string
     | number
     | boolean
-    | null
-  updatedAt: string
-  createdAt: string
+    | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: string
-  name?: string | null
-  batch?: number | null
-  updatedAt: string
-  createdAt: string
+  id: string;
+  name?: string | null;
+  batch?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-llm-instructions".
+ */
+export interface PayloadLlmInstruction {
+  id: string;
+  entitySlug: string;
+  title?: string | null;
+  entityType: 'collection' | 'global';
+  additionalInstructions?: LexicalRichText<LexicalNodes_3DE324E4> | null;
+  systemInstructions?: LexicalRichText<LexicalNodes_3DE324E4> | null;
+  createdBy?: {
+    relationTo: 'users';
+    value: string | User;
+  } | null;
+  updatedBy?: {
+    relationTo: 'users';
+    value: string | User;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
-  updatedAt?: T
-  createdAt?: T
-  email?: T
-  resetPasswordToken?: T
-  resetPasswordExpiration?: T
-  salt?: T
-  hash?: T
-  loginAttempts?: T
-  lockUntil?: T
+  updatedAt?: T;
+  createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  resetPasswordRequestedAt?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
   sessions?:
     | T
     | {
-        id?: T
-        createdAt?: T
-        expiresAt?: T
-      }
+        id?: T;
+        createdAt?: T;
+        expiresAt?: T;
+        refreshCount?: T;
+        refreshedAt?: T;
+        label?: T;
+        type?: T;
+        metadata?: T;
+      };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "profile-avatar_select".
+ * via the `definition` "media_select".
  */
-export interface ProfileAvatarSelect<T extends boolean = true> {
-  alt?: T
-  updatedAt?: T
-  createdAt?: T
-  url?: T
-  thumbnailURL?: T
-  filename?: T
-  mimeType?: T
-  filesize?: T
-  width?: T
-  height?: T
-  focalX?: T
-  focalY?: T
-  sizes?:
+export interface MediaSelect<T extends boolean = true> {
+  alt?: T;
+  caption?: T;
+  _h_folders?: T;
+  _h_tags?: T;
+  prefix?: T;
+  _objectKey?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  _stored?: T;
+  _transforms?: T;
+  original?:
     | T
     | {
-        thumbnail?:
-          | T
-          | {
-              url?: T
-              width?: T
-              height?: T
-              mimeType?: T
-              filesize?: T
-              filename?: T
-            }
-        medium?:
-          | T
-          | {
-              url?: T
-              width?: T
-              height?: T
-              mimeType?: T
-              filesize?: T
-              filename?: T
-            }
-        large?:
-          | T
-          | {
-              url?: T
-              width?: T
-              height?: T
-              mimeType?: T
-              filesize?: T
-              filename?: T
-            }
-      }
+        filename?: T;
+        url?: T;
+        mimeType?: T;
+        filesize?: T;
+        width?: T;
+        height?: T;
+        prefix?: T;
+        _objectKey?: T;
+        _stored?: T;
+      };
+  focalX?: T;
+  focalY?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "profile-icons_select".
+ * via the `definition` "folders_select".
  */
-export interface ProfileIconsSelect<T extends boolean = true> {
-  alt?: T
-  updatedAt?: T
-  createdAt?: T
-  url?: T
-  thumbnailURL?: T
-  filename?: T
-  mimeType?: T
-  filesize?: T
-  width?: T
-  height?: T
-  focalX?: T
-  focalY?: T
+export interface FoldersSelect<T extends boolean = true> {
+  _h_folders?: T;
+  name?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _h_slugPath?: T;
+  _h_titlePath?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "hobbies-media_select".
+ * via the `definition` "tags_select".
  */
-export interface HobbiesMediaSelect<T extends boolean = true> {
-  alt?: T
-  updatedAt?: T
-  createdAt?: T
-  url?: T
-  thumbnailURL?: T
-  filename?: T
-  mimeType?: T
-  filesize?: T
-  width?: T
-  height?: T
-  focalX?: T
-  focalY?: T
-  sizes?:
-    | T
-    | {
-        thumbnail?:
-          | T
-          | {
-              url?: T
-              width?: T
-              height?: T
-              mimeType?: T
-              filesize?: T
-              filename?: T
-            }
-        medium?:
-          | T
-          | {
-              url?: T
-              width?: T
-              height?: T
-              mimeType?: T
-              filesize?: T
-              filename?: T
-            }
-        large?:
-          | T
-          | {
-              url?: T
-              width?: T
-              height?: T
-              mimeType?: T
-              filesize?: T
-              filename?: T
-            }
-      }
+export interface TagsSelect<T extends boolean = true> {
+  _h_tags?: T;
+  name?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _h_slugPath?: T;
+  _h_titlePath?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "feeds_select".
  */
 export interface FeedsSelect<T extends boolean = true> {
-  title?: T
-  media?: T
-  body?: T
-  updatedAt?: T
-  createdAt?: T
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "feeds-media_select".
- */
-export interface FeedsMediaSelect<T extends boolean = true> {
-  alt?: T
-  updatedAt?: T
-  createdAt?: T
-  url?: T
-  thumbnailURL?: T
-  filename?: T
-  mimeType?: T
-  filesize?: T
-  width?: T
-  height?: T
-  focalX?: T
-  focalY?: T
-  sizes?:
-    | T
-    | {
-        thumbnail?:
-          | T
-          | {
-              url?: T
-              width?: T
-              height?: T
-              mimeType?: T
-              filesize?: T
-              filename?: T
-            }
-        large?:
-          | T
-          | {
-              url?: T
-              width?: T
-              height?: T
-              mimeType?: T
-              filesize?: T
-              filename?: T
-            }
-      }
+  title?: T;
+  media?: T;
+  body?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "projects_select".
  */
 export interface ProjectsSelect<T extends boolean = true> {
-  title?: T
-  githubRepo?: T
-  description?: T
+  title?: T;
+  githubRepo?: T;
+  description?: T;
   techStacks?:
     | T
     | {
-        tag?: T
-        id?: T
-      }
-  thumbnail?: T
-  demoUrl?: T
-  repositoryUrl?: T
-  projectType?: T
-  updatedAt?: T
-  createdAt?: T
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "projects-media_select".
- */
-export interface ProjectsMediaSelect<T extends boolean = true> {
-  alt?: T
-  updatedAt?: T
-  createdAt?: T
-  url?: T
-  thumbnailURL?: T
-  filename?: T
-  mimeType?: T
-  filesize?: T
-  width?: T
-  height?: T
-  focalX?: T
-  focalY?: T
-  sizes?:
-    | T
-    | {
-        thumbnail?:
-          | T
-          | {
-              url?: T
-              width?: T
-              height?: T
-              mimeType?: T
-              filesize?: T
-              filename?: T
-            }
-        large?:
-          | T
-          | {
-              url?: T
-              width?: T
-              height?: T
-              mimeType?: T
-              filesize?: T
-              filename?: T
-            }
-      }
+        tag?: T;
+        id?: T;
+      };
+  thumbnail?: T;
+  demoUrl?: T;
+  repositoryUrl?: T;
+  projectType?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "contact-messages_select".
  */
 export interface ContactMessagesSelect<T extends boolean = true> {
-  name?: T
-  email?: T
-  subject?: T
-  message?: T
-  readAt?: T
-  updatedAt?: T
-  createdAt?: T
+  name?: T;
+  email?: T;
+  subject?: T;
+  message?: T;
+  readAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "articles_select".
  */
 export interface ArticlesSelect<T extends boolean = true> {
-  title?: T
-  slug?: T
-  excerpt?: T
-  author?: T
-  mainImage?: T
-  categories?: T
-  body?: T
-  readingTime?: T
+  title?: T;
+  slug?: T;
+  excerpt?: T;
+  author?: T;
+  mainImage?: T;
+  categories?: T;
+  body?: T;
+  readingTime?: T;
   seo?:
     | T
     | {
-        title?: T
-        description?: T
-      }
-  status?: T
-  publishedAt?: T
-  updatedAt?: T
-  createdAt?: T
+        title?: T;
+        description?: T;
+      };
+  status?: T;
+  publishedAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "article-categories_select".
  */
 export interface ArticleCategoriesSelect<T extends boolean = true> {
-  title?: T
-  slug?: T
-  description?: T
-  updatedAt?: T
-  createdAt?: T
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "article-media_select".
- */
-export interface ArticleMediaSelect<T extends boolean = true> {
-  alt?: T
-  caption?: T
-  updatedAt?: T
-  createdAt?: T
-  url?: T
-  thumbnailURL?: T
-  filename?: T
-  mimeType?: T
-  filesize?: T
-  width?: T
-  height?: T
-  focalX?: T
-  focalY?: T
-  sizes?:
-    | T
-    | {
-        thumbnail?:
-          | T
-          | {
-              url?: T
-              width?: T
-              height?: T
-              mimeType?: T
-              filesize?: T
-              filename?: T
-            }
-        card?:
-          | T
-          | {
-              url?: T
-              width?: T
-              height?: T
-              mimeType?: T
-              filesize?: T
-              filename?: T
-            }
-        og?:
-          | T
-          | {
-              url?: T
-              width?: T
-              height?: T
-              mimeType?: T
-              filesize?: T
-              filename?: T
-            }
-        hero?:
-          | T
-          | {
-              url?: T
-              width?: T
-              height?: T
-              mimeType?: T
-              filesize?: T
-              filename?: T
-            }
-      }
+  title?: T;
+  slug?: T;
+  description?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv_select".
  */
 export interface PayloadKvSelect<T extends boolean = true> {
-  key?: T
-  data?: T
+  key?: T;
+  data?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents_select".
  */
 export interface PayloadLockedDocumentsSelect<T extends boolean = true> {
-  document?: T
-  globalSlug?: T
-  user?: T
-  updatedAt?: T
-  createdAt?: T
+  document?: T;
+  globalSlug?: T;
+  user?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-preferences_select".
  */
 export interface PayloadPreferencesSelect<T extends boolean = true> {
-  user?: T
-  key?: T
-  value?: T
-  updatedAt?: T
-  createdAt?: T
+  user?: T;
+  key?: T;
+  value?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-migrations_select".
  */
 export interface PayloadMigrationsSelect<T extends boolean = true> {
-  name?: T
-  batch?: T
-  updatedAt?: T
-  createdAt?: T
+  name?: T;
+  batch?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-llm-instructions_select".
+ */
+export interface PayloadLlmInstructionsSelect<T extends boolean = true> {
+  id?: T;
+  entitySlug?: T;
+  title?: T;
+  entityType?: T;
+  additionalInstructions?: T;
+  systemInstructions?: T;
+  createdBy?: T;
+  updatedBy?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "profile".
  */
 export interface Profile {
-  id: string
-  name: string
-  email: string
-  avatar: string | ProfileAvatar
-  intro: string
-  bio: string
+  id: string;
+  name: string;
+  email: string;
+  avatar: string | Media;
+  intro: string;
+  bio: string;
   roles: {
-    role: string
-    id?: string | null
-  }[]
-  location: string
+    role: string;
+    id?: string | null;
+  }[];
+  location: string;
   languages: {
-    language: string
-    id?: string | null
-  }[]
+    language: string;
+    id?: string | null;
+  }[];
   socials?:
     | {
-        name: string
-        url: string
-        icon: string | ProfileIcon
-        id?: string | null
+        name: string;
+        url: string;
+        icon: string | Media;
+        id?: string | null;
       }[]
-    | null
+    | null;
   timelines: {
-    yearStart: number
-    yearEnd?: number | null
-    present?: boolean | null
-    title: string
-    institution: string
-    description: string
-    id?: string | null
-  }[]
+    yearStart: number;
+    yearEnd?: number | null;
+    present?: boolean | null;
+    title: string;
+    institution: string;
+    description: string;
+    id?: string | null;
+  }[];
   hobbies: {
-    title: string
-    description?: string | null
-    image: string | HobbiesMedia
-    id?: string | null
-  }[]
-  updatedAt?: string | null
-  createdAt?: string | null
+    title: string;
+    description?: string | null;
+    image: string | Media;
+    id?: string | null;
+  }[];
+  updatedAt?: string | null;
+  createdAt?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "profile_select".
  */
 export interface ProfileSelect<T extends boolean = true> {
-  name?: T
-  email?: T
-  avatar?: T
-  intro?: T
-  bio?: T
+  name?: T;
+  email?: T;
+  avatar?: T;
+  intro?: T;
+  bio?: T;
   roles?:
     | T
     | {
-        role?: T
-        id?: T
-      }
-  location?: T
+        role?: T;
+        id?: T;
+      };
+  location?: T;
   languages?:
     | T
     | {
-        language?: T
-        id?: T
-      }
+        language?: T;
+        id?: T;
+      };
   socials?:
     | T
     | {
-        name?: T
-        url?: T
-        icon?: T
-        id?: T
-      }
+        name?: T;
+        url?: T;
+        icon?: T;
+        id?: T;
+      };
   timelines?:
     | T
     | {
-        yearStart?: T
-        yearEnd?: T
-        present?: T
-        title?: T
-        institution?: T
-        description?: T
-        id?: T
-      }
+        yearStart?: T;
+        yearEnd?: T;
+        present?: T;
+        title?: T;
+        institution?: T;
+        description?: T;
+        id?: T;
+      };
   hobbies?:
     | T
     | {
-        title?: T
-        description?: T
-        image?: T
-        id?: T
-      }
-  updatedAt?: T
-  createdAt?: T
-  globalType?: T
+        title?: T;
+        description?: T;
+        image?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "welcome_widget".
+ */
+export interface WelcomeWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'full';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1149,17 +948,255 @@ export interface ProfileSelect<T extends boolean = true> {
  */
 export interface CollectionsWidget {
   data?: {
-    [k: string]: unknown
-  }
-  width: 'full'
+    [k: string]: unknown;
+  };
+  width: 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "collection-query_widget".
+ */
+export interface CollectionQueryWidget {
+  data?: {
+    title?: string | null;
+    relatedCollection:
+      | 'users'
+      | 'media'
+      | 'folders'
+      | 'tags'
+      | 'feeds'
+      | 'projects'
+      | 'contact-messages'
+      | 'articles'
+      | 'article-categories';
+    where?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    sortField?: string | null;
+    sortDirection?: ('asc' | 'desc') | null;
+    limit?: number | null;
+  };
+  width: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "activity_widget".
+ */
+export interface ActivityWidget {
+  data?: {
+    excludedCollections?:
+      | (
+          | 'users'
+          | 'media'
+          | 'folders'
+          | 'tags'
+          | 'feeds'
+          | 'projects'
+          | 'contact-messages'
+          | 'articles'
+          | 'article-categories'
+        )[]
+      | null;
+  };
+  width: 'small' | 'medium' | 'large' | 'x-large' | 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "upload-dropzone_widget".
+ */
+export interface UploadDropzoneWidget {
+  data?: {
+    excludedCollections?: 'media'[] | null;
+  };
+  width: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LexicalUploadFields_7C90EEAC".
+ */
+export interface LexicalUploadFields_7C90EEAC {
+  caption?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "Embed".
+ */
+export interface Embed {
+  id: string;
+  blockType: 'embed';
+  html: string;
+  blockName?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "auth".
  */
 export interface Auth {
-  [k: string]: unknown
+  [k: string]: unknown;
 }
+
+/** @internal Core Lexical types — see @payloadcms/richtext-lexical. */
+export type LexicalElementFormat = 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+export type LexicalElementDirection = ('ltr' | 'rtl') | null;
+
+export interface SerializedLexicalElementBase<TChildren> {
+  children: TChildren[];
+  direction: LexicalElementDirection;
+  format: LexicalElementFormat;
+  indent: number;
+  textFormat?: number;
+  textStyle?: string;
+  /** @deprecated Ignored when loading. Typed as required only to match Lexical's types: rich text sent through the API, CLI or MCP may not contain it. */
+  version: number;
+}
+
+export type LexicalTextMode = 'normal' | 'token' | 'segmented';
+
+export interface SerializedTextNode {
+  type: 'text';
+  detail: number;
+  format: number;
+  mode: LexicalTextMode;
+  style: string;
+  text: string;
+  /** @deprecated Ignored when loading. Typed as required only to match Lexical's types: rich text sent through the API, CLI or MCP may not contain it. */
+  version: number;
+}
+
+export interface SerializedTabNode {
+  type: 'tab';
+  detail: number;
+  format: number;
+  mode: LexicalTextMode;
+  style: string;
+  text: string;
+  /** @deprecated Ignored when loading. Typed as required only to match Lexical's types: rich text sent through the API, CLI or MCP may not contain it. */
+  version: number;
+}
+
+export interface SerializedLineBreakNode {
+  type: 'linebreak';
+  /** @deprecated Ignored when loading. Typed as required only to match Lexical's types: rich text sent through the API, CLI or MCP may not contain it. */
+  version: number;
+}
+
+export interface SerializedParagraphNode<TChildren> extends SerializedLexicalElementBase<TChildren> {
+  type: 'paragraph';
+  textFormat: number;
+  textStyle: string;
+}
+
+export type SerializedUploadNode<TSlugs extends keyof Config['collections'], TFields = { [k: string]: unknown }> = {
+  type: 'upload';
+  format: LexicalElementFormat;
+  id: string;
+  /** @deprecated Ignored when loading. Typed as required only to match Lexical's types: rich text sent through the API, CLI or MCP may not contain it. */
+  version: number;
+  fields: TFields;
+} & {
+  [TSlug in TSlugs]: {
+    relationTo: TSlug;
+    value: Config['collections'][TSlug]['id'] | Config['collections'][TSlug];
+  };
+}[TSlugs];
+
+export type SerializedBlockNode<TFields extends { blockType: string }> = TFields extends unknown ? {
+  type: 'block';
+  format: LexicalElementFormat;
+  /** @deprecated Ignored when loading. Typed as required only to match Lexical's types: rich text sent through the API, CLI or MCP may not contain it. */
+  version: number;
+  fields: { id: string; blockName?: string | null } & Omit<TFields, 'id' | 'blockName'>;
+} : never;
+export type SerializedInlineBlockNode<TFields extends { blockType: string }> = TFields extends unknown ? {
+  type: 'inlineBlock';
+  /** @deprecated Ignored when loading. Typed as required only to match Lexical's types: rich text sent through the API, CLI or MCP may not contain it. */
+  version: number;
+  fields: { id: string } & Omit<TFields, 'id'>;
+} : never;
+
+export interface SerializedHorizontalRuleNode {
+  type: 'horizontalrule';
+  /** @deprecated Ignored when loading. Typed as required only to match Lexical's types: rich text sent through the API, CLI or MCP may not contain it. */
+  version: number;
+}
+
+export interface SerializedQuoteNode<TChildren> extends SerializedLexicalElementBase<TChildren> {
+  type: 'quote';
+}
+
+export type SerializedRelationshipNode<TSlugs extends keyof Config['collections']> = {
+  type: 'relationship';
+  format: LexicalElementFormat;
+  /** @deprecated Ignored when loading. Typed as required only to match Lexical's types: rich text sent through the API, CLI or MCP may not contain it. */
+  version: number;
+} & {
+  [TSlug in TSlugs]: {
+    relationTo: TSlug;
+    value: Config['collections'][TSlug]['id'] | Config['collections'][TSlug];
+  };
+}[TSlugs];
+
+export interface LexicalLinkFields {
+  [k: string]: unknown;
+  doc?: {
+    relationTo: string;
+    value: Config['db']['defaultIDType'] | { [k: string]: unknown; id: Config['db']['defaultIDType'] };
+  } | null;
+  linkType: 'custom' | 'internal';
+  newTab: boolean;
+  url?: string;
+}
+export interface SerializedLinkNode<TChildren, TFields = LexicalLinkFields> extends SerializedLexicalElementBase<TChildren> {
+  type: 'link';
+  fields: TFields;
+  id?: string;
+}
+export interface SerializedAutoLinkNode<TChildren, TFields = LexicalLinkFields> extends SerializedLexicalElementBase<TChildren> {
+  type: 'autolink';
+  fields: TFields;
+}
+
+export interface SerializedListNode<TChildren> extends SerializedLexicalElementBase<TChildren> {
+  type: 'list';
+  checked?: boolean;
+  listType: 'number' | 'bullet' | 'check';
+  start: number;
+  tag: 'ul' | 'ol';
+}
+
+export interface SerializedListItemNode<TChildren> extends SerializedLexicalElementBase<TChildren> {
+  type: 'listitem';
+  checked?: boolean;
+  value: number;
+}
+
+export interface SerializedHeadingNode<
+  TChildren,
+  TTag extends 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6',
+> extends SerializedLexicalElementBase<TChildren> {
+  type: 'heading';
+  tag: TTag;
+}
+
+/** Shape of a Lexical `richText` field. */
+export interface LexicalRichText<TNode> {
+  root: {
+    children: TNode[];
+    direction: LexicalElementDirection;
+    format: LexicalElementFormat;
+    indent: number;
+    type: 'root';
+    /** @deprecated Ignored when loading. Typed as required only to match Lexical's types: rich text sent through the API, CLI or MCP may not contain it. */
+    version: number;
+  };
+}
+
 
 declare module 'payload' {
   export interface GeneratedTypes extends Config {}

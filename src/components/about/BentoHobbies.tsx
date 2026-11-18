@@ -1,94 +1,130 @@
-import { useTranslations } from 'next-intl'
+import * as stylex from '@stylexjs/stylex'
 import { Reveal } from '@/components/ui/Reveal'
-import type { Profile } from '@/payload-types'
+import { shared } from '@/components/ui/styles'
+import type { Media, Profile } from '@/payload-types'
+import { m } from '@/paraglide/messages'
 
-export interface BentoHobbiesProps {
-  profile: Profile
-}
+const styles = stylex.create({
+  section: {
+    paddingInline: '1.5rem',
+    paddingBlock: '3rem',
+  },
+  container: {
+    maxWidth: '56rem',
+    marginInline: 'auto',
+  },
+  grid: {
+    display: 'grid',
+    gap: '1rem',
+    gridTemplateColumns: { default: '1fr', '@media (min-width: 768px)': 'repeat(3, minmax(0, 1fr))' },
+  },
+  card: {
+    position: 'relative',
+    overflow: 'hidden',
+    borderRadius: '1rem',
+    minHeight: '200px',
+    backgroundColor: 'var(--color-surface)',
+  },
+  hero: {
+    '@media (min-width: 768px)': {
+      gridColumn: 'span 2',
+      gridRow: 'span 2',
+      minHeight: '420px',
+    },
+  },
+  wide: {
+    '@media (min-width: 768px)': {
+      gridColumn: 'span 2',
+    },
+  },
+  tall: {
+    '@media (min-width: 768px)': {
+      gridRow: 'span 2',
+      minHeight: '420px',
+    },
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+    transitionProperty: 'transform',
+    transitionDuration: '500ms',
+    ':hover': {
+      transform: 'scale(1.06)',
+    },
+  },
+  fallback: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'var(--color-accent-soft)',
+    fontFamily: 'var(--font-mono)',
+    fontSize: '2.25rem',
+    fontWeight: 700,
+    color: 'var(--color-accent)',
+  },
+  caption: {
+    position: 'absolute',
+    right: 0,
+    bottom: 0,
+    left: 0,
+    padding: '1.5rem',
+    backgroundImage: 'linear-gradient(to top, rgb(0 0 0 / 0.85), rgb(0 0 0 / 0.2), transparent)',
+  },
+  title: {
+    marginTop: 0,
+    marginRight: 0,
+    marginLeft: 0,
+    marginBottom: '0.25rem',
+    fontSize: '1.125rem',
+    fontWeight: 700,
+    color: '#ffffff',
+  },
+  description: {
+    margin: 0,
+    fontSize: '0.875rem',
+    color: 'rgb(255 255 255 / 0.8)',
+  },
+})
 
-const LAYOUTS = [
-  { col: 'md:col-span-2', row: 'md:row-span-2', minH: 'min-h-[220px] md:min-h-[420px]' }, // hero
-  { col: 'md:col-span-1', row: 'md:row-span-1', minH: 'min-h-[200px]' }, // square
-  { col: 'md:col-span-1', row: 'md:row-span-1', minH: 'min-h-[200px]' }, // square
-  { col: 'md:col-span-2', row: 'md:row-span-1', minH: 'min-h-[200px]' }, // wide
-  { col: 'md:col-span-1', row: 'md:row-span-2', minH: 'min-h-[200px] md:min-h-[420px]' }, // tall
-  { col: 'md:col-span-1', row: 'md:row-span-1', minH: 'min-h-[200px]' }, // square
-]
+const layouts = [styles.hero, null, null, styles.wide, styles.tall, null] as const
 
-function getLayout(index: number) {
-  if (index === 0) return LAYOUTS[0]
-  return LAYOUTS[1 + ((index - 1) % (LAYOUTS.length - 1))]
-}
-
-const TILT_CLASSES = [
-  'group-hover:rotate-[-1.5deg] group-focus:rotate-[-1.5deg]',
-  'group-hover:rotate-[1.5deg] group-focus:rotate-[1.5deg]',
-  'group-hover:rotate-[-1deg] group-focus:rotate-[-1deg]',
-  'group-hover:rotate-[1deg] group-focus:rotate-[1deg]',
-  'group-hover:rotate-[-2deg] group-focus:rotate-[-2deg]',
-  'group-hover:rotate-[2deg] group-focus:rotate-[2deg]',
-]
-
-export function BentoHobbies({ profile }: BentoHobbiesProps) {
-  const t = useTranslations('pages.About')
-  const hobbiesItems = profile.hobbies || []
+export function BentoHobbies({ profile }: { profile: Profile }) {
+  const hobbies = profile.hobbies
 
   return (
-    <section className="px-6 py-12">
-      <div className="mx-auto max-w-4xl">
+    <section {...stylex.props(styles.section)}>
+      <div {...stylex.props(styles.container)}>
         <Reveal>
-          <p className="mb-2 font-mono text-xs uppercase tracking-wider text-accent">{t('hobbies.eyebrow')}</p>
-          <h2 className="mb-8 text-2xl font-bold text-ink">{t('hobbies.title')}</h2>
+          <p {...stylex.props(shared.eyebrow)}>{m.pages_about_hobbies_eyebrow()}</p>
+          <h2 {...stylex.props(shared.sectionTitle)}>{m.pages_about_hobbies_title()}</h2>
         </Reveal>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          {hobbiesItems.map((hobby, index) => {
-            const layout = getLayout(index)
-            const tiltClass = TILT_CLASSES[index % TILT_CLASSES.length]
+        <Reveal>
+          <div {...stylex.props(styles.grid)}>
+            {hobbies.map((hobby, index) => {
+              const image = hobby.image as Media
+              const layout = layouts[index === 0 ? 0 : 1 + ((index - 1) % (layouts.length - 1))]
 
-            let imageUrl = ''
-            let altText = hobby.title
-            if (hobby.image && typeof hobby.image === 'object') {
-              imageUrl = hobby.image.url || ''
-              altText = hobby.image.alt || hobby.title
-            }
-
-            return (
-              <Reveal
-                key={index}
-                delay={index * 90}
-                tabIndex={0}
-                className={`group relative overflow-hidden rounded-2xl bg-surface focus:outline-none focus:ring-2 focus:ring-accent/25 ${layout.col} ${layout.row} ${layout.minH}`}
-              >
-                <div
-                  className={`absolute inset-0 transition-transform duration-500 ease-out group-hover:scale-[1.06] group-focus:scale-[1.06] ${tiltClass} motion-reduce:transform-none motion-reduce:transition-none`}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  {imageUrl ? (
-                    <img src={imageUrl} alt={altText} className="h-full w-full object-cover" loading="lazy" />
+              return (
+                <div key={hobby.id ?? index} tabIndex={0} {...stylex.props(styles.card, layout)}>
+                  {image.url ? (
+                    <img src={image.url} alt={image.alt} loading="lazy" {...stylex.props(styles.image)} />
                   ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-accent/30 via-surface to-surface">
-                      <span className="font-mono text-4xl font-bold text-accent/60">
-                        {hobby.title?.charAt(0) ?? '?'}
-                      </span>
-                    </div>
+                    <div {...stylex.props(styles.fallback)}>{hobby.title.charAt(0)}</div>
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent transition-opacity duration-500 group-hover:from-black/90 group-focus:from-black/90" />
+
+                  <div {...stylex.props(styles.caption)}>
+                    <h3 {...stylex.props(styles.title)}>{hobby.title}</h3>
+                    {hobby.description && <p {...stylex.props(styles.description)}>{hobby.description}</p>}
+                  </div>
                 </div>
-                <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <h3 className="mb-1 text-lg font-bold text-white transition-transform duration-300 group-hover:-translate-y-1 group-focus:-translate-y-1">
-                    {hobby.title}
-                  </h3>
-                  {hobby.description && (
-                    <p className="max-h-0 overflow-hidden text-sm text-white/80 opacity-0 transition-all duration-300 group-hover:max-h-20 group-hover:opacity-100 group-focus:max-h-20 group-focus:opacity-100">
-                      {hobby.description}
-                    </p>
-                  )}
-                </div>
-              </Reveal>
-            )
-          })}
-        </div>
+              )
+            })}
+          </div>
+        </Reveal>
       </div>
     </section>
   )

@@ -1,82 +1,163 @@
-import Image from 'next/image'
-import type { Profile } from '@/payload-types'
+import * as stylex from '@stylexjs/stylex'
+import type { Media, Profile } from '@/payload-types'
 
-export interface AboutHeroProps {
-  profile: Profile
+const styles = stylex.create({
+  section: {
+    paddingInline: '1.5rem',
+    paddingTop: '5rem',
+    paddingBottom: '3rem',
+  },
+  container: {
+    maxWidth: '56rem',
+    marginInline: 'auto',
+    animationName: 'fade-in-up',
+    animationDuration: '0.6s',
+    animationFillMode: 'both',
+    animationTimingFunction: 'ease-out',
+  },
+  head: {
+    display: 'flex',
+    flexDirection: { default: 'column', '@media (min-width: 640px)': 'row' },
+    alignItems: { default: 'flex-start', '@media (min-width: 640px)': 'center' },
+    gap: '2rem',
+  },
+  avatar: {
+    position: 'relative',
+    flexShrink: 0,
+    width: '6rem',
+    height: '6rem',
+    overflow: 'hidden',
+    borderRadius: '9999px',
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: 'var(--color-border)',
+    backgroundColor: 'var(--color-accent)',
+  },
+  avatarImage: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+  },
+  avatarFallback: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    height: '100%',
+    fontFamily: 'var(--font-mono)',
+    fontSize: '1.5rem',
+    fontWeight: 700,
+    color: '#ffffff',
+  },
+  name: {
+    margin: 0,
+    fontSize: { default: '1.875rem', '@media (min-width: 640px)': '2.25rem' },
+    fontWeight: 700,
+    color: 'var(--color-ink)',
+  },
+  roles: {
+    marginTop: '0.25rem',
+    marginBottom: 0,
+    fontSize: '1.125rem',
+    color: 'var(--color-muted)',
+  },
+  facts: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '1rem',
+    marginTop: '1rem',
+    fontSize: '0.875rem',
+    color: 'var(--color-muted)',
+  },
+  fact: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.375rem',
+  },
+  icon: {
+    width: '1rem',
+    height: '1rem',
+  },
+  bio: {
+    maxWidth: '42rem',
+    marginTop: '2rem',
+    marginBottom: 0,
+    fontSize: '1rem',
+    color: 'var(--color-muted)',
+  },
+})
+
+function PinIcon() {
+  return (
+    <svg {...stylex.props(styles.icon)} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.242-4.243a8 8 0 1111.314 0z"
+      />
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+    </svg>
+  )
 }
 
-export function AboutHero({ profile }: AboutHeroProps) {
-  const name = profile.name
-  const initials = name
+function LanguageIcon() {
+  return (
+    <svg {...stylex.props(styles.icon)} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"
+      />
+    </svg>
+  )
+}
+
+export function AboutHero({ profile }: { profile: Profile }) {
+  const initials = profile.name
     .split(' ')
     .map((word) => word[0])
     .join('')
     .slice(0, 2)
     .toUpperCase()
 
-  const languagesString = profile.languages ? profile.languages.map((l) => l.language).join(' • ') : ''
-
-  const rolesString = profile.roles ? profile.roles.map((r) => r.role).join(' • ') : ''
-
-  const avatarUrl = typeof profile.avatar === 'object' && profile.avatar !== null ? profile.avatar.url || '' : ''
-  const avatarAlt =
-    typeof profile.avatar === 'object' && profile.avatar !== null ? profile.avatar.alt || 'Avatar' : 'Avatar'
+  const languages = profile.languages.map((item) => item.language).join(' • ')
+  const roles = profile.roles.map((item) => item.role).join(' • ')
+  const avatar = profile.avatar as Media
 
   return (
-    <section className="px-6 pt-20 pb-12">
-      <div className="mx-auto max-w-4xl">
-        <div className="animate-fade-in-up">
-          <div className="flex flex-col items-start gap-8 sm:flex-row sm:items-center">
-            <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-full border border-border bg-gradient-to-br from-accent to-accent/40">
-              {avatarUrl ? (
-                <Image src={avatarUrl} alt={avatarAlt} fill className="object-cover" sizes="96px" priority />
-              ) : (
-                <div className="flex h-full w-full items-center justify-center font-mono text-2xl font-bold text-white">
-                  {initials}
+    <section {...stylex.props(styles.section)}>
+      <div {...stylex.props(styles.container)}>
+        <div {...stylex.props(styles.head)}>
+          <div {...stylex.props(styles.avatar)}>
+            {avatar.url ? (
+              <img src={avatar.url} alt={avatar.alt} {...stylex.props(styles.avatarImage)} />
+            ) : (
+              <div {...stylex.props(styles.avatarFallback)}>{initials}</div>
+            )}
+          </div>
+
+          <div>
+            <h1 {...stylex.props(styles.name)}>{profile.name}</h1>
+            <p {...stylex.props(styles.roles)}>{roles}</p>
+
+            <div {...stylex.props(styles.facts)}>
+              <div {...stylex.props(styles.fact)}>
+                <PinIcon />
+                {profile.location}
+              </div>
+              {languages && (
+                <div {...stylex.props(styles.fact)}>
+                  <LanguageIcon />
+                  {languages}
                 </div>
               )}
             </div>
-            <div>
-              <h1 className="text-3xl font-bold text-ink sm:text-4xl">{name}</h1>
-              <p className="mt-1 text-lg text-muted">{rolesString}</p>
-
-              <div className="mt-4 flex flex-wrap gap-4 text-sm text-muted">
-                <div className="flex items-center gap-1.5">
-                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.242-4.243a8 8 0 1111.314 0z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                  </svg>
-                  {profile.location}
-                </div>
-                {languagesString && (
-                  <div className="flex items-center gap-1.5">
-                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"
-                      />
-                    </svg>
-                    {languagesString}
-                  </div>
-                )}
-              </div>
-            </div>
           </div>
-
-          <p className="mt-8 max-w-2xl text-base text-muted">{profile.bio}</p>
         </div>
+
+        <p {...stylex.props(styles.bio)}>{profile.bio}</p>
       </div>
     </section>
   )

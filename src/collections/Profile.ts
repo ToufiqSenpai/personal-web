@@ -1,15 +1,13 @@
-import { COMMON_IMAGE_MIMETYPES } from '@/constants/mimetype'
-import { revalidateProfileCache } from '@/hooks/revalidateCache'
-import type { GlobalConfig, CollectionConfig } from 'payload'
+import type { GlobalConfig } from 'payload'
 import { z } from 'zod'
 
 export const Profile: GlobalConfig = {
   slug: 'profile',
+  access: {
+    read: () => true,
+  },
   admin: {
     group: 'Profile',
-  },
-  hooks: {
-    afterChange: [revalidateProfileCache],
   },
   fields: [
     {
@@ -26,7 +24,7 @@ export const Profile: GlobalConfig = {
       name: 'avatar',
       type: 'upload',
       required: true,
-      relationTo: 'profile-avatar',
+      relationTo: 'media',
     },
     {
       name: 'intro',
@@ -102,7 +100,7 @@ export const Profile: GlobalConfig = {
         {
           name: 'icon',
           type: 'upload',
-          relationTo: 'profile-icons',
+          relationTo: 'media',
           required: true,
           filterOptions: {},
         },
@@ -124,10 +122,10 @@ export const Profile: GlobalConfig = {
           name: 'yearEnd',
           type: 'number',
           admin: {
-            condition: (data, siblingData) => !siblingData?.present,
+            condition: (data, siblingData) => !siblingData.present,
           },
           validate: (val: unknown, { siblingData }: { siblingData: { present?: boolean } }) => {
-            if (!siblingData?.present && !val) {
+            if (!siblingData.present && !val) {
               return 'Year end is required if this is not your current / present journey.'
             }
             return true
@@ -173,124 +171,10 @@ export const Profile: GlobalConfig = {
         {
           name: 'image',
           type: 'upload',
-          relationTo: 'hobbies-media',
+          relationTo: 'media',
           required: true,
         },
       ],
     },
   ],
-}
-
-export const ProfileAvatar: CollectionConfig = {
-  slug: 'profile-avatar',
-  admin: {
-    group: 'Profile',
-  },
-  access: {
-    read: () => true,
-  },
-  fields: [
-    {
-      name: 'alt',
-      type: 'text',
-      required: true,
-      localized: true,
-    },
-  ],
-  upload: {
-    staticDir: 'profile-avatar',
-    mimeTypes: COMMON_IMAGE_MIMETYPES,
-    formatOptions: {
-      format: 'avif',
-      options: {
-        quality: 80,
-      },
-    },
-    imageSizes: [
-      {
-        name: 'thumbnail',
-        width: 150,
-        height: 150,
-        position: 'centre',
-      },
-      {
-        name: 'medium',
-        width: 400,
-        height: 400,
-        position: 'centre',
-      },
-      {
-        name: 'large',
-        width: 800,
-        height: 800,
-        position: 'centre',
-      },
-    ],
-    adminThumbnail: 'thumbnail',
-  },
-}
-
-export const ProfileIcons: CollectionConfig = {
-  slug: 'profile-icons',
-  admin: {
-    group: 'Profile',
-  },
-  access: {
-    read: () => true,
-  },
-  fields: [
-    {
-      name: 'alt',
-      type: 'text',
-      required: true,
-      localized: true,
-    },
-  ],
-  upload: {
-    staticDir: 'profile-icons',
-    mimeTypes: ['image/svg+xml'],
-  },
-}
-
-export const HobbiesMedia: CollectionConfig = {
-  slug: 'hobbies-media',
-  admin: {
-    group: 'Profile',
-  },
-  access: {
-    read: () => true,
-  },
-  fields: [
-    {
-      name: 'alt',
-      type: 'text',
-      required: true,
-      localized: true,
-    },
-  ],
-  upload: {
-    staticDir: 'hobbies-media',
-    mimeTypes: COMMON_IMAGE_MIMETYPES,
-    formatOptions: {
-      format: 'avif',
-      options: {
-        quality: 80,
-      },
-    },
-    imageSizes: [
-      {
-        name: 'thumbnail',
-        width: 150,
-      },
-      {
-        name: 'medium',
-        width: 400,
-      },
-      {
-        name: 'large',
-        width: 800,
-      },
-    ],
-    adminThumbnail: 'thumbnail',
-  },
 }

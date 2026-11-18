@@ -1,84 +1,261 @@
 'use client'
 
-import { useTranslations } from 'next-intl'
-import Link from 'next/link'
-import { useEffect, useState, useMemo } from 'react'
+import * as stylex from '@stylexjs/stylex'
+import { Link } from '@tanstack/react-router'
+import { useEffect, useMemo, useState } from 'react'
 import type { Profile } from '@/payload-types'
+import { m } from '@/paraglide/messages'
 
-export interface HeroProps {
-  profile: Profile
-}
+const terminalSequence = [
+  { type: 'input', text: 'claude profile --verbose' },
+  { type: 'output', text: 'Initializing profile compilation...' },
+  { type: 'output', text: 'Status: 100% operational' },
+  { type: 'output', text: 'Focus: Full-Stack Engineering & AI Systems' },
+] as const
 
-export function Hero({ profile }: HeroProps) {
-  const t = useTranslations('pages.Home.hero')
+const styles = stylex.create({
+  section: {
+    position: 'relative',
+    display: 'flex',
+    alignItems: 'center',
+    maxWidth: '72rem',
+    minHeight: 'calc(100vh - 4rem)',
+    marginInline: 'auto',
+    paddingInline: '1.5rem',
+    paddingBlock: { default: '3rem', '@media (min-width: 768px)': '6rem' },
+  },
+  grid: {
+    display: 'grid',
+    width: '100%',
+    alignItems: 'center',
+    gap: '3rem',
+    gridTemplateColumns: { default: '1fr', '@media (min-width: 768px)': 'repeat(12, minmax(0, 1fr))' },
+  },
+  left: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    gridColumn: { default: 'auto', '@media (min-width: 768px)': 'span 7' },
+    animationName: 'fade-in-up',
+    animationDuration: '0.6s',
+    animationFillMode: 'both',
+    animationTimingFunction: 'ease-out',
+  },
+  title: {
+    margin: 0,
+    fontSize: { default: '2.25rem', '@media (min-width: 640px)': '3rem', '@media (min-width: 768px)': '3.75rem' },
+    fontWeight: 800,
+    lineHeight: 1.1,
+    letterSpacing: '-0.025em',
+    color: 'var(--color-ink)',
+  },
+  name: {
+    color: 'var(--color-accent)',
+  },
+  role: {
+    display: 'flex',
+    alignItems: 'center',
+    minHeight: '28px',
+    marginTop: '1rem',
+    fontFamily: 'var(--font-mono)',
+    fontSize: { default: '1rem', '@media (min-width: 640px)': '1.125rem' },
+    fontWeight: 600,
+    color: 'var(--color-accent)',
+  },
+  cursor: {
+    display: 'inline-block',
+    width: '2px',
+    height: '15px',
+    marginLeft: '0.25rem',
+    backgroundColor: 'var(--color-accent)',
+    animationName: 'pulse',
+    animationDuration: '2s',
+    animationIterationCount: 'infinite',
+  },
+  intro: {
+    maxWidth: '32rem',
+    marginTop: '1.5rem',
+    marginBottom: 0,
+    fontSize: { default: '0.875rem', '@media (min-width: 640px)': '1rem' },
+    lineHeight: 1.625,
+    color: 'var(--color-muted)',
+  },
+  actions: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    gap: '1rem',
+    marginTop: '2rem',
+  },
+  primary: {
+    paddingInline: '1.5rem',
+    paddingBlock: '0.625rem',
+    borderRadius: '0.5rem',
+    backgroundColor: 'var(--color-accent)',
+    color: '#ffffff',
+    fontSize: '0.875rem',
+    fontWeight: 500,
+    textDecorationLine: 'none',
+    transitionProperty: 'box-shadow, background-color',
+    transitionDuration: '200ms',
+    ':hover': {
+      backgroundColor: 'color-mix(in srgb, var(--color-accent) 90%, transparent)',
+      boxShadow: '0 10px 15px -3px color-mix(in srgb, var(--color-accent) 20%, transparent)',
+    },
+  },
+  secondary: {
+    paddingInline: '1.5rem',
+    paddingBlock: '0.625rem',
+    borderRadius: '0.5rem',
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: 'var(--color-border)',
+    backgroundColor: 'color-mix(in srgb, var(--color-surface) 30%, transparent)',
+    color: 'var(--color-ink)',
+    fontSize: '0.875rem',
+    fontWeight: 500,
+    textDecorationLine: 'none',
+    transitionProperty: 'color, border-color',
+    transitionDuration: '150ms',
+    ':hover': {
+      borderColor: 'var(--color-accent)',
+      color: 'var(--color-accent)',
+    },
+  },
+  terminalWrap: {
+    display: 'flex',
+    justifyContent: 'center',
+    width: '100%',
+    gridColumn: { default: 'auto', '@media (min-width: 768px)': 'span 5' },
+    animationName: 'fade-in-up',
+    animationDuration: '0.6s',
+    animationFillMode: 'both',
+    animationTimingFunction: 'ease-out',
+  },
+  terminal: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.75rem',
+    width: '100%',
+    maxWidth: '28rem',
+    padding: '1rem',
+    borderRadius: '0.75rem',
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: 'var(--color-border)',
+    backgroundColor: 'color-mix(in srgb, var(--color-surface) 40%, transparent)',
+    fontFamily: 'var(--font-mono)',
+    fontSize: '0.75rem',
+    color: 'var(--color-muted)',
+    boxShadow: '0 25px 50px -12px rgb(0 0 0 / 0.25)',
+  },
+  terminalBar: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderBottomWidth: 1,
+    borderBottomStyle: 'solid',
+    borderBottomColor: 'color-mix(in srgb, var(--color-border) 50%, transparent)',
+    paddingBottom: '0.75rem',
+  },
+  dots: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+  },
+  dot: {
+    display: 'inline-block',
+    width: '0.75rem',
+    height: '0.75rem',
+    borderRadius: '9999px',
+  },
+  dotRed: {
+    backgroundColor: '#FF5F56',
+  },
+  dotYellow: {
+    backgroundColor: '#FFBD2E',
+  },
+  dotGreen: {
+    backgroundColor: '#27C93F',
+  },
+  terminalName: {
+    fontSize: '0.625rem',
+    letterSpacing: '-0.025em',
+    color: 'color-mix(in srgb, var(--color-muted) 60%, transparent)',
+    userSelect: 'none',
+  },
+  spacer: {
+    width: '3rem',
+  },
+  lines: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.375rem',
+    minHeight: '220px',
+    paddingTop: '0.5rem',
+    fontSize: '0.6875rem',
+    lineHeight: 1.625,
+  },
+  lineInput: {
+    color: 'var(--color-ink)',
+  },
+  prompt: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.125rem',
+    color: 'var(--color-ink)',
+  },
+})
+
+export function Hero({ profile }: { profile: Profile }) {
   const [terminalLines, setTerminalLines] = useState<string[]>([])
   const [currentLine, setCurrentLine] = useState('')
   const [lineIndex, setLineIndex] = useState(0)
 
-  const terminalSequence = [
-    { type: 'input', text: 'claude profile --verbose' },
-    { type: 'output', text: 'Initializing profile compilation...' },
-    { type: 'output', text: 'Status: 100% operational' },
-    { type: 'output', text: 'Focus: Full-Stack Engineering & AI Systems' },
-  ]
-
-  // Typing effect for the mockup terminal
   useEffect(() => {
-    if (lineIndex >= terminalSequence.length) return
+    const item = terminalSequence.at(lineIndex)
+    if (!item) return
 
-    const item = terminalSequence[lineIndex]
-    if (item.type === 'input') {
-      let charIndex = 0
-      const interval = setInterval(() => {
-        if (charIndex < item.text.length) {
-          const nextChar = item.text[charIndex]
-          setCurrentLine((prev) => prev + nextChar)
-          charIndex++
-        } else {
-          clearInterval(interval)
-          setTerminalLines((prev) => [...prev, `~$ ${item.text}`])
-          setCurrentLine('')
-          setLineIndex((prev) => prev + 1)
-        }
-      }, 60)
-      return () => clearInterval(interval)
-    } else {
+    if (item.type === 'output') {
       const timeout = setTimeout(() => {
         setTerminalLines((prev) => [...prev, item.text])
         setLineIndex((prev) => prev + 1)
       }, 400)
       return () => clearTimeout(timeout)
     }
+
+    let charIndex = 0
+    const interval = setInterval(() => {
+      if (charIndex < item.text.length) {
+        setCurrentLine((prev) => prev + item.text[charIndex])
+        charIndex++
+        return
+      }
+      clearInterval(interval)
+      setTerminalLines((prev) => [...prev, `~$ ${item.text}`])
+      setCurrentLine('')
+      setLineIndex((prev) => prev + 1)
+    }, 60)
+    return () => clearInterval(interval)
   }, [lineIndex])
 
-  // Role typing effect
-  const rolesList = useMemo(() => {
-    return (
-      profile.roles?.map((r) => r.role) || [
-        'Backend Engineer',
-        'AI Engineer',
-        'Full-Stack Developer',
-        'AI Solutions Architect',
-      ]
-    )
+  const roles = useMemo(() => {
+    if (profile.roles.length > 0) return profile.roles.map((role) => role.role)
+    // Keeps the typing effect alive before any role exists in the CMS.
+    return ['Backend Engineer', 'AI Engineer', 'Full-Stack Developer']
   }, [profile.roles])
-
-  const [roleIdx, setRoleIdx] = useState(0)
+  const [roleIndex, setRoleIndex] = useState(0)
   const [typedRole, setTypedRole] = useState('')
   const [isDeletingRole, setIsDeletingRole] = useState(false)
 
   useEffect(() => {
-    let timer: NodeJS.Timeout
-    const currentWord = rolesList[roleIdx]
+    const currentWord = roles[roleIndex] ?? ''
+    let timer: ReturnType<typeof setTimeout>
 
     if (isDeletingRole) {
-      timer = setTimeout(() => {
-        setTypedRole((prev) => prev.slice(0, -1))
-      }, 45)
+      timer = setTimeout(() => setTypedRole((prev) => prev.slice(0, -1)), 45)
     } else {
-      timer = setTimeout(() => {
-        setTypedRole((prev) => currentWord.slice(0, prev.length + 1))
-      }, 85)
+      timer = setTimeout(() => setTypedRole(currentWord.slice(0, typedRole.length + 1)), 85)
     }
 
     if (!isDeletingRole && typedRole === currentWord) {
@@ -86,87 +263,68 @@ export function Hero({ profile }: HeroProps) {
     } else if (isDeletingRole && typedRole === '') {
       timer = setTimeout(() => {
         setIsDeletingRole(false)
-        setRoleIdx((prev) => (prev + 1) % rolesList.length)
+        setRoleIndex((prev) => (prev + 1) % roles.length)
       }, 0)
     }
 
     return () => clearTimeout(timer)
-  }, [typedRole, isDeletingRole, roleIdx, rolesList])
+  }, [typedRole, isDeletingRole, roleIndex, roles])
+
+  const isTyping = terminalSequence[lineIndex]?.type === 'input'
 
   return (
-    <section className="relative mx-auto max-w-6xl px-6 py-12 md:py-24 min-h-[calc(100vh-4rem)] flex items-center">
-      <div className="grid grid-cols-1 gap-12 md:grid-cols-12 w-full items-center">
-        {/* Left Column: Heading, Subtitle, CTA */}
-        <div className="md:col-span-7 flex flex-col items-start text-left animate-fade-in-up">
-          <h1 className="font-sans text-4xl font-extrabold tracking-tight text-ink sm:text-5xl md:text-6xl leading-[1.1]">
-            {t.rich('greeting', {
-              name: profile.name,
-              nameTag: (chunks) => (
-                <span className="bg-gradient-to-r from-accent to-violet-400 bg-clip-text text-transparent">
-                  {chunks}
-                </span>
-              ),
-            })}
-          </h1>
+    <section {...stylex.props(styles.section)}>
+      <div {...stylex.props(styles.grid)}>
+        <div {...stylex.props(styles.left)}>
+          <h1 {...stylex.props(styles.title)}>{m.pages_home_hero_greeting({ name: profile.name })}</h1>
 
-          <p className="mt-4 font-mono text-base font-semibold text-accent sm:text-lg min-h-[28px] flex items-center">
+          <p {...stylex.props(styles.role)}>
             <span>{typedRole}</span>
-            <span className="inline-block w-[2px] h-[15px] bg-accent ml-1 animate-pulse"></span>
+            <span {...stylex.props(styles.cursor)} />
           </p>
 
-          <p className="mt-6 text-sm sm:text-base text-muted leading-relaxed max-w-lg">{profile.intro}</p>
+          <p {...stylex.props(styles.intro)}>{profile.intro}</p>
 
-          <div className="mt-8 flex flex-wrap items-center gap-4">
-            <Link
-              href="/projects"
-              className="rounded-lg bg-accent px-6 py-2.5 text-sm font-medium text-white transition-all hover:bg-accent/90 hover:shadow-lg hover:shadow-accent/20"
-            >
-              {t('viewProjects')}
+          <div {...stylex.props(styles.actions)}>
+            <Link to="/projects" {...stylex.props(styles.primary)}>
+              {m.pages_home_hero_view_projects()}
             </Link>
-            <Link
-              href="/contact"
-              className="rounded-lg border border-border bg-surface/30 backdrop-blur-sm px-6 py-2.5 text-sm font-medium text-ink transition-colors hover:border-accent hover:text-accent"
-            >
-              {t('getInTouch')}
+            <Link to="/contact" {...stylex.props(styles.secondary)}>
+              {m.pages_home_hero_get_in_touch()}
             </Link>
           </div>
         </div>
 
-        {/* Right Column: Terminal Window Mockup */}
-        <div className="md:col-span-5 w-full flex justify-center animate-fade-in-up">
-          <div className="w-full max-w-md rounded-xl border border-border bg-surface/40 backdrop-blur-md shadow-2xl p-4 font-mono text-xs text-muted flex flex-col gap-3">
-            {/* macOS window buttons */}
-            <div className="flex items-center justify-between border-b border-border/50 pb-3">
-              <div className="flex items-center gap-2">
-                <span className="h-3 w-3 rounded-full bg-[#FF5F56] inline-block"></span>
-                <span className="h-3 w-3 rounded-full bg-[#FFBD2E] inline-block"></span>
-                <span className="h-3 w-3 rounded-full bg-[#27C93F] inline-block"></span>
+        <div {...stylex.props(styles.terminalWrap)}>
+          <div {...stylex.props(styles.terminal)}>
+            <div {...stylex.props(styles.terminalBar)}>
+              <div {...stylex.props(styles.dots)}>
+                <span {...stylex.props(styles.dot, styles.dotRed)} />
+                <span {...stylex.props(styles.dot, styles.dotYellow)} />
+                <span {...stylex.props(styles.dot, styles.dotGreen)} />
               </div>
-              <span className="text-[10px] text-muted/60 font-mono tracking-tight select-none">profile.sh</span>
-              <div className="w-12"></div> {/* Spacer for symmetry */}
+              <span {...stylex.props(styles.terminalName)}>profile.sh</span>
+              <div {...stylex.props(styles.spacer)} />
             </div>
 
-            {/* Terminal lines */}
-            <div className="flex-1 min-h-[220px] font-mono text-[11px] leading-relaxed flex flex-col gap-1.5 pt-2">
-              {terminalLines.map((line, idx) => (
-                <div key={idx} className={line.startsWith('~$') ? 'text-ink' : 'text-muted'}>
+            <div {...stylex.props(styles.lines)}>
+              {terminalLines.map((line, index) => (
+                <div key={index} {...stylex.props(line.startsWith('~$') && styles.lineInput)}>
                   {line}
                 </div>
               ))}
 
-              {/* Active line with typing cursor */}
-              {lineIndex < terminalSequence.length && terminalSequence[lineIndex].type === 'input' && (
-                <div className="text-ink">
+              {isTyping && (
+                <div {...stylex.props(styles.lineInput)}>
                   ~$ {currentLine}
-                  <span className="inline-block w-[6px] h-3 bg-accent ml-0.5 animate-pulse"></span>
+                  <span {...stylex.props(styles.cursor)} />
                 </div>
               )}
 
-              {/* Ending prompt cursor */}
               {lineIndex >= terminalSequence.length && (
-                <div className="text-ink flex items-center gap-0.5">
+                <div {...stylex.props(styles.prompt)}>
                   <span>~$</span>
-                  <span className="inline-block w-[6px] h-3 bg-accent animate-pulse"></span>
+                  <span {...stylex.props(styles.cursor)} />
                 </div>
               )}
             </div>

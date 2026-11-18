@@ -1,61 +1,103 @@
-import { useTranslations } from 'next-intl'
-import Link from 'next/link'
+import * as stylex from '@stylexjs/stylex'
+import { Link } from '@tanstack/react-router'
 import { Reveal } from '@/components/ui/Reveal'
+import { shared } from '@/components/ui/styles'
+import { m } from '@/paraglide/messages'
+
+const styles = stylex.create({
+  section: {
+    position: 'relative',
+    overflow: 'hidden',
+    backgroundColor: 'color-mix(in srgb, var(--color-canvas) 30%, transparent)',
+    borderTopWidth: 1,
+    borderTopStyle: 'solid',
+    borderTopColor: 'color-mix(in srgb, var(--color-border) 50%, transparent)',
+    paddingBlock: '6rem',
+  },
+  wrapper: {
+    maxWidth: '72rem',
+    marginInline: 'auto',
+    paddingInline: '1.5rem',
+  },
+  card: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    maxWidth: '48rem',
+    marginInline: 'auto',
+    padding: { default: '2rem', '@media (min-width: 640px)': '3rem', '@media (min-width: 768px)': '4rem' },
+    borderRadius: '1.5rem',
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: 'color-mix(in srgb, var(--color-border) 80%, transparent)',
+    backgroundColor: 'color-mix(in srgb, var(--color-surface) 75%, transparent)',
+    boxShadow: '0 25px 50px -12px rgb(0 0 0 / 0.25)',
+  },
+  content: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    maxWidth: '36rem',
+    textAlign: 'center',
+  },
+  eyebrow: {
+    marginTop: 0,
+    marginRight: 0,
+    marginLeft: 0,
+    marginBottom: '0.75rem',
+    fontFamily: 'var(--font-mono)',
+    fontSize: '0.75rem',
+    fontWeight: 600,
+    letterSpacing: '0.05em',
+    textTransform: 'uppercase',
+    color: 'var(--color-accent)',
+  },
+  title: {
+    marginTop: 0,
+    marginRight: 0,
+    marginLeft: 0,
+    marginBottom: '1rem',
+    fontSize: { default: '1.875rem', '@media (min-width: 640px)': '2.25rem' },
+    fontWeight: 800,
+    lineHeight: 1.25,
+    letterSpacing: '-0.025em',
+    color: 'var(--color-ink)',
+  },
+  description: {
+    marginTop: 0,
+    marginRight: 0,
+    marginLeft: 0,
+    marginBottom: '2rem',
+    fontSize: { default: '0.875rem', '@media (min-width: 640px)': '1rem' },
+    lineHeight: 1.625,
+    color: 'var(--color-muted)',
+  },
+})
 
 export function CTA() {
-  const t = useTranslations('pages.Home.cta')
-
   return (
-    <section className="relative px-6 py-24 overflow-hidden bg-canvas/30 border-t border-border/50">
-      {/* Decorative Grid Backdrop */}
-      <div className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-[0.07] pointer-events-none" />
+    <section {...stylex.props(styles.section)}>
+      <div {...stylex.props(styles.wrapper)}>
+        <div {...stylex.props(styles.card)}>
+          <div {...stylex.props(styles.content)}>
+            <Reveal>
+              <p {...stylex.props(styles.eyebrow)}>{m.pages_home_cta_eyebrow()}</p>
+            </Reveal>
 
-      {/* Decorative Glowing Radial Blobs */}
-      <div className="absolute top-1/2 left-1/4 -translate-y-1/2 -translate-x-1/2 -z-10 h-[350px] w-[350px] rounded-full bg-accent/8 blur-[120px] pointer-events-none" />
-      <div className="absolute top-1/2 right-1/4 -translate-y-1/2 translate-x-1/2 -z-10 h-[350px] w-[350px] rounded-full bg-emerald-500/5 blur-[120px] pointer-events-none" />
+            <Reveal delay={100}>
+              <h2 {...stylex.props(styles.title)}>{m.pages_home_cta_title()}</h2>
+            </Reveal>
 
-      <div className="mx-auto max-w-3xl rounded-3xl border border-border/80 bg-surface/75 backdrop-blur-md p-8 sm:p-12 md:p-16 shadow-2xl relative overflow-hidden flex flex-col items-center">
-        {/* Mesh gradient light highlight */}
-        <div className="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-accent/5 blur-[80px]" />
+            <Reveal delay={200}>
+              <p {...stylex.props(styles.description)}>{m.pages_home_cta_description()}</p>
+            </Reveal>
 
-        <div className="relative z-10 flex flex-col items-center text-center max-w-xl">
-          <Reveal>
-            <p className="mb-3 font-mono text-xs uppercase tracking-wider text-accent font-semibold">{t('eyebrow')}</p>
-          </Reveal>
-
-          <Reveal delay={100}>
-            <h2 className="mb-4 text-3xl font-extrabold text-ink sm:text-4xl tracking-tight leading-tight">
-              {t('title')}
-            </h2>
-          </Reveal>
-
-          <Reveal delay={200}>
-            <p className="mb-8 text-sm sm:text-base text-muted leading-relaxed">{t('description')}</p>
-          </Reveal>
-
-          <Reveal delay={300}>
-            <Link
-              href="/contact"
-              className="group relative inline-flex items-center justify-center rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-white shadow-md shadow-accent/10 hover:bg-accent/90 transition-all hover:shadow-lg hover:shadow-accent/20"
-            >
-              <span>{t('button')}</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="ml-2 transition-transform duration-300 group-hover:translate-x-1"
-              >
-                <line x1="5" y1="12" x2="19" y2="12" />
-                <polyline points="12 5 19 12 12 19" />
-              </svg>
-            </Link>
-          </Reveal>
+            <Reveal delay={300}>
+              <Link to="/contact" {...stylex.props(shared.primaryButton)}>
+                {m.pages_home_cta_button()}
+              </Link>
+            </Reveal>
+          </div>
         </div>
       </div>
     </section>
