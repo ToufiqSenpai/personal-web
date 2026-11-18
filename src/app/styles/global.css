@@ -2,30 +2,87 @@
 @import '@fontsource-variable/geist-mono';
 
 :root {
-  color-scheme: light;
+  color-scheme: light dark;
 
   --font-sans: 'Geist Variable', system-ui, sans-serif;
   --font-mono: 'Geist Mono Variable', 'Roboto Mono', monospace;
 
-  --color-canvas: #fafafa;
-  --color-surface: #ffffff;
-  --color-ink: #18181b;
-  --color-muted: #71717a;
-  --color-accent: #7c3aed;
-  --color-accent-soft: #ede9fe;
-  --color-border: #e4e4e7;
+  /* Raw palette for each scheme, so fallbacks and light-dark() share one source. */
+  --color-canvas-light: #fafafa;
+  --color-canvas-dark: #09090b;
+  --color-surface-light: #ffffff;
+  --color-surface-dark: #18181b;
+  --color-ink-light: #18181b;
+  --color-ink-dark: #fafafa;
+  --color-muted-light: #71717a;
+  --color-muted-dark: #a1a1aa;
+  --color-accent-light: #7c3aed;
+  --color-accent-dark: #8b5cf6;
+  --color-accent-soft-light: #ede9fe;
+  --color-accent-soft-dark: #1e1b30;
+  --color-border-light: #e4e4e7;
+  --color-border-dark: #27272a;
+
+  /* Fallback values for browsers without light-dark(). */
+  --color-canvas: var(--color-canvas-light);
+  --color-surface: var(--color-surface-light);
+  --color-ink: var(--color-ink-light);
+  --color-muted: var(--color-muted-light);
+  --color-accent: var(--color-accent-light);
+  --color-accent-soft: var(--color-accent-soft-light);
+  --color-border: var(--color-border-light);
 }
 
-.dark {
+/* Fallback: follow the OS preference where light-dark() is not supported. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-canvas: var(--color-canvas-dark);
+    --color-surface: var(--color-surface-dark);
+    --color-ink: var(--color-ink-dark);
+    --color-muted: var(--color-muted-dark);
+    --color-accent: var(--color-accent-dark);
+    --color-accent-soft: var(--color-accent-soft-dark);
+    --color-border: var(--color-border-dark);
+  }
+}
+
+@supports (color: light-dark(white, black)) {
+  :root {
+    --color-canvas: light-dark(var(--color-canvas-light), var(--color-canvas-dark));
+    --color-surface: light-dark(var(--color-surface-light), var(--color-surface-dark));
+    --color-ink: light-dark(var(--color-ink-light), var(--color-ink-dark));
+    --color-muted: light-dark(var(--color-muted-light), var(--color-muted-dark));
+    --color-accent: light-dark(var(--color-accent-light), var(--color-accent-dark));
+    --color-accent-soft: light-dark(var(--color-accent-soft-light), var(--color-accent-soft-dark));
+    --color-border: light-dark(var(--color-border-light), var(--color-border-dark));
+  }
+}
+
+/* The <meta> is only a presentational hint, so map it back to `color-scheme`:
+   otherwise author CSS would win and updating the meta alone would be a no-op.
+   The explicit token values keep the override working in older browsers too. */
+:root:has(> head > meta[name='color-scheme'][content='dark']) {
   color-scheme: dark;
 
-  --color-canvas: #09090b;
-  --color-surface: #18181b;
-  --color-ink: #fafafa;
-  --color-muted: #a1a1aa;
-  --color-accent: #8b5cf6;
-  --color-accent-soft: #1e1b30;
-  --color-border: #27272a;
+  --color-canvas: var(--color-canvas-dark);
+  --color-surface: var(--color-surface-dark);
+  --color-ink: var(--color-ink-dark);
+  --color-muted: var(--color-muted-dark);
+  --color-accent: var(--color-accent-dark);
+  --color-accent-soft: var(--color-accent-soft-dark);
+  --color-border: var(--color-border-dark);
+}
+
+:root:has(> head > meta[name='color-scheme'][content='light']) {
+  color-scheme: light;
+
+  --color-canvas: var(--color-canvas-light);
+  --color-surface: var(--color-surface-light);
+  --color-ink: var(--color-ink-light);
+  --color-muted: var(--color-muted-light);
+  --color-accent: var(--color-accent-light);
+  --color-accent-soft: var(--color-accent-soft-light);
+  --color-border: var(--color-border-light);
 }
 
 *,
@@ -93,16 +150,52 @@ button {
   }
 }
 
-.theme-icon-moon {
-  display: none;
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
-.dark .theme-icon-sun {
-  display: none;
-}
-
-.dark .theme-icon-moon {
+/* The toggle's icon and action label follow the rendered scheme in CSS, so
+   they stay correct without JS and when the OS preference changes. */
+.theme-light-option {
   display: block;
+}
+
+.theme-dark-option {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  .theme-light-option {
+    display: none;
+  }
+
+  .theme-dark-option {
+    display: block;
+  }
+}
+
+:root:has(> head > meta[name='color-scheme'][content='dark']) .theme-light-option {
+  display: none;
+}
+
+:root:has(> head > meta[name='color-scheme'][content='dark']) .theme-dark-option {
+  display: block;
+}
+
+:root:has(> head > meta[name='color-scheme'][content='light']) .theme-light-option {
+  display: block;
+}
+
+:root:has(> head > meta[name='color-scheme'][content='light']) .theme-dark-option {
+  display: none;
 }
 
 .reveal {
