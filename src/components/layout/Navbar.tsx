@@ -2,7 +2,7 @@
 
 import * as stylex from '@stylexjs/stylex'
 import { Link, useLocation } from '@tanstack/react-router'
-import { useState } from 'react'
+import { useId, useRef, useState } from 'react'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
 import { LANGUAGES } from '@/constants/language'
 import { m } from '@/paraglide/messages'
@@ -102,33 +102,36 @@ const styles = stylex.create({
       color: 'var(--color-accent)',
     },
   },
-  langWrapper: {
-    position: 'relative',
-  },
-  langSummary: {
+  langTrigger: {
     display: 'flex',
     alignItems: 'center',
     gap: '0.25rem',
+    minBlockSize: '1.5rem',
+    minInlineSize: '1.5rem',
+    paddingBlock: '0.25rem',
+    paddingInline: '0.25rem',
+    borderWidth: 0,
+    borderRadius: '0.375rem',
+    backgroundColor: 'transparent',
     fontFamily: 'var(--font-mono)',
     fontSize: '0.75rem',
     fontWeight: 500,
     color: 'var(--color-muted)',
     cursor: 'pointer',
-    listStyleType: 'none',
     ':hover': {
       color: 'var(--color-accent)',
+    },
+    ':focus-visible': {
+      outline: '2px solid var(--color-accent)',
+      outlineOffset: '2px',
     },
   },
   langCurrent: {
     color: 'var(--color-ink)',
   },
   langMenu: {
-    position: 'absolute',
-    top: '100%',
-    right: 0,
-    marginTop: '0.75rem',
-    display: 'flex',
     width: '11rem',
+    maxWidth: 'calc(100vw - 1.5rem)',
     flexDirection: 'column',
     overflow: 'hidden',
     borderRadius: '0.75rem',
@@ -136,11 +139,31 @@ const styles = stylex.create({
     borderStyle: 'solid',
     borderColor: 'var(--color-border)',
     backgroundColor: 'var(--color-canvas)',
+    color: 'var(--color-ink)',
     paddingBlock: '0.5rem',
     boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
-    zIndex: 50,
+    /* A closed popover is display:none by UA rule, so only style it when open. */
+    ':popover-open': {
+      display: 'flex',
+    },
+    /* Never set `inset: auto` unconditionally: without anchor positioning the
+       browser would lose its centering and strand the panel at the corner. */
+    '@supports (position-area: block-end)': {
+      inset: 'auto',
+      margin: '0.5rem 0 0',
+      positionArea: 'block-end span-inline-end',
+      positionTryFallbacks: 'flip-block, flip-inline, flip-block flip-inline',
+    },
+    '@supports not (position-area: block-end)': {
+      position: 'fixed',
+      inset: 'auto 0 0 0',
+      width: 'auto',
+      maxWidth: 'none',
+      margin: 0,
+    },
   },
   langOption: {
+    minBlockSize: '1.5rem',
     paddingInline: '1rem',
     paddingBlock: '0.5rem',
     borderWidth: 0,
@@ -153,10 +176,25 @@ const styles = stylex.create({
       backgroundColor: 'color-mix(in srgb, var(--color-muted) 10%, transparent)',
       color: 'var(--color-ink)',
     },
+    ':focus-visible': {
+      outline: '2px solid var(--color-accent)',
+      outlineOffset: '-2px',
+    },
   },
   langOptionActive: {
     fontWeight: 500,
     color: 'var(--color-accent)',
+  },
+  visuallyHidden: {
+    position: 'absolute',
+    width: 1,
+    height: 1,
+    padding: 0,
+    margin: -1,
+    overflow: 'hidden',
+    clipPath: 'inset(50%)',
+    whiteSpace: 'nowrap',
+    borderWidth: 0,
   },
   mobileToggle: {
     display: 'flex',
@@ -220,6 +258,7 @@ const navLinks = [
 function ShareIcon() {
   return (
     <svg
+      aria-hidden="true"
       xmlns="http://www.w3.org/2000/svg"
       width="16"
       height="16"
@@ -239,12 +278,26 @@ function ShareIcon() {
 
 function LanguageMenu() {
   const locale = getLocale()
+  const id = useId()
+  const triggerRef = useRef<HTMLButtonElement>(null)
+  const menuRef = useRef<HTMLDivElement>(null)
+  const [open, setOpen] = useState(false)
 
   return (
-    <details {...stylex.props(styles.langWrapper)}>
-      <summary aria-label={m.layout_navbar_select_language()} {...stylex.props(styles.langSummary)}>
-        <span {...stylex.props(styles.langCurrent)}>{LANGUAGES.find((item) => item.code === locale)?.name}</span>
+    <>
+      <button
+        ref={triggerRef}
+        type="button"
+        popoverTarget={id}
+        aria-expanded={open}
+        {...stylex.props(styles.langTrigger)}
+      >
+        <span {...stylex.props(styles.visuallyHidden)}>{m.layout_navbar_select_language()}</span>
+        <span lang={locale} {...stylex.props(styles.langCurrent)}>
+          {LANGUAGES.find((item) => item.code === locale)?.name}
+        </span>
         <svg
+          aria-hidden="true"
           width="12"
           height="12"
           viewBox="0 0 24 24"
@@ -256,20 +309,34 @@ function LanguageMenu() {
         >
           <polyline points="6 9 12 15 18 9" />
         </svg>
-      </summary>
-      <div {...stylex.props(styles.langMenu)}>
+      </button>
+      <div
+        ref={menuRef}
+        id={id}
+        popover="auto"
+        role="group"
+        aria-label={m.layout_navbar_select_language()}
+        onToggle={(event) => setOpen(event.newState === 'open')}
+        {...stylex.props(styles.langMenu)}
+      >
         {LANGUAGES.map((item) => (
           <button
             key={item.code}
             type="button"
-            onClick={() => void setLocale(item.code)}
+            lang={item.code}
+            aria-pressed={item.code === locale}
+            onClick={() => {
+              menuRef.current?.hidePopover()
+              triggerRef.current?.focus()
+              void setLocale(item.code)
+            }}
             {...stylex.props(styles.langOption, item.code === locale && styles.langOptionActive)}
           >
             {item.name}
           </button>
         ))}
       </div>
-    </details>
+    </>
   )
 }
 
@@ -331,6 +398,7 @@ export function Navbar({ name }: { name: string }) {
             {...stylex.props(styles.mobileToggle)}
           >
             <svg
+              aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               width="16"
               height="16"
