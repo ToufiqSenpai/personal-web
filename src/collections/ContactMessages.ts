@@ -3,11 +3,8 @@ import { render } from '@react-email/render'
 import { APIError, CollectionConfig } from 'payload'
 import { env } from '../configs/env'
 import { ContactEmail } from '../emails/ContactEmail'
+import { consumeRateLimit, resolveClientIp } from '../lib/rate-limit'
 import { verifyTurnstileToken } from '../lib/turnstile'
-
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>()
-const RATE_LIMIT_MAX = 5
-const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000 // 15 minutes
 
 export const ContactMessages: CollectionConfig = {
   slug: 'contact-messages',
@@ -27,25 +24,10 @@ export const ContactMessages: CollectionConfig = {
       async ({ data, operation, req }) => {
         if (operation !== 'create') return data
 
-        const clientIp =
-          req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || req.headers.get('x-real-ip') || 'unknown'
+        const clientIp = resolveClientIp(req)
 
-        // Rate limiting
-        const entry = rateLimitMap.get(clientIp)
-        if (entry) {
-          if (Date.now() > entry.resetAt) {
-            entry.count = 0
-            entry.resetAt = Date.now() + RATE_LIMIT_WINDOW_MS
-          }
-          if (entry.count >= RATE_LIMIT_MAX) {
-            throw new APIError('Too many submissions. Please try again later.', 429)
-          }
-          entry.count++
-        } else {
-          rateLimitMap.set(clientIp, { count: 1, resetAt: Date.now() + RATE_LIMIT_WINDOW_MS })
-        }
-
-        // Turnstile CAPTCHA validation
+        // Validate the CAPTCHA before recording an attempt, so a bad token never
+        // burns the visitor's quota.
         const token = data._turnstileToken as string | undefined
         if (!token) {
           throw new APIError('Captcha verification is required.', 400)
@@ -58,6 +40,20 @@ export const ContactMessages: CollectionConfig = {
 
         // Remove token before saving to DB
         delete data._turnstileToken
+
+        let allowed: boolean
+        try {
+          allowed = await consumeRateLimit(req.payload, clientIp)
+        } catch (error) {
+          // Storage is down. Fail closed so an outage cannot turn the contact
+          // endpoint into an open spam relay.
+          req.payload.logger.error(`Contact rate limit storage unavailable: ${String(error)}`)
+          throw new APIError('Too many submissions. Please try again later.', 429)
+        }
+
+        if (!allowed) {
+          throw new APIError('Too many submissions. Please try again later.', 429)
+        }
 
         return data
       },
