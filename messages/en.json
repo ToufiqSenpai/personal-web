@@ -57,6 +57,7 @@
   "pages_contact_success_subtitle": "Thanks for reaching out. I'll get back to you soon.",
   "pages_contact_send_another": "Send another",
   "pages_contact_error_submit_failed": "Failed to send message. Please try again.",
+  "pages_contact_error_captcha_unavailable": "Captcha check is temporarily unavailable. Please try again in a moment.",
   "pages_contact_captcha_error": "Captcha verification failed. Please try again.",
   "pages_contact_captcha_required": "Please complete the captcha verification.",
   "pages_feeds_title": "Feeds",

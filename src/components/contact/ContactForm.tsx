@@ -12,6 +12,7 @@ interface PayloadError {
   message: string
   path?: string
   name?: string
+  data?: { code?: string }
 }
 
 const styles = stylex.create({
@@ -172,6 +173,21 @@ export function ContactForm() {
 
       if (!response.ok) {
         const body = (await response.json().catch(() => null)) as { errors?: PayloadError[] } | null
+        const captchaCode = body?.errors?.find((error) => error.data?.code)?.data?.code
+        const captchaMessage =
+          captchaCode === 'CAPTCHA_UNAVAILABLE'
+            ? m.pages_contact_error_captcha_unavailable()
+            : captchaCode === 'CAPTCHA_FAILED'
+              ? m.pages_contact_captcha_error()
+              : undefined
+
+        if (captchaMessage) {
+          setErrors({ captcha: captchaMessage })
+          setFormState('idle')
+          resetCaptcha()
+          return
+        }
+
         const fieldErrors: Errors = {}
         for (const error of body?.errors ?? []) {
           const field = (error.path ?? error.name) as Field | undefined

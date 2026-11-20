@@ -35,7 +35,13 @@ export const ContactMessages: CollectionConfig = {
 
         const result = await verifyTurnstileToken(token, clientIp)
         if (!result.success) {
-          throw new APIError('Captcha verification failed.', 400)
+          if (result.code === 'CAPTCHA_UNAVAILABLE') {
+            req.payload.logger.error(`[Turnstile] ${result.error}`)
+            throw new APIError('Captcha check unavailable. Please try again.', 503, {
+              code: result.code,
+            })
+          }
+          throw new APIError('Captcha verification failed.', 400, { code: 'CAPTCHA_FAILED' })
         }
 
         // Remove token before saving to DB
