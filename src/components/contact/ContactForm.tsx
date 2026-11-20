@@ -15,6 +15,26 @@ interface PayloadError {
   data?: { code?: string }
 }
 
+interface ApiErrorBody {
+  errors?: PayloadError[]
+}
+
+function getCaptchaErrorMessage(body: ApiErrorBody | null): string | undefined {
+  const code = body?.errors?.find((error) => error.data?.code)?.data?.code
+  if (code === 'CAPTCHA_UNAVAILABLE') return m.pages_contact_error_captcha_unavailable()
+  if (code === 'CAPTCHA_FAILED') return m.pages_contact_captcha_error()
+  return undefined
+}
+
+function getFieldErrors(body: ApiErrorBody | null): Errors {
+  const fieldErrors: Errors = {}
+  for (const error of body?.errors ?? []) {
+    const field = (error.path ?? error.name) as Field | undefined
+    if (field) fieldErrors[field] = error.message
+  }
+  return fieldErrors
+}
+
 const styles = stylex.create({
   form: {
     padding: { default: '1.5rem', '@media (min-width: 640px)': '2rem' },
@@ -172,36 +192,20 @@ export function ContactForm() {
       })
 
       if (!response.ok) {
-        const body = (await response.json().catch(() => null)) as { errors?: PayloadError[] } | null
-        const captchaCode = body?.errors?.find((error) => error.data?.code)?.data?.code
-        const captchaMessage =
-          captchaCode === 'CAPTCHA_UNAVAILABLE'
-            ? m.pages_contact_error_captcha_unavailable()
-            : captchaCode === 'CAPTCHA_FAILED'
-              ? m.pages_contact_captcha_error()
-              : undefined
+        const body = (await response.json().catch(() => null)) as ApiErrorBody | null
+        const captchaMessage = getCaptchaErrorMessage(body)
 
         if (captchaMessage) {
           setErrors({ captcha: captchaMessage })
-          setFormState('idle')
-          resetCaptcha()
-          return
-        }
-
-        const fieldErrors: Errors = {}
-        for (const error of body?.errors ?? []) {
-          const field = (error.path ?? error.name) as Field | undefined
-          if (field) fieldErrors[field] = error.message
-        }
-
-        if (Object.keys(fieldErrors).length > 0) {
+        } else {
+          const fieldErrors = getFieldErrors(body)
+          if (Object.keys(fieldErrors).length === 0) throw new Error('Failed to submit form')
           setErrors(fieldErrors)
-          setFormState('idle')
-          resetCaptcha()
-          return
         }
 
-        throw new Error('Failed to submit form')
+        setFormState('idle')
+        resetCaptcha()
+        return
       }
 
       setFormState('success')
