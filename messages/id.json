@@ -57,6 +57,7 @@
   "pages_contact_success_subtitle": "Terima kasih telah menghubungi saya. Saya akan segera membalasnya.",
   "pages_contact_send_another": "Kirim lagi",
   "pages_contact_error_submit_failed": "Gagal mengirim pesan. Silakan coba lagi.",
+  "pages_contact_error_captcha_unavailable": "Pemeriksaan captcha sedang tidak tersedia. Silakan coba lagi sebentar.",
   "pages_contact_captcha_error": "Verifikasi captcha gagal. Silakan coba lagi.",
   "pages_contact_captcha_required": "Silakan selesaikan verifikasi captcha.",
   "pages_feeds_title": "Kabar",

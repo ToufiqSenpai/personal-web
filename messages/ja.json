@@ -57,6 +57,7 @@
   "pages_contact_success_subtitle": "ご連絡ありがとうございます。近いうちにご返信いたします。",
   "pages_contact_send_another": "別のメッセージを送信",
   "pages_contact_error_submit_failed": "メッセージの送信に失敗しました。もう一度お試しください。",
+  "pages_contact_error_captcha_unavailable": "キャプチャの確認を現在利用できません。しばらくしてからもう一度お試しください。",
   "pages_contact_captcha_error": "キャプチャの検証に失敗しました。もう一度お試しください。",
   "pages_contact_captcha_required": "キャプチャの検証を完了してください。",
   "pages_feeds_title": "フィード",
