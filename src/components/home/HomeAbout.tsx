@@ -97,7 +97,7 @@ const styles = stylex.create({
   },
 })
 
-function Avatar({ profile }: { profile: Profile }) {
+function Avatar({ profile }: { readonly profile: Profile }) {
   const avatar = profile.avatar as Media
 
   if (avatar.url) {
@@ -116,14 +116,14 @@ function Avatar({ profile }: { profile: Profile }) {
   )
 }
 
-export function HomeAbout({ profile }: { profile: Profile }) {
+export function HomeAbout({ profile }: { readonly profile: Profile }) {
   return (
     <section {...stylex.props(shared.section, shared.bordered, styles.section)}>
       <div {...stylex.props(shared.container)}>
         <div {...stylex.props(styles.grid)}>
           <div {...stylex.props(styles.avatarColumn)}>
             <Reveal>
-              <div tabIndex={0} {...stylex.props(styles.avatarFrame)}>
+              <div {...stylex.props(styles.avatarFrame)}>
                 <Avatar profile={profile} />
               </div>
             </Reveal>
@@ -146,6 +146,7 @@ export function HomeAbout({ profile }: { profile: Profile }) {
               <Link to="/about" {...stylex.props(styles.cta)}>
                 <span>{m.pages_home_about_cta()}</span>
                 <svg
+                  aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"
                   height="16"

@@ -224,6 +224,7 @@ export function ContactForm() {
       <div {...stylex.props(styles.successCard)}>
         <div {...stylex.props(styles.successIcon)}>
           <svg
+            aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"

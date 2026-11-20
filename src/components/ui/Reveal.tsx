@@ -8,10 +8,10 @@ export function Reveal({
   className = '',
   ...props
 }: {
-  children: ReactNode
-  delay?: number
-  className?: string
-  [key: string]: unknown
+  readonly children: ReactNode
+  readonly delay?: number
+  readonly className?: string
+  readonly [key: string]: unknown
 }) {
   const ref = useRef<HTMLDivElement>(null)
   const [isVisible, setIsVisible] = useState(false)
@@ -36,10 +36,13 @@ export function Reveal({
     return () => observer.disconnect()
   }, [])
 
+  const visibilityClass = isVisible ? ' is-visible' : ''
+  const extraClass = className ? ` ${className}` : ''
+
   return (
     <div
       ref={ref}
-      className={`reveal${isVisible ? ' is-visible' : ''}${className ? ` ${className}` : ''}`}
+      className={`reveal${visibilityClass}${extraClass}`}
       {...props}
       style={{ transitionDelay: `${delay}ms` }}
     >

@@ -13,6 +13,8 @@ const terminalSequence = [
   { type: 'output', text: 'Focus: Full-Stack Engineering & AI Systems' },
 ] as const
 
+type TerminalLine = { readonly id: number; readonly text: string }
+
 const styles = stylex.create({
   section: {
     position: 'relative',
@@ -207,8 +209,8 @@ const styles = stylex.create({
   },
 })
 
-export function Hero({ profile }: { profile: Profile }) {
-  const [terminalLines, setTerminalLines] = useState<string[]>([])
+export function Hero({ profile }: { readonly profile: Profile }) {
+  const [terminalLines, setTerminalLines] = useState<TerminalLine[]>([])
   const [currentLine, setCurrentLine] = useState('')
   const [lineIndex, setLineIndex] = useState(0)
 
@@ -218,7 +220,7 @@ export function Hero({ profile }: { profile: Profile }) {
 
     if (item.type === 'output') {
       const timeout = setTimeout(() => {
-        setTerminalLines((prev) => [...prev, item.text])
+        setTerminalLines((prev) => [...prev, { id: lineIndex, text: item.text }])
         setLineIndex((prev) => prev + 1)
       }, 400)
       return () => clearTimeout(timeout)
@@ -232,7 +234,7 @@ export function Hero({ profile }: { profile: Profile }) {
         return
       }
       clearInterval(interval)
-      setTerminalLines((prev) => [...prev, `~$ ${item.text}`])
+      setTerminalLines((prev) => [...prev, { id: lineIndex, text: `~$ ${item.text}` }])
       setCurrentLine('')
       setLineIndex((prev) => prev + 1)
     }, 60)
@@ -308,9 +310,9 @@ export function Hero({ profile }: { profile: Profile }) {
             </div>
 
             <div {...stylex.props(styles.lines)}>
-              {terminalLines.map((line, index) => (
-                <div key={index} {...stylex.props(line.startsWith('~$') && styles.lineInput)}>
-                  {line}
+              {terminalLines.map((line) => (
+                <div key={line.id} {...stylex.props(line.text.startsWith('~$') && styles.lineInput)}>
+                  {line.text}
                 </div>
               ))}
 

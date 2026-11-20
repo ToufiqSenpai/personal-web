@@ -140,7 +140,7 @@ const links = [
 
 const year = new Date().getFullYear()
 
-export function Footer({ profile }: { profile: Profile }) {
+export function Footer({ profile }: { readonly profile: Profile }) {
   return (
     <footer {...stylex.props(styles.footer)}>
       <div {...stylex.props(styles.inner)}>

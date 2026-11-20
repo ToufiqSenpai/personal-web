@@ -4,7 +4,7 @@ import { createServerFn } from '@tanstack/react-start'
 import { getPayload, type PaginatedDocs } from 'payload'
 import type { Article, Feed, Profile, Project } from '@/payload-types'
 
-const getPayloadClient = async () => getPayload({ config: configPromise })
+const getPayloadClient = () => getPayload({ config: configPromise })
 
 // Public pages read through the Local API on the server, so `overrideAccess: true` is
 // explicit — Payload 4 enforces access control on Local API calls by default.

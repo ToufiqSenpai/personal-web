@@ -128,7 +128,7 @@ function categoryTitle(article: Article) {
   return first && typeof first === 'object' ? first.title : ''
 }
 
-export function FeaturedArticles({ articles }: { articles: Article[] }) {
+export function FeaturedArticles({ articles }: { readonly articles: Article[] }) {
   if (articles.length === 0) return null
 
   return (
@@ -167,6 +167,7 @@ export function FeaturedArticles({ articles }: { articles: Article[] }) {
                     <span {...stylex.props(styles.readMore)}>
                       {m.pages_home_featured_articles_read_more()}
                       <svg
+                        aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         width="14"
                         height="14"

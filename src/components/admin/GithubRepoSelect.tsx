@@ -11,7 +11,7 @@ interface GithubRepo {
   private: boolean
 }
 
-export default function GithubRepoSelect({ path }: { path: string }) {
+export default function GithubRepoSelect({ path }: { readonly path: string }) {
   const { value, setValue } = useField<string>({ path })
   const { dispatchFields } = useForm()
   const [repos, setRepos] = useState<GithubRepo[]>([])
@@ -47,7 +47,9 @@ export default function GithubRepoSelect({ path }: { path: string }) {
 
   return (
     <div className="field-type select" style={{ marginBottom: '20px' }}>
-      <label className="field-label">GitHub Repository</label>
+      <label className="field-label" htmlFor="github-repository">
+        GitHub Repository
+      </label>
 
       {loading && <div style={{ fontSize: '13px', color: '#888', marginTop: '5px' }}>Loading repositories...</div>}
       {error && (
@@ -56,6 +58,7 @@ export default function GithubRepoSelect({ path }: { path: string }) {
 
       {!loading && !error && (
         <select
+          id="github-repository"
           className="field-type select"
           style={{
             width: '100%',

@@ -129,8 +129,7 @@ const styles = stylex.create({
   overlay: {
     position: 'absolute',
     inset: 0,
-    backgroundImage:
-      'linear-gradient(to top, rgb(0 0 0 / var(--overlay-bottom)), rgb(0 0 0 / 0.25), transparent)',
+    backgroundImage: 'linear-gradient(to top, rgb(0 0 0 / var(--overlay-bottom)), rgb(0 0 0 / 0.25), transparent)',
   },
   caption: {
     position: 'absolute',
@@ -166,7 +165,7 @@ const styles = stylex.create({
 const layouts = [styles.hero, null, null, styles.wide, styles.tall, null] as const
 const tilts = [styles.tilt1, styles.tilt2, styles.tilt3, styles.tilt4, styles.tilt5, styles.tilt6] as const
 
-export function BentoHobbies({ profile }: { profile: Profile }) {
+export function BentoHobbies({ profile }: { readonly profile: Profile }) {
   const hobbies = profile.hobbies
 
   return (
@@ -191,7 +190,12 @@ export function BentoHobbies({ profile }: { profile: Profile }) {
               >
                 <div {...stylex.props(styles.media)}>
                   {image.url ? (
-                    <img src={image.url} alt={image.alt || hobby.title} loading="lazy" {...stylex.props(styles.image)} />
+                    <img
+                      src={image.url}
+                      alt={image.alt || hobby.title}
+                      loading="lazy"
+                      {...stylex.props(styles.image)}
+                    />
                   ) : (
                     <div {...stylex.props(styles.fallback)}>{hobby.title.charAt(0)}</div>
                   )}

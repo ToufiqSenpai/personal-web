@@ -35,7 +35,7 @@ const styles = stylex.create({
   },
 })
 
-export function FeaturedProjects({ projects }: { projects: Project[] }) {
+export function FeaturedProjects({ projects }: { readonly projects: Project[] }) {
   return (
     <section {...stylex.props(shared.section, shared.bordered, styles.section)}>
       <div {...stylex.props(shared.container)}>

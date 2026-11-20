@@ -74,7 +74,7 @@ const styles = stylex.create({
   },
 })
 
-export function CTA() {
+export function Cta() {
   return (
     <section {...stylex.props(styles.section)}>
       <div {...stylex.props(styles.wrapper)}>

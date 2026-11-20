@@ -30,7 +30,7 @@ export function resolveClientIp(req: RequestWithIp): string {
 
   const forwardedFor = req.headers.get('x-forwarded-for')
   if (forwardedFor) {
-    const trusted = forwardedFor.split(',').map(normalizeIp).filter(Boolean).at(-1)
+    const trusted = forwardedFor.split(',').map(normalizeIp).findLast(Boolean)
     if (trusted) return trusted
   }
 
@@ -57,7 +57,7 @@ export async function consumeRateLimit(payload: Payload, ip: string): Promise<bo
 
   const count = Number(result.rows[0]?.count)
   if (!Number.isFinite(count)) {
-    throw new Error('Rate limit upsert returned no count')
+    throw new TypeError('Rate limit upsert returned no count')
   }
 
   // One row per (ip, window) already bounds growth, but stale windows still need

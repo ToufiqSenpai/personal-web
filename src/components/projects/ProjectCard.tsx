@@ -18,7 +18,7 @@ const styles = stylex.create({
       transform: 'translateY(-0.25rem)',
       borderColor: 'var(--color-accent)',
     },
-    ':focus-visible': {
+    ':focus-within': {
       transform: 'translateY(-0.25rem)',
       borderColor: 'var(--color-accent)',
       outlineWidth: 2,
@@ -71,6 +71,9 @@ const styles = stylex.create({
     transitionProperty: 'opacity',
     transitionDuration: '300ms',
     ':hover': {
+      opacity: 1,
+    },
+    ':focus-within': {
       opacity: 1,
     },
   },
@@ -135,6 +138,7 @@ const styles = stylex.create({
 function DemoIcon() {
   return (
     <svg
+      aria-hidden="true"
       width="16"
       height="16"
       viewBox="0 0 24 24"
@@ -154,6 +158,7 @@ function DemoIcon() {
 function CodeIcon() {
   return (
     <svg
+      aria-hidden="true"
       width="16"
       height="16"
       viewBox="0 0 24 24"
@@ -169,11 +174,11 @@ function CodeIcon() {
   )
 }
 
-export function ProjectCard({ project }: { project: Project }) {
+export function ProjectCard({ project }: { readonly project: Project }) {
   const thumbnail = project.thumbnail as Media
 
   return (
-    <div tabIndex={0} {...stylex.props(styles.card)}>
+    <div {...stylex.props(styles.card)}>
       <div {...stylex.props(styles.media)}>
         {thumbnail.url ? (
           <img src={thumbnail.url} alt={thumbnail.alt} loading="lazy" {...stylex.props(styles.image)} />
