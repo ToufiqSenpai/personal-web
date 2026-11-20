@@ -135,12 +135,12 @@ const styles = stylex.create({
     flexDirection: 'column',
     overflow: 'hidden',
     borderRadius: '0.75rem',
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderColor: 'var(--color-border)',
+    borderWidth: 0,
+    margin: 0,
     backgroundColor: 'var(--color-canvas)',
     color: 'var(--color-ink)',
     paddingBlock: '0.5rem',
+    paddingInline: 0,
     boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
     /* A closed popover is display:none by UA rule, so only style it when open. */
     ':popover-open': {
@@ -280,7 +280,7 @@ function LanguageMenu() {
   const locale = getLocale()
   const id = useId()
   const triggerRef = useRef<HTMLButtonElement>(null)
-  const menuRef = useRef<HTMLDivElement>(null)
+  const menuRef = useRef<HTMLFieldSetElement>(null)
   const [open, setOpen] = useState(false)
 
   return (
@@ -310,11 +310,10 @@ function LanguageMenu() {
           <polyline points="6 9 12 15 18 9" />
         </svg>
       </button>
-      <div
+      <fieldset
         ref={menuRef}
         id={id}
         popover="auto"
-        role="group"
         aria-label={m.layout_navbar_select_language()}
         onToggle={(event) => setOpen(event.newState === 'open')}
         {...stylex.props(styles.langMenu)}
@@ -335,7 +334,7 @@ function LanguageMenu() {
             {item.name}
           </button>
         ))}
-      </div>
+      </fieldset>
     </>
   )
 }
@@ -354,7 +353,7 @@ async function share(name: string) {
   alert(m.layout_navbar_copied())
 }
 
-export function Navbar({ name }: { name: string }) {
+export function Navbar({ name }: { readonly name: string }) {
   const [isOpen, setIsOpen] = useState(false)
   const pathname = deLocalizeHref(useLocation().pathname)
 

@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { AboutHero } from '@/components/about/AboutHero'
 import { BentoHobbies } from '@/components/about/BentoHobbies'
 import { Timeline } from '@/components/about/Timeline'
-import { CTA } from '@/components/home/CTA'
+import { Cta } from '@/components/home/Cta'
 import { getProfileFn } from '@/data/queries'
 import { buildHead } from '@/lib/seo'
 import { m } from '@/paraglide/messages'
@@ -27,7 +27,7 @@ function AboutPage() {
       <AboutHero profile={profile} />
       <Timeline profile={profile} />
       <BentoHobbies profile={profile} />
-      <CTA />
+      <Cta />
     </>
   )
 }

@@ -38,6 +38,19 @@ function applyScheme(scheme: Scheme) {
   if (meta) meta.content = scheme
 }
 
+function toggle() {
+  const systemScheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  const current = storedScheme() ?? systemScheme
+  const target = current === 'dark' ? 'light' : 'dark'
+
+  // Reverting to the current system preference means the user is undoing the
+  // override, so remove it instead of pinning the scheme against future OS changes.
+  if (target === systemScheme) localStorage.removeItem(STORAGE_KEY)
+  else localStorage.setItem(STORAGE_KEY, target)
+
+  applyScheme(target === systemScheme ? 'light dark' : target)
+}
+
 // Both the icon and its action label are CSS-only branches (see global.css), so
 // they stay correct without JS and when the OS preference changes.
 export function ThemeToggle() {
@@ -51,19 +64,6 @@ export function ThemeToggle() {
     window.addEventListener('storage', sync)
     return () => window.removeEventListener('storage', sync)
   }, [])
-
-  function toggle() {
-    const systemScheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-    const current = storedScheme() ?? systemScheme
-    const target = current === 'dark' ? 'light' : 'dark'
-
-    // Reverting to the current system preference means the user is undoing the
-    // override, so remove it instead of pinning the scheme against future OS changes.
-    if (target === systemScheme) localStorage.removeItem(STORAGE_KEY)
-    else localStorage.setItem(STORAGE_KEY, target)
-
-    applyScheme(target === systemScheme ? 'light dark' : target)
-  }
 
   return (
     <button type="button" onClick={toggle} {...stylex.props(styles.button)}>

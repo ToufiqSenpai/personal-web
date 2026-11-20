@@ -5,9 +5,9 @@ import { clientEnv } from '@/configs/client-env'
 import { getLocale } from '@/paraglide/runtime'
 
 interface TurnstileProps {
-  onVerify: (token: string) => void
-  onError?: () => void
-  onExpire?: () => void
+  readonly onVerify: (token: string) => void
+  readonly onError?: () => void
+  readonly onExpire?: () => void
 }
 
 const SCRIPT_SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js'

@@ -58,9 +58,9 @@ const styles = stylex.create({
 })
 
 interface FeedListProps {
-  initialFeeds: Feed[]
-  initialHasNextPage: boolean
-  initialNextPage: number
+  readonly initialFeeds: Feed[]
+  readonly initialHasNextPage: boolean
+  readonly initialNextPage: number
 }
 
 export function FeedList({ initialFeeds, initialHasNextPage, initialNextPage }: FeedListProps) {

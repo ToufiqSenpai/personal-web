@@ -62,7 +62,7 @@ const styles = stylex.create({
   },
 })
 
-export function ContactInfo({ profile }: { profile: Profile }) {
+export function ContactInfo({ profile }: { readonly profile: Profile }) {
   return (
     <div {...stylex.props(styles.list)}>
       <div {...stylex.props(styles.card)}>

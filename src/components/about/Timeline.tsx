@@ -116,7 +116,7 @@ const styles = stylex.create({
   },
 })
 
-export function Timeline({ profile }: { profile: Profile }) {
+export function Timeline({ profile }: { readonly profile: Profile }) {
   const items = profile.timelines
 
   return (

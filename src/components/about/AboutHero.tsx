@@ -114,7 +114,7 @@ function LanguageIcon() {
   )
 }
 
-export function AboutHero({ profile }: { profile: Profile }) {
+export function AboutHero({ profile }: { readonly profile: Profile }) {
   const initials = profile.name
     .split(' ')
     .map((word) => word[0])

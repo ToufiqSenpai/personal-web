@@ -86,7 +86,7 @@ const converters: JSXConvertersFunction = ({ defaultConverters }) => ({
   },
 })
 
-function EmbedBlock({ html }: { html: string }) {
+function EmbedBlock({ html }: { readonly html: string }) {
   const [sanitized, setSanitized] = useState('')
 
   useEffect(() => {
@@ -109,7 +109,7 @@ function EmbedBlock({ html }: { html: string }) {
   return <div {...stylex.props(styles.embed)} dangerouslySetInnerHTML={{ __html: sanitized }} />
 }
 
-export function FeedCard({ feed }: { feed: Feed }) {
+export function FeedCard({ feed }: { readonly feed: Feed }) {
   const formattedDate = new Intl.DateTimeFormat(getLocale(), {
     month: 'short',
     day: 'numeric',

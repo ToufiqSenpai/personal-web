@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { CTA } from '@/components/home/CTA'
+import { Cta } from '@/components/home/Cta'
 import { FeaturedArticles } from '@/components/home/FeaturedArticles'
 import { FeaturedProjects } from '@/components/home/FeaturedProjects'
 import { Hero } from '@/components/home/Hero'
@@ -43,7 +43,7 @@ function HomePage() {
       <HomeAbout profile={profile} />
       <FeaturedProjects projects={projects} />
       <FeaturedArticles articles={articles} />
-      <CTA />
+      <Cta />
     </>
   )
 }
